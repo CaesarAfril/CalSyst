@@ -1,0 +1,67 @@
+.form-control{
+    appearance: auto;
+}
+select.form-control{padding:10px;}
+.buttonTambah {
+    margin-top: 0;
+    float: right;
+    margin-bottom: 5px;
+}
+
+.coba {
+    color: red;
+}
+
+.cardUser {
+    background-color: rgb(157, 206, 249);
+
+}
+
+.cardPacking {
+    background-color: rgb(157, 206, 249);
+
+}
+
+.cardStorehouse {
+    background-color: rgb(157, 206, 249);
+
+}
+
+.cardLoading {
+    background-color: rgb(157, 206, 249);
+
+}
+
+.cardHistoryPacking {
+    background-color: rgb(165, 190, 211);
+
+}
+
+.cardHistoryStorage {
+    background-color: rgb(165, 190, 211);
+
+}
+
+.cardHistoryLoading {
+    background-color: rgb(165, 190, 211);
+
+}
+
+
+.buttonCheck {
+    margin-top: 0;
+    /* float: right; */
+    margin-bottom: 5px;
+    margin-left: 15px;
+    width: 400px;
+}
+
+.breadcrumb{background-color: #696cff;padding: 10px 20px;border-radius: 5px;}
+.breadcrumb li, .breadcrumb li a{color:#ffffff!important;}
+
+#datatable_filter{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 16px;
+}
