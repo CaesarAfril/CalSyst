@@ -33,7 +33,10 @@ class ReportController extends Controller
 
     public function temperature_addData()
     {
-        $asset = Assets::with('department')->where('category_uuid', '3cfc952c-ca24-4f7e-8532-5073b3d66d34')->get();
+        $asset = Assets::with(['department', 'category'])
+            ->whereHas('category', function ($query) {
+                $query->where('category', 'Thermometer');
+            })->get();
         return view('report.store_internal_temp', ['assets' => $asset]);
     }
 
@@ -43,6 +46,7 @@ class ReportController extends Controller
         $tanggal = Carbon::parse($request->tanggal);
         $monthRoman = $this->toRoman($tanggal->month);
         $year = $tanggal->year;
+        $expired = Carbon::parse($request->tanggal)->addMonths(6);
 
         // Construct the certificate number
         $certificate = $asset->plant->abbreviaton . '/' . $monthRoman . '/' . $year;
@@ -66,6 +70,7 @@ class ReportController extends Controller
             $asset->veff = $request->veff;
             $asset->k = $request->k;
             $asset->u95 = $request->u95;
+            $asset->expired_date = $expired;
             $asset->save();
 
             // Get the newly created uuid

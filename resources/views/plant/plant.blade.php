@@ -32,6 +32,17 @@
                                     required>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="plant_abbreviaton" class="form-label">Singkatan</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="plant_abbreviaton"
+                                    name="plant_abbreviaton"
+                                    placeholder="Masukkan Nama Departemen"
+                                    required>
+                            </div>
+
                             <!-- Plant Dropdown -->
                         </div>
                         <div class="modal-footer">
@@ -49,6 +60,7 @@
                     <tr class="text-nowrap">
                         <th>No.</th>
                         <th>Plant</th>
+                        <th>Singkatan</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -57,6 +69,7 @@
                     <tr>
                         <th>{{$loop->iteration}}</th>
                         <td>{{$plant->plant}}</td>
+                        <td>{{$plant->abbreviaton}}</td>
                         <td>
                             <!-- Edit Button -->
                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPlantModal{{$plant->id}}">

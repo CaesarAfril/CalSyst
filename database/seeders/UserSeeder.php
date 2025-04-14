@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'email' => 'afril.hanif@cp.co.id',
             'email_verified_at' => now(),
             'password' => bcrypt('stutjack7217'),
-            'role_uuid' => '954cb4a4-9f74-4dc4-93ce-56546a0b7f36'
+            'role_uuid' => '2f01c48a-675c-47a8-b517-8a32eb9d05cd'
         ]);
         User::create([
             'username' => 'yosi.pratama',

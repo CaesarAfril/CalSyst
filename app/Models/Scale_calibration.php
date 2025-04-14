@@ -34,7 +34,8 @@ class Scale_calibration extends Model
         'avg_dev_repeatability',
         'UDrift_weight',
         'Ureadability',
-        'U95'
+        'U95',
+        'expired_date'
     ];
 
     protected static function boot()
