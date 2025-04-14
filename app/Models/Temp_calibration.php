@@ -29,7 +29,8 @@ class temp_calibration extends Model
         'uc',
         'veff',
         'k',
-        'u95'
+        'u95',
+        'expired_date'
     ];
 
     protected static function boot()
