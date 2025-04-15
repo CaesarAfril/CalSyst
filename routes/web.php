@@ -40,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('plant', PlantController::class);
     Route::resource('category', CategoryController::class);
     Route::resource('asset', AssetController::class);
+    Route::post('/asset/upload-csv', [AssetController::class, 'importCsv'])->name('asset.importCsv');
     Route::resource('machine', MachineController::class);
     Route::resource('weight', WeightController::class);
     Route::resource('validation_asset', Validation_assetController::class);

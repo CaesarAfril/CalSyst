@@ -126,6 +126,5 @@ class DashboardController extends Controller
             'calibratedCount' => $calibratedCount,
             'expiredCount' => $expiredCount,
         ]);
-
     }
 }
