@@ -2,12 +2,42 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="card">
-        <h5 class="card-header d-flex justify-content-between align-items-center">
+        {{-- <h5 class="card-header d-flex justify-content-between align-items-center">
             Data Aset Mesin Pemasakan
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addassetModal">
                 +
             </button>
+        </h5> --}}
+
+        <h5 class="card-header d-flex justify-content-between align-items-center">
+            <span>Data Aset Mesin Pemasakan</span>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importCsvModal">
+                    Import CSV
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addassetModal">
+                    +
+                </button>
+            </div>
         </h5>
+
+        <div class="modal fade" id="importCsvModal" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="{{ route('validation_asset.importCsv') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="importCsvModalLabel">Import CSV</h5>
+                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="file" name="csv_file" id="csv_file" class="form-control mb-3" required>
+                            <button class="btn btn-success" type="submit">Import</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- Add asset Modal -->
         <div class="modal fade" id="addassetModal" tabindex="-1" aria-labelledby="addassetModalLabel" aria-hidden="true">

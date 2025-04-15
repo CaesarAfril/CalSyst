@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('machine', MachineController::class);
     Route::resource('weight', WeightController::class);
     Route::resource('validation_asset', Validation_assetController::class);
+    Route::post('/validation_asset/upload-csv', [Validation_assetController::class, 'importCsv'])->name('validation_asset.importCsv');
     Route::get('report', [ReportController::class, 'index'])->name('report');
     Route::get('report/temperature', [ReportController::class, 'temperature'])->name('report.temperature');
     Route::get('report/temperature/addData', [ReportController::class, 'temperature_addData'])->name('report.addDataTemperature');
