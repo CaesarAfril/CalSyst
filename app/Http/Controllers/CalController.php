@@ -7,6 +7,7 @@ use App\Models\Assets;
 use App\Models\Category;
 use App\Models\Display_calibration;
 use App\Models\External_calibration;
+use App\Models\external_calibration_file;
 use App\Models\Scale_calibration;
 use App\Models\temp_calibration;
 use Carbon\Carbon;
@@ -114,26 +115,37 @@ class CalController extends Controller
         $request->validate([
             'date' => 'required|date',
             'asset' => 'required|string|exists:assets,uuid',
-            'status' => 'required|string',
-            'next_date' => 'required|date'
         ]);
+
+        External_calibration::create([
+            'date' => $request->date,
+            'asset_uuid' => $request->asset,
+            'progress_status' => 'penawaran',
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function penawaranFileStore(Request $request, $uuid)
+    {
+
+        $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+        
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = $file->getClientOriginalExtension();
             $filename = "{$originalFilename}.{$extension}";
-
-            $folder = "calibration/external_calibration";
+            $folder = "calibration/penawaran";
             $path = $file->storeAs($folder, $filename, 'public');
 
-            External_calibration::create([
-                'date' => $request->date,
-                'asset_uuid' => $request->asset,
-                'path' => $path,
-                'filename' => $filename,
-                'status' => $request->status,
-                'next_calibration_date' => $request->next_date
+            external_calibration_file::create([
+                'calibration_uuid'=>$uuid,
+                'progress'=> $calibration->progress_status,
+                'upload_date'=> $request->date_file,
+                'path'=>$path,
+                'filename'=>$filename,
             ]);
 
             return redirect()->back();

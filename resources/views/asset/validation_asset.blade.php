@@ -93,13 +93,13 @@
                             </div>
                             <div class="mb-3">
                                 <label for="asset_machine_name" class="form-label">Nama Mesin</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="asset_machine_name"
-                                    name="asset_machine_name"
-                                    placeholder="Masukkan Nama Mesin"
-                                    required>
+                                    <select name="asset_machine_name" id="asset_machine_name" class="form-control">
+                                        <option value="
+                                        "hidden>-- Pilih --</option>
+                                        @foreach ($machines as $machine)
+                                            <option value="{{ $machine->uuid }}">{{ $machine->machine_name }}</option>
+                                        @endforeach
+                                    </select>
                             </div>
                             <div class="mb-3">
                                 <label for="asset_detail" class="form-label">Detail</label>
@@ -141,7 +141,7 @@
                         <td>{{$asset->department->department}}</td>
                         <td>{{$asset->plant->plant}}</td>
                         <td>{{$asset->location}}</td>
-                        <td>{{$asset->machine_name}}</td>
+                        <td>{{$asset->machine->machine_name}}</td>
                         <td>{{$asset->detail}}</td>
                         <td>
                             <!-- Edit Button -->

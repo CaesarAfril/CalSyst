@@ -12,7 +12,7 @@ class external_calibration_file extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "external_calibrations";
+    protected $table = "external_calibration_files";
     protected $primaryKey = "id";
     protected $fillable = [
         'calibration_uuid',
@@ -31,4 +31,8 @@ class external_calibration_file extends Model
             $external->uuid = Str::uuid();
         });
     }
+
+    public function calibration()
+    {
+        return $this->belongsTo(External_calibration::class, 'calibration_uuid','uuid');}
 }

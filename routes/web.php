@@ -67,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('sertifikat/internal/scale', [CalController::class, 'scale'])->name('Internal_calibration.scale');
     Route::get('sertifikat/eksternal', [CalController::class, 'external'])->name('External_calibration');
     Route::post('sertifikat/eksternal/store', [CalController::class, 'externalStore'])->name('External_calibration.storeExternalCalibration');
+    Route::post('sertifikat/eksternal/penawaranFileStore/{uuid}', [CalController::class, 'penawaranFileStore'])->name('penawaranFileStore');
     Route::get('referensi', [RefController::class, 'index'])->name('references');
     Route::resource('references', RefController::class);
 });
