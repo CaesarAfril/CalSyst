@@ -44,6 +44,5 @@ class DashboardController extends Controller
             'assets' => $expiringAssets,
             'totalAssets' => $totalAssets,
         ]);
-
     }
 }

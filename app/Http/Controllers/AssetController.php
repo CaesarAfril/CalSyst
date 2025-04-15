@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Department;
 use App\Models\Plant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AssetController extends Controller
 {
@@ -98,5 +99,45 @@ class AssetController extends Controller
         $asset->delete();
 
         return redirect()->back();
+    }
+
+    public function importCsv(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt'
+        ]);
+
+        $file = fopen($request->file('csv_file'), 'r');
+        $header = fgetcsv($file);
+
+        $file = fopen($request->file('csv_file'), 'r');
+        $header = fgetcsv($file, 0, ';');
+
+        while ($row = fgetcsv($file, 0, ';')) {
+            $data = array_combine($header, $row);
+
+            $plant = Plant::where('plant', $data['plant'])->firstOrFail();
+            $department = Department::where('department', $data['departemen'])->firstOrFail();
+            $category = Category::where('category', $data['kategori'])->where('calibration', $data['kalibrasi'])->firstOrFail();
+
+            Assets::create([
+                'plant_uuid' => $plant->uuid,
+                'dept_uuid' => $department->uuid,
+                'location' => $data['lokasi'],
+                'category_uuid' => $category->uuid,
+                'merk' => $data['merk'],
+                'type' => $data['tipe'],
+                'series_number' => $data['nomor_seri'],
+                'capacity' => $data['kapasitas'],
+                'range' => $data['range'],
+                'resolution' => $data['resolusi'],
+                'correction' => floatval($data['koreksi']),
+                'uncertainty' => floatval($data['ketidakpastian']),
+                'standard' => floatval($data['standar'])
+            ]);
+        }
+
+        fclose($file);
+        return back()->with('success', 'Import CSV berhasil');
     }
 }
