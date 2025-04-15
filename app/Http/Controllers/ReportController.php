@@ -129,7 +129,10 @@ class ReportController extends Controller
 
     public function display_addData()
     {
-        $asset = Assets::with('department')->where('category_uuid', '575261f1-039d-4fc3-bcfa-bff34999dcdc')->get();
+        $asset = Assets::with(['department', 'category'])
+            ->whereHas('category', function ($query) {
+                $query->where('category', 'Display Suhu');
+            })->get();
         return view('report.store_internal_display', ['assets' => $asset]);
     }
 
@@ -139,6 +142,7 @@ class ReportController extends Controller
         $tanggal = Carbon::parse($request->tanggal);
         $monthRoman = $this->toRoman($tanggal->month);
         $year = $tanggal->year;
+        $expired = Carbon::parse($request->tanggal)->addMonths(6);
 
         // Construct the certificate number
         $certificate = $asset->plant->abbreviaton . '/' . $monthRoman . '/' . $year;
@@ -160,6 +164,7 @@ class ReportController extends Controller
             $asset->u3 = $request->u3;
             $asset->uc = $request->uc;
             $asset->veff = $request->veff;
+            $asset->expired_date = $expired;
             $asset->k = $request->k;
             $asset->u95 = $request->u95;
             $asset->save();
@@ -216,7 +221,11 @@ class ReportController extends Controller
 
     public function scale_addData()
     {
-        $asset = Assets::with('department')->where('category_uuid', 'b3306ec8-697d-414c-89aa-dc5cea8f5d8f')->get();
+        // $asset = Assets::with('department')->where('category_uuid', 'b3306ec8-697d-414c-89aa-dc5cea8f5d8f')->get();
+        $asset = Assets::with(['department', 'category'])
+            ->whereHas('category', function ($query) {
+                $query->where('category', 'Scale');
+            })->get();
         $weight = Weight::all();
         return view('report.store_internal_scale', [
             'assets' => $asset,
@@ -230,6 +239,7 @@ class ReportController extends Controller
         $tanggal = Carbon::parse($request->tanggal);
         $monthRoman = $this->toRoman($tanggal->month);
         $year = $tanggal->year;
+        $expired = Carbon::parse($request->tanggal)->addMonths(6);
         $certificate = $asset->plant->abbreviaton . '/' . $monthRoman . '/' . $year;
 
         try {
@@ -255,6 +265,7 @@ class ReportController extends Controller
             $asset->UDrift_weight = $request->UDrift_weight;
             $asset->Ureadability = $request->Ureadability;
             $asset->U95 = $request->avg_U95;
+            $asset->expired_date = $expired;
             $asset->save();
 
             $calibrationUuid = $asset->uuid;
