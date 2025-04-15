@@ -21,6 +21,7 @@ class External_calibration extends Model
         'status',
         'next_calibration_date',
         'progress_status',
+        'certificate_date',
     ];
 
     protected static function boot()

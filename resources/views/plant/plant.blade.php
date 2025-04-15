@@ -28,7 +28,7 @@
                                     class="form-control"
                                     id="plant_name"
                                     name="plant_name"
-                                    placeholder="Masukkan Nama Departemen"
+                                    placeholder="Masukkan Nama Plant"
                                     required>
                             </div>
 
@@ -39,7 +39,7 @@
                                     class="form-control"
                                     id="plant_abbreviaton"
                                     name="plant_abbreviaton"
-                                    placeholder="Masukkan Nama Departemen"
+                                    placeholder="Masukkan Singkatan"
                                     required>
                             </div>
 
@@ -98,6 +98,18 @@
                                                         name="plant_name"
                                                         value="{{ $plant->plant }}"
                                                         placeholder="Enter plant name"
+                                                        required>
+                                                </div>
+
+                                                <!-- Plant Abbreviation Input -->
+                                                <div class="mb-3">
+                                                    <label for="edit_plant_abbreviation{{$plant->id}}" class="form-label">Singkatan</label>
+                                                    <input
+                                                        type="text"
+                                                        class="form-control"
+                                                        id="edit_plant_abbreviation{{$plant->id}}"
+                                                        name="plant_abbreviaton"
+                                                        value="{{ $plant->abbreviaton }}"
                                                         required>
                                                 </div>
 

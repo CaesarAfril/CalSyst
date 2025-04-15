@@ -30,4 +30,20 @@ class WeightController extends Controller
 
         return redirect()->back();
     }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'edit_mass' => 'required|string|max:255',
+            'edit_error' => 'required|string|max:255',
+        ]);
+
+        $weights = Weight::findOrFail($id);
+        $weights->update([
+            'mass' => $validated['edit_mass'],
+            'error' => $validated['edit_error'],
+        ]);
+
+        return redirect()->back();
+    }
 }

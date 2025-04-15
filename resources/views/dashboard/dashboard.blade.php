@@ -53,21 +53,21 @@
       <div class="col-md-3">
         <div class="stat-card">
           <div class="stat-title">TOTAL ALAT SUDAH KALIBRASI</div>
-          <div class="stat-value">27%</div>
+          <div class="stat-value">{{ $calibratedCount }}</div>
           <div class="stat-footer"></div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="stat-card">
           <div class="stat-title">TOTAL ALAT ON TRACK KALIBRASI</div>
-          <div class="stat-value">95%</div>
+          <div class="stat-value">data</div>
           <div class="stat-footer"></div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="stat-card">
-          <div class="stat-title">TOTAL ALAT KALIBRASI</div>
-          <div class="stat-value">100%</div>
+          <div class="stat-title">TOTAL ALAT TELAT KALIBRASI</div>
+          <div class="stat-value">{{ $expiredCount }}</div>
           <div class="stat-footer"></div>
         </div>
       </div>
@@ -120,8 +120,6 @@
                 <th>Departemen</th>
                 <th>ED Sertifikat</th>
                 <th>Kalibrasi</th>
-                <th>Progress</th>
-                <th>Status</th>
             </tr>
         
         </thead>
@@ -154,13 +152,18 @@
                     @endphp
                     <span style="color: red;">{{ $date->format('d-m-y') }}</span>
 
+                    @elseif($asset->category->category === 'Scale' && $asset->latest_scale_calibration)
+                    @php
+                        $date = \Carbon\Carbon::parse($asset->latest_scale_calibration->expired_date);
+                        $daysLeft = now()->diffInDays($date, false);
+                    @endphp
+                    <span style="color: red;">{{ $date->format('d-m-y') }}</span>
+
                 @else
                     <span style="color: gray;">N/A</span>
                 @endif
             </td>
             <td>{{ $asset->category->calibration }}</td>
-            <td>p</td>
-            <td>p</td>
         </tr>
 @empty
 <tr>

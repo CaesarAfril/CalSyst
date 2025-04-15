@@ -69,6 +69,11 @@ class Assets extends Model
         return $this->hasMany(External_calibration::class, 'asset_uuid');
     }
 
+    public function scale_calibrations()
+    {
+        return $this->hasMany(Scale_calibration::class, 'asset_uuid');
+    }
+
     public function latest_external_calibration()
     {
         return $this->hasOne(External_calibration::class, 'asset_uuid')->latestOfMany('date');
@@ -82,5 +87,10 @@ class Assets extends Model
     public function latest_display_calibration()
     {
         return $this->hasOne(Display_calibration::class, 'asset_uuid', 'uuid')->latestOfMany('date');
+    }
+
+    public function latest_scale_calibration()
+    {
+        return $this->hasOne(Scale_calibration::class, 'asset_uuid', 'uuid')->latestOfMany('date');
     }
 }
