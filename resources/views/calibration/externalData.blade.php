@@ -40,37 +40,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="file" class="form-label">Upload File</label>
-                                <input
-                                    type="file"
-                                    class="form-control"
-                                    id="file"
-                                    name="file"
-                                    accept=".pdf,.doc,.docx"
-                                    required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select name="status" id="status" class="form-control">
-                                    <option value="" hidden>--Pilih--</option>
-                                    <option value="Ok">Ok</option>
-                                    <option value="Tidak Ok">Tidak OK</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="next_date" class="form-label">Kalibrasi Selanjutnya</label>
-                                <input
-                                    type="date"
-                                    class="form-control"
-                                    id="next_date"
-                                    name="next_date"
-                                    placeholder="Masukkan Tanggal"
-                                    required>
-                            </div>
                             <!-- External Dropdown -->
                         </div>
                         <div class="modal-footer">
@@ -88,9 +57,9 @@
                     <tr class="text-nowrap">
                         <th>No.</th>
                         <th>Tanggal</th>
-                        <th>Alat</th>
-                        <th>Departemen</th>
+                        <th>Status</th>
                         <th>Aksi</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -98,10 +67,38 @@
                     <tr>
                         <th>{{$loop->iteration}}</th>
                         <td>{{$report->date}}</td>
-                        <td>{{$report->asset->merk}} {{$report->asset->type}} {{$report->asset->series_number}}</td>
-                        <td>{{$report->asset->department->department}}</td>
-                        <td>
+                        <td>{{$report->progress_status  }}
                         </td>
+                        {{-- <td><button type="button" class="btn btn-success btn-sm" onclick="{{ route('penawaranFileStore', $report->uuid) }}">
+                            Masukkan
+                        </button></td> --}}
+                        <td>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importCsvModal">
+                                Masukkan
+                            </button>
+                        </td>
+
+                        <div class="modal fade" id="importCsvModal" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form action="{{ route('penawaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="label" class="form-label">Tanggal</label>
+                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                            <label for="label" class="form-label">Upload FIle</label>
+                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
+                                            
+                                            <button class="btn btn-success" type="submit">Upload</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </tr>
                     @endforeach
                 </tbody>

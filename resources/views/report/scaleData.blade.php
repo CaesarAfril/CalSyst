@@ -28,7 +28,7 @@
                         <td>{{$report->asset->merk}} {{$report->asset->type}} {{$report->asset->series_number}}</td>
                         <td>{{$report->asset->department->department}}</td>
                         <td>
-                            <!-- <a href="{{route('report.exportDataDisplay', $report->uuid)}}" class="btn btn-success">Export</a> -->
+                            <a href="{{route('report.exportDataDisplay', $report->uuid)}}" class="btn btn-success">Export</a>
                         </td>
                     </tr>
                     @endforeach

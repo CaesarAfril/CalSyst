@@ -17,13 +17,18 @@ class Validation_assetController extends Controller
             'plant'
         ])->get();
 
+        $machine = Machine::all();
+
         $plant = Plant::all();
         $department = Department::all();
         return view('asset.validation_asset', [
             'assets' => $assets,
             'departments' => $department,
-            'plants' => $plant
+            'plants' => $plant,
+            'machines' => $machine,
         ]);
+
+        
     }
 
     public function store(Request $request)
@@ -37,12 +42,12 @@ class Validation_assetController extends Controller
         ];
 
         $validated = $request->validate($rules);
-
+        
         Validation_asset::create([
             'plant_uuid' => $validated['asset_plant'],
             'dept_uuid' => $validated['asset_department'],
             'location' => $validated['asset_location'],
-            'machine_name' => $validated['asset_machine_name'],
+            'machine_uuid' => $validated['asset_machine_name'],
             'detail' => $validated['asset_detail']
         ]);
 

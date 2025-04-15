@@ -37,4 +37,9 @@ class External_calibration extends Model
     {
         return $this->belongsTo(Assets::class, 'asset_uuid', 'uuid');
     }
+
+    public function calibrations()
+    {
+        return $this->hasMany(external_calibration_file::class, 'calibration_uuid', 'uuid');
+    }
 }
