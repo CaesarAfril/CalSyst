@@ -3,13 +3,15 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="card">
         <h5 class="card-header d-flex justify-content-between align-items-center">
-            Data Aset Alat Ukur
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addassetModal">
-                +
-            </button>
-            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importCsvModal">
-                Import CSV
-            </button>
+            <span>Data Aset Alat Ukur</span>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importCsvModal">
+                    Import CSV
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addassetModal">
+                    +
+                </button>
+            </div>
         </h5>
         <div class="modal fade" id="importCsvModal" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
             <div class="modal-dialog">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Machine;
 use App\Models\Plant;
 use App\Models\Validation_asset;
 use Illuminate\Http\Request;
@@ -54,5 +55,39 @@ class Validation_assetController extends Controller
         $asset->delete();
 
         return redirect()->back();
+    }
+
+    public function importCsv(Request $request)
+    {
+
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt'
+        ]);
+
+        $file = fopen($request->file('csv_file'), 'r');
+        $header = fgetcsv($file);
+
+        $file = fopen($request->file('csv_file'), 'r');
+        $header = fgetcsv($file, 0, ';');
+
+        while ($row = fgetcsv($file, 0, ';')) {
+            $data = array_combine($header, $row);
+            $plant = Plant::where('plant', $data['plant'])->firstOrFail();
+            $department = Department::where('department', $data['departemen'])->firstOrFail();
+            dd($department);
+            $machine = Machine::where('machine_name', $data['mesin'])->firstOrFail();
+
+            Validation_asset::create([
+                'plant_uuid' => $plant->uuid,
+                'dept_uuid' => $department->uuid,
+                'location' => $data['lokasi'],
+                'machine_uuid' => $machine->uuid,
+                'detail' => $data['detail'],
+                'type' => $data['tipe'],
+            ]);
+        }
+
+        fclose($file);
+        return back()->with('success', 'Import CSV berhasil');
     }
 }
