@@ -67,7 +67,40 @@ Route::middleware(['auth'])->group(function () {
     Route::get('sertifikat/internal/scale', [CalController::class, 'scale'])->name('Internal_calibration.scale');
     Route::get('sertifikat/eksternal', [CalController::class, 'external'])->name('External_calibration');
     Route::post('sertifikat/eksternal/store', [CalController::class, 'externalStore'])->name('External_calibration.storeExternalCalibration');
-    Route::post('sertifikat/eksternal/penawaranFileStore/{uuid}', [CalController::class, 'penawaranFileStore'])->name('penawaranFileStore');
+
     Route::get('referensi', [RefController::class, 'index'])->name('references');
     Route::resource('references', RefController::class);
+
+    Route::post('sertifikat/eksternal/penawaranFileStore/{uuid}', [CalController::class, 'penawaranFileStore'])->name('penawaranFileStore');
+    Route::post('/sertifikat/eksternal/{uuid}/add-notes', [CalController::class, 'addNotes'])->name('external.save-notes');
+    Route::post('/sertifikat/eksternal/{uuid}/add-approve', [CalController::class, 'addApprove'])->name('external.addApprove');
+
+    Route::post('sertifikat/eksternal/ppbjFilestore/{uuid}', [CalController::class, 'ppbjFilestore'])->name('ppbjFileStore');
+    Route::post('/sertifikat/eksternal/{uuid}/add-notes-ppbj', [CalController::class, 'addNotesPpbj'])->name('external.save-notes-ppbj');
+    Route::post('/sertifikat/eksternal/{uuid}/add-approve-ppbj', [CalController::class, 'addApprovePpbj'])->name('external.addApprovePpbj');
+
+    Route::post('sertifikat/eksternal/negosiasiFilestore/{uuid}', [CalController::class, 'negosiasiFilestore'])->name('negosiasiFileStore');
+    Route::post('/sertifikat/eksternal/{uuid}/add-notes-negosiasi', [CalController::class, 'addNotesNegosiasi'])->name('external.save-notes-negosiasi');
+    Route::post('/sertifikat/eksternal/{uuid}/add-approve-negosiasi', [CalController::class, 'addApproveNegosiasi'])->name('external.addApproveNegosiasi');
+
+    Route::post('sertifikat/eksternal/spkFilestore/{uuid}', [CalController::class, 'spkFilestore'])->name('spkFileStore');
+    Route::post('/sertifikat/eksternal/{uuid}/add-notes-spk', [CalController::class, 'addNotesSpk'])->name('external.save-notes-spk');
+    Route::post('/sertifikat/eksternal/{uuid}/add-approve-spk', [CalController::class, 'addApproveSpk'])->name('external.addApproveSpk');
+
+    Route::post('sertifikat/eksternal/pelaksanaanFilestore/{uuid}', [CalController::class, 'pelaksanaanFilestore'])->name('pelaksanaanFileStore');
+    Route::post('/sertifikat/eksternal/{uuid}/add-notes-pelaksanaan', [CalController::class, 'addNotesPelaksanaan'])->name('external.save-notes-pelaksanaan');
+    Route::post('/sertifikat/eksternal/{uuid}/add-approve-pelaksanaan', [CalController::class, 'addApprovePelaksanaan'])->name('external.addApprovePelaksanaan');
+
+    Route::post('sertifikat/eksternal/baFilestore/{uuid}', [CalController::class, 'baFilestore'])->name('baFileStore');
+    Route::post('/sertifikat/eksternal/{uuid}/add-notes-ba', [CalController::class, 'addNotesBa'])->name('external.save-notes-ba');
+    Route::post('/sertifikat/eksternal/{uuid}/add-approve-ba', [CalController::class, 'addApproveBa'])->name('external.addApproveBa');
+
+    Route::post('sertifikat/eksternal/pembayaranFilestore/{uuid}', [CalController::class, 'pembayaranFilestore'])->name('pembayaranFileStore');
+    Route::post('/sertifikat/eksternal/{uuid}/add-notes-pembayaran', [CalController::class, 'addNotesPembayaran'])->name('external.save-notes-pembayaran');
+    Route::post('/sertifikat/eksternal/{uuid}/add-approve-pembayaran', [CalController::class, 'addApprovePembayaran'])->name('external.addApprovePembayaran');
+
+    Route::post('sertifikat/eksternal/sertifikatFilestore/{uuid}', [CalController::class, 'sertifikatFilestore'])->name('sertifikatFileStore');
+    Route::post('/sertifikat/eksternal/{uuid}/add-notes-sertifikat', [CalController::class, 'addNotesSertifikat'])->name('external.save-notes-sertifikat');
+    Route::post('/sertifikat/eksternal/{uuid}/add-approve-sertifikat', [CalController::class, 'addApproveSertifikat'])->name('external.addApproveSertifikat');
+
 });

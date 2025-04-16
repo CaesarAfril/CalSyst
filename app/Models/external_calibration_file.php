@@ -21,6 +21,7 @@ class external_calibration_file extends Model
         'filename',
         'approval',
         'upload_date',
+        'notes',
     ];
 
     protected static function boot()
@@ -34,5 +35,8 @@ class external_calibration_file extends Model
 
     public function calibration()
     {
-        return $this->belongsTo(External_calibration::class, 'calibration_uuid','uuid');}
+        return $this->belongsTo(External_calibration::class, 'calibration_uuid', 'uuid');
+    }
+
+   
 }

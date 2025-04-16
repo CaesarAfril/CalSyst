@@ -102,7 +102,7 @@ class CalController extends Controller
         $assets = Assets::whereHas('category', function ($query) {
             $query->where('calibration', 'external');
         })->get();
-        $report = External_calibration::with(['asset'])->get();
+        $report = External_calibration::with(['asset', 'latestCalibrationFile'])->get();
 
         return view('calibration.externalData', [
             'assets' => $assets,
@@ -120,17 +120,20 @@ class CalController extends Controller
         External_calibration::create([
             'date' => $request->date,
             'asset_uuid' => $request->asset,
-            'progress_status' => 'penawaran',
+            'progress_status' => 'sertifikat',
         ]);
 
         return redirect()->back();
     }
 
+
+
+    // PENAWARAN
     public function penawaranFileStore(Request $request, $uuid)
     {
 
         $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
-        
+
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -141,15 +144,365 @@ class CalController extends Controller
             $path = $file->storeAs($folder, $filename, 'public');
 
             external_calibration_file::create([
-                'calibration_uuid'=>$uuid,
-                'progress'=> $calibration->progress_status,
-                'upload_date'=> $request->date_file,
-                'path'=>$path,
-                'filename'=>$filename,
+                'calibration_uuid' => $uuid,
+                'progress' => $calibration->progress_status,
+                'upload_date' => $request->date_file,
+                'path' => $path,
+                'filename' => $filename,
             ]);
 
             return redirect()->back();
         }
+        return redirect()->back();
+    }
+
+    public function addNotes(Request $request, $uuid)
+    {
+        $validatedData = $request->validate([
+            'notes' => 'required'
+        ]);
+        $calibrations = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $calibrations->notes = $validatedData['notes'];
+        $calibrations->save();
+
+        return redirect()->back();
+    }
+
+    public function addApprove($uuid)
+    {
+        $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $approvalConfirm->approval = '1';
+        $approvalConfirm->save();
+
+        return redirect()->back();
+    }
+
+    // PPBJ
+    public function ppbjFileStore(Request $request, $uuid)
+    {
+        $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $filename = "{$originalFilename}.{$extension}";
+            $folder = "calibration/ppbj";
+            $path = $file->storeAs($folder, $filename, 'public');
+
+            external_calibration_file::create([
+                'calibration_uuid' => $uuid,
+                'progress' => 'ppbj',
+                'upload_date' => $request->date_file,
+                'path' => $path,
+                'filename' => $filename,
+            ]);
+
+            return redirect()->back();
+        }
+        return redirect()->back();
+    }
+
+    public function addNotesPpbj(Request $request, $uuid)
+    {
+        $validatedData = $request->validate([
+            'notes' => 'required'
+        ]);
+        $calibrations = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $calibrations->notes = $validatedData['notes'];
+        $calibrations->save();
+
+        return redirect()->back();
+    }
+
+    public function addApprovePpbj($uuid)
+    {
+        $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $approvalConfirm->approval = '1';
+        $approvalConfirm->save();
+
+        return redirect()->back();
+    }
+
+    // NEGOSIASI
+    public function negosiasiFileStore(Request $request, $uuid)
+    {
+        $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $filename = "{$originalFilename}.{$extension}";
+            $folder = "calibration/negosiasi";
+            $path = $file->storeAs($folder, $filename, 'public');
+
+            external_calibration_file::create([
+                'calibration_uuid' => $uuid,
+                'progress' => 'negosiasi',
+                'upload_date' => $request->date_file,
+                'path' => $path,
+                'filename' => $filename,
+            ]);
+
+            return redirect()->back();
+        }
+        return redirect()->back();
+    }
+
+    public function addNotesNegosiasi(Request $request, $uuid)
+    {
+        $validatedData = $request->validate([
+            'notes' => 'required'
+        ]);
+        $calibrations = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $calibrations->notes = $validatedData['notes'];
+        $calibrations->save();
+
+        return redirect()->back();
+    }
+
+    public function addApproveNegosiasi($uuid)
+    {
+        $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $approvalConfirm->approval = '1';
+        $approvalConfirm->save();
+
+        return redirect()->back();
+    }
+
+    // SPK
+    public function spkFileStore(Request $request, $uuid)
+    {
+        $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $filename = "{$originalFilename}.{$extension}";
+            $folder = "calibration/spk";
+            $path = $file->storeAs($folder, $filename, 'public');
+
+            external_calibration_file::create([
+                'calibration_uuid' => $uuid,
+                'progress' => 'spk',
+                'upload_date' => $request->date_file,
+                'path' => $path,
+                'filename' => $filename,
+            ]);
+
+            return redirect()->back();
+        }
+        return redirect()->back();
+    }
+
+    public function addNotesSpk(Request $request, $uuid)
+    {
+        $validatedData = $request->validate([
+            'notes' => 'required'
+        ]);
+        $calibrations = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $calibrations->notes = $validatedData['notes'];
+        $calibrations->save();
+
+        return redirect()->back();
+    }
+
+    public function addApproveSpk($uuid)
+    {
+        $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $approvalConfirm->approval = '1';
+        $approvalConfirm->save();
+
+        return redirect()->back();
+    }
+
+    // PELAKSANAAN
+    public function pelaksanaanFileStore(Request $request, $uuid)
+    {
+        $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $filename = "{$originalFilename}.{$extension}";
+            $folder = "calibration/pelaksanaan";
+            $path = $file->storeAs($folder, $filename, 'public');
+
+            external_calibration_file::create([
+                'calibration_uuid' => $uuid,
+                'progress' => 'pelaksanaan',
+                'upload_date' => $request->date_file,
+                'path' => $path,
+                'filename' => $filename,
+            ]);
+
+            return redirect()->back();
+        }
+        return redirect()->back();
+    }
+
+    public function addNotesPelaksanaan(Request $request, $uuid)
+    {
+        $validatedData = $request->validate([
+            'notes' => 'required'
+        ]);
+        $calibrations = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $calibrations->notes = $validatedData['notes'];
+        $calibrations->save();
+
+        return redirect()->back();
+    }
+
+    public function addApprovePelaksanaan($uuid)
+    {
+        $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $approvalConfirm->approval = '1';
+        $approvalConfirm->save();
+
+        return redirect()->back();
+    }
+
+    // BA
+    public function baFileStore(Request $request, $uuid)
+    {
+        $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $filename = "{$originalFilename}.{$extension}";
+            $folder = "calibration/ba";
+            $path = $file->storeAs($folder, $filename, 'public');
+
+            external_calibration_file::create([
+                'calibration_uuid' => $uuid,
+                'progress' => 'ba',
+                'upload_date' => $request->date_file,
+                'path' => $path,
+                'filename' => $filename,
+            ]);
+
+            return redirect()->back();
+        }
+        return redirect()->back();
+    }
+
+    public function addNotesBa(Request $request, $uuid)
+    {
+        $validatedData = $request->validate([
+            'notes' => 'required'
+        ]);
+        $calibrations = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $calibrations->notes = $validatedData['notes'];
+        $calibrations->save();
+
+        return redirect()->back();
+    }
+
+    public function addApproveBa($uuid)
+    {
+        $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $approvalConfirm->approval = '1';
+        $approvalConfirm->save();
+
+        return redirect()->back();
+    }
+
+    // PEMBAYARAN
+    public function pembayaranFileStore(Request $request, $uuid)
+    {
+        $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $filename = "{$originalFilename}.{$extension}";
+            $folder = "calibration/pembayaran";
+            $path = $file->storeAs($folder, $filename, 'public');
+
+            external_calibration_file::create([
+                'calibration_uuid' => $uuid,
+                'progress' => 'pembayaran',
+                'upload_date' => $request->date_file,
+                'path' => $path,
+                'filename' => $filename,
+            ]);
+
+            return redirect()->back();
+        }
+        return redirect()->back();
+    }
+
+    public function addNotesPembayaran(Request $request, $uuid)
+    {
+        $validatedData = $request->validate([
+            'notes' => 'required'
+        ]);
+        $calibrations = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $calibrations->notes = $validatedData['notes'];
+        $calibrations->save();
+
+        return redirect()->back();
+    }
+
+    public function addApprovePembayaran($uuid)
+    {
+        $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $approvalConfirm->approval = '1';
+        $approvalConfirm->save();
+
+        return redirect()->back();
+    }
+
+    // SERTIFIKAT
+    public function sertifikatFileStore(Request $request, $uuid)
+    {
+        $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $filename = "{$originalFilename}.{$extension}";
+            $folder = "calibration/sertifikat";
+            $path = $file->storeAs($folder, $filename, 'public');
+
+            external_calibration_file::create([
+                'calibration_uuid' => $uuid,
+                'progress' => 'sertifikat',
+                'upload_date' => $request->date_file,
+                'path' => $path,
+                'filename' => $filename,
+            ]);
+
+            return redirect()->back();
+        }
+        return redirect()->back();
+    }
+
+    public function addNotesSertifikat(Request $request, $uuid)
+    {
+        $validatedData = $request->validate([
+            'notes' => 'required'
+        ]);
+        $calibrations = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $calibrations->notes = $validatedData['notes'];
+        $calibrations->save();
+
+        return redirect()->back();
+    }
+
+    public function addApproveSertifikat($uuid)
+    {
+        $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
+        $approvalConfirm->approval = '1';
+        $approvalConfirm->save();
+
         return redirect()->back();
     }
 }

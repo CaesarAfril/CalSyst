@@ -126,7 +126,7 @@
         <tbody>
         @forelse ($assets as $index => $asset)
         <tr>
-            <td>{{ $index + 1 }}</td>
+            <td>{{ $loop->iteration }}</td>
             <td>{{ $asset->category->category }}</td>
             <td>{{ $asset->series_number }}</td>
             <td>{{ $asset->department->department }}</td>
