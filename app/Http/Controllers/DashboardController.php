@@ -22,41 +22,34 @@ class DashboardController extends Controller
             'latest_scale_calibration',
         ])->get();
 
+        // expiring asset
         // $expiringAssets = $assets->filter(function ($asset) {
-        //     $now = now();
+        //     $nowPlus3Months = now()->addMonths(3);
 
         //     $external = $asset->latest_external_calibration;
         //     $temp = $asset->latest_temp_calibration;
         //     $display = $asset->latest_display_calibration;
+        //     $scale = $asset->latest_scale_calibration;
 
-        //     $calibrationType = $asset->category->calibration;
+        //     $externalExpiring = $external && $external->expired_date &&
+        //         Carbon::parse($external->expired_date)->lessThanOrEqualTo($nowPlus3Months);
 
-        //     if ($calibrationType === 'External') {
-        //         $limitDate = $now->copy()->addMonths(6);
-        //         return $external && $external->expired_date &&
-        //             Carbon::parse($external->expired_date)->lessThanOrEqualTo($limitDate);
-        //     }
+        //     $tempExpiring = $temp && $temp->expired_date &&
+        //         Carbon::parse($temp->expired_date)->lessThanOrEqualTo($nowPlus3Months);
 
-        //     if ($calibrationType === 'Internal') {
-        //         $limitDate = $now->copy()->addMonths(2);
+        //     $displayExpiring = $display && $display->expired_date &&
+        //         Carbon::parse($display->expired_date)->lessThanOrEqualTo($nowPlus3Months);
 
-        //         $isThermometer = $asset->category->category === 'Thermometer';
-        //         $isDisplay = $asset->category->category === 'Display Suhu';
+        //     $scaleExpiring = $scale && $scale->expired_date &&
+        //         Carbon::parse($scale->expired_date)->lessThanOrEqualTo($nowPlus3Months);
 
-        //         $tempExpiring = $isThermometer && $temp && $temp->expired_date &&
-        //             Carbon::parse($temp->expired_date)->lessThanOrEqualTo($limitDate);
-
-        //         $displayExpiring = $isDisplay && $display && $display->expired_date &&
-        //             Carbon::parse($display->expired_date)->lessThanOrEqualTo($limitDate);
-
-        //         return $tempExpiring || $displayExpiring;
-        //     }
-
-        //     return false; // Tidak termasuk internal atau external
+        //     return $externalExpiring || $tempExpiring || $displayExpiring || $scaleExpiring;
         // });
 
+        // expiring asset 3-6
         $expiringAssets = $assets->filter(function ($asset) {
-            $nowPlus6Months = now()->addMonths(6);
+            $now = now();
+            $nowPlus3Months = $now->copy()->addMonths(3);
 
             $external = $asset->latest_external_calibration;
             $temp = $asset->latest_temp_calibration;
@@ -64,22 +57,23 @@ class DashboardController extends Controller
             $scale = $asset->latest_scale_calibration;
 
             $externalExpiring = $external && $external->expired_date &&
-                Carbon::parse($external->expired_date)->lessThanOrEqualTo($nowPlus6Months);
+                Carbon::parse($external->expired_date)->between($now, $nowPlus3Months);
 
             $tempExpiring = $temp && $temp->expired_date &&
-                Carbon::parse($temp->expired_date)->lessThanOrEqualTo($nowPlus6Months);
+                Carbon::parse($temp->expired_date)->between($now, $nowPlus3Months);
 
             $displayExpiring = $display && $display->expired_date &&
-                Carbon::parse($display->expired_date)->lessThanOrEqualTo($nowPlus6Months);
+                Carbon::parse($display->expired_date)->between($now, $nowPlus3Months);
 
             $scaleExpiring = $scale && $scale->expired_date &&
-                Carbon::parse($scale->expired_date)->lessThanOrEqualTo($nowPlus6Months);
+                Carbon::parse($scale->expired_date)->between($now, $nowPlus3Months);
 
             return $externalExpiring || $tempExpiring || $displayExpiring || $scaleExpiring;
         });
 
         $year = now()->year;
 
+        // total alat sudah kalibrasi
         $calibratedAssets = $assets->filter(function ($asset) use ($year) {
             $external = optional($asset->latest_external_calibration)->certificate_date;
             $temp = optional($asset->latest_temp_calibration)->date;
@@ -93,9 +87,9 @@ class DashboardController extends Controller
                 ($scale && Carbon::parse($scale)->year == $year)
             );
         });
-
         $calibratedCount = $calibratedAssets->count();
 
+        // total alat telat kalibrasi
         $expiredCount = $assets->filter(function ($asset) {
             $today = now();
 
