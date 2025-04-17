@@ -45,6 +45,6 @@ class External_calibration extends Model
 
     public function latestCalibrationFile()
     {
-        return $this->hasOne(external_calibration_file::class, 'calibration_uuid', 'uuid')->latestOfMany();
+        return $this->hasOne(external_calibration_file::class, 'calibration_uuid', 'uuid')->latest('id');
     }
 }

@@ -176,9 +176,16 @@ class CalController extends Controller
         $approvalConfirm->approval = '1';
         $approvalConfirm->save();
 
+
+
         $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
         $calibration->progress_status = 'PPBJ';
         $calibration->save();
+
+        external_calibration_file::create([
+            'calibration_uuid' => $uuid,
+            'progress' => $calibration->progress_status,
+        ]);
         return redirect()->back();
     }
 
