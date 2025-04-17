@@ -69,24 +69,26 @@
                     <tr>
                         <th>{{$loop->iteration}}</th>
                         <td>{{$report->date}}</td>
-                        <td>{{$report->progress_status }}
+                        <td>{{$report->progress_status ?? '-' }}
                         </td>
                         <td>
-                            @if($report->latestCalibrationFile)
-                            @if($report->latestCalibrationFile->progress == 'Persiapan Pengajuan')
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
+                            @if($report->progress_status == 'Persiapan Pengajuan')
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaranpengajuan-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            @endif
+                            @if($report->latestCalibrationFile)
+                            
 
                             {{-- PENAWARAN --}}
-                            @elseif($report->latestCalibrationFile->progress == 'Penawaran')
+                            @if($report->latestCalibrationFile->progress == 'Penawaran')
                             @if($report->latestCalibrationFile->filename == NULL)
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
                                 Upload File
                             </button>
-                            @elseif($report->latestCalibrationFile->filename != NULL )
+                            @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                a
+                                {{ $report->latestCalibrationFile->filename }}
                             </a>
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
                                 Approve
@@ -96,9 +98,9 @@
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
 
-                            {{-- @elseif($report->latestCalibrationFile->filename != NULL) --}}
+                            @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                               b
+                                {{ $report->latestCalibrationFile->filename }}
                             </a>
                             @endif
 
@@ -267,7 +269,7 @@
                         </td>
 
                         {{-- modal upload persiapan pengajuan --}}
-                        {{-- <div class="modal fade" id="importpenawaranpengajuan-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="importpenawaranpengajuan-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <form action="{{ route('penawaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
                                     @csrf
@@ -287,7 +289,7 @@
                                     </div>
                                 </form>
                             </div>
-                        </div> --}}
+                        </div>
 
                         {{-- penawaran --}}
                         <td>

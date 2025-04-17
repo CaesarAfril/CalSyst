@@ -133,10 +133,10 @@ class CalController extends Controller
     // PENAWARAN
     public function penawaranFileStore(Request $request, $uuid)
     {
-
         $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
-
-
+        $update = $calibration->update([
+            'progress_status' => 'Penawaran'
+        ]);
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -176,6 +176,9 @@ class CalController extends Controller
         $approvalConfirm->approval = '1';
         $approvalConfirm->save();
 
+        $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
+        $calibration->progress_status = 'PPBJ';
+        $calibration->save();
         return redirect()->back();
     }
 
@@ -221,8 +224,12 @@ class CalController extends Controller
     {
         $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
         $approvalConfirm->approval = '1';
+        $approvalConfirm->progress = 'Negosiasi';
         $approvalConfirm->save();
 
+        $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
+        $calibration->progress_status = 'Negosiasi';
+        $calibration->save();
         return redirect()->back();
     }
 
@@ -268,8 +275,12 @@ class CalController extends Controller
     {
         $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
         $approvalConfirm->approval = '1';
+        $approvalConfirm->progress = 'SPK';
         $approvalConfirm->save();
 
+        $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
+        $calibration->progress_status = 'SPK';
+        $calibration->save();
         return redirect()->back();
     }
 
@@ -315,8 +326,12 @@ class CalController extends Controller
     {
         $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
         $approvalConfirm->approval = '1';
+        $approvalConfirm->progress = 'Pelaksanaan';
         $approvalConfirm->save();
 
+        $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
+        $calibration->progress_status = 'Pelaksanaan';
+        $calibration->save();
         return redirect()->back();
     }
 
@@ -362,8 +377,12 @@ class CalController extends Controller
     {
         $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
         $approvalConfirm->approval = '1';
+        $approvalConfirm->progress = 'BA';
         $approvalConfirm->save();
 
+        $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
+        $calibration->progress_status = 'BA';
+        $calibration->save();
         return redirect()->back();
     }
 
@@ -409,8 +428,12 @@ class CalController extends Controller
     {
         $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
         $approvalConfirm->approval = '1';
+        $approvalConfirm->progress = 'Pembayaran';
         $approvalConfirm->save();
 
+        $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
+        $calibration->progress_status = 'Pembayaran';
+        $calibration->save();
         return redirect()->back();
     }
 
@@ -456,8 +479,12 @@ class CalController extends Controller
     {
         $approvalConfirm = external_calibration_file::where('uuid', $uuid)->FirstOrFail();
         $approvalConfirm->approval = '1';
+        $approvalConfirm->progress = 'Sertifikat';
         $approvalConfirm->save();
 
+        $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
+        $calibration->progress_status = 'Sertifikat';
+        $calibration->save();
         return redirect()->back();
     }
 
