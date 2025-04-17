@@ -77,50 +77,222 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
                                 Upload File
                             </button>
+
+                            {{-- PENAWARAN --}}
                             @elseif($report->latestCalibrationFile->progress == 'Penawaran')
                             @if($report->latestCalibrationFile->filename == NULL)
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
+                                Upload File
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL )
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                a
+                            </a>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
+                                Approve
+                            </button>
+
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModal">
+                                <i class="fas fa-exclamation-circle"></i> Add Notes
+                            </button>
+
+                            {{-- @elseif($report->latestCalibrationFile->filename != NULL) --}}
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                               b
+                            </a>
+                            @endif
+
+                            {{-- PPBJ --}}
+                            @elseif($report->latestCalibrationFile->progress == 'PPBJ')
+                            @if($report->latestCalibrationFile->filename == NULL)
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importPpbj-{{ $report->uuid }}">
                                 Upload File
                             </button>
                             @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
                             </a>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePpbj-{{ $report->latestCalibrationFile->uuid }}">
                                 Approve
+                            </button>
+
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPpbj">
+                                <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
                             </a>
                             @endif
-                            @elseif($report->latestCalibrationFile->progress == 'PPBJ')
-                            @elseif($report->latestCalibrationFile->progress == 'Negosiasi')
-                            @elseif($report->latestCalibrationFile->progress == 'SPK')
-                            @elseif($report->latestCalibrationFile->progress == 'Pelaksanaan')
-                            @elseif($report->latestCalibrationFile->progress == 'BA')
-                            @elseif($report->latestCalibrationFile->progress == 'Pembayaran')
-                            @elseif($report->latestCalibrationFile->progress == 'Sertifikat')
-                            @endif
-                            @endif
-                        </td>
-                        {{-- penawaran --}}
-                        @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'penawaran')
-                        <td>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
-                                Check File
-                            </button>
 
-                            @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'penawaran')
+                            {{-- NEGOSIASI --}}
+                            @elseif($report->latestCalibrationFile->progress == 'Negosiasi')
+                            @if($report->latestCalibrationFile->filename == NULL)
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importNegosiasi-{{ $report->uuid }}">
+                                Upload File
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
                             </a>
-                                      
-
-                            {{-- approve --}}
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveNegosiasi-{{ $report->latestCalibrationFile->uuid }}">
                                 Approve
                             </button>
+
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalNegosiasi">
+                                <i class="fas fa-exclamation-circle"></i> Add Notes
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            @endif
+
+                            {{-- SPK --}}
+                            @elseif($report->latestCalibrationFile->progress == 'SPK')
+                            @if($report->latestCalibrationFile->filename == NULL)
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importSpk-{{ $report->uuid }}">
+                                Upload File
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveSpk-{{ $report->latestCalibrationFile->uuid }}">
+                                Approve
+                            </button>
+
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalSpk">
+                                <i class="fas fa-exclamation-circle"></i> Add Notes
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            @endif
+
+                            {{-- PELAKSANAAN --}}
+                            @elseif($report->latestCalibrationFile->progress == 'Pelaksanaan')
+                            @if($report->latestCalibrationFile->filename == NULL)
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importPelaksanaan-{{ $report->uuid }}">
+                                Upload File
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePelaksanaan-{{ $report->latestCalibrationFile->uuid }}">
+                                Approve
+                            </button>
+
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPelaksanaan">
+                                <i class="fas fa-exclamation-circle"></i> Add Notes
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            @endif
+
+                            {{-- BA --}}
+                            @elseif($report->latestCalibrationFile->progress == 'BA')
+                            @if($report->latestCalibrationFile->filename == NULL)
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importBa-{{ $report->uuid }}">
+                                Upload File
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveBa-{{ $report->latestCalibrationFile->uuid }}">
+                                Approve
+                            </button>
+
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalBa">
+                                <i class="fas fa-exclamation-circle"></i> Add Notes
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            @endif
+
+                            {{-- PEMBAYARAN --}}
+                            @elseif($report->latestCalibrationFile->progress == 'Pembayaran')
+                            @if($report->latestCalibrationFile->filename == NULL)
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importPembayaran-{{ $report->uuid }}">
+                                Upload File
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePembayaran-{{ $report->latestCalibrationFile->uuid }}">
+                                Approve
+                            </button>
+
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPembayaran">
+                                <i class="fas fa-exclamation-circle"></i> Add Notes
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            @endif
+
+                            {{-- SERTIFIKAT --}}
+                            @elseif($report->latestCalibrationFile->progress == 'Sertifikat')
+                            @if($report->latestCalibrationFile->filename == NULL)
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importSertifikat-{{ $report->uuid }}">
+                                Upload File
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveSertifikat-{{ $report->latestCalibrationFile->uuid }}">
+                                Approve
+                            </button>
+
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalSertifikat">
+                                <i class="fas fa-exclamation-circle"></i> Add Notes
+                            </button>
+                            @elseif($report->latestCalibrationFile->filename != NULL)
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
+                            @endif
+                            @endif
+                            @endif
+                        </td>
+
+                        {{-- modal upload persiapan pengajuan --}}
+                        {{-- <div class="modal fade" id="importpenawaranpengajuan-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form action="{{ route('penawaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="label" class="form-label">Tanggal</label>
+                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                            <label for="label" class="form-label">Upload FIle</label>
+                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                            <button class="btn btn-success" type="submit">Upload</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div> --}}
+
+                        {{-- penawaran --}}
+                        <td>
+                            {{-- approve --}}
+                            @if($report->latestCalibrationFile)
                             <div class="modal fade" id="approvePenawaran-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -144,10 +316,6 @@
                                 </div>
                                           
                             </div>
-
-                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModal">
-                                <i class="fas fa-exclamation-circle"></i> Add Notes
-                            </button>
                             <div class="modal fade" id="addNotesModal" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -174,7 +342,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                         </td>
                         {{-- modal upload penawaran --}}
                         <div class="modal fade" id="importpenawaran-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
@@ -198,25 +365,11 @@
                                 </form>
                             </div>
                         </div>
-                        @endif
 
                         {{-- ppbj --}}
-                        @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'ppbj')
                         <td>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importPpbj-{{ $report->uuid }}">
-                                Check File
-                            </button>
-
-                            @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'ppbj')
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                                      
-
                             {{-- approve --}}
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePpbj-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
+                            @elseif($report->latestCalibrationFile)
                             <div class="modal fade" id="approvePpbj-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -242,9 +395,6 @@
                             </div>
 
                             {{-- notes --}}
-                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPpbj">
-                                <i class="fas fa-exclamation-circle"></i> Add Notes
-                            </button>
                             <div class="modal fade" id="addNotesModalPpbj" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -271,7 +421,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                         </td>
                         {{-- modal upload ppbj --}}
                         <div class="modal fade" id="importPpbj-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelPpbj" aria-hidden="true">
@@ -295,25 +444,11 @@
                                 </form>
                             </div>
                         </div>
-                        @endif
-
+                        
                         {{-- negosiasi --}}
-                        @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'negosiasi')
                         <td>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importNegosiasi-{{ $report->uuid }}">
-                                Check File
-                            </button>
-
-                            @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'negosiasi')
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                                      
-
                             {{-- approve --}}
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveNegosiasi-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
+                            @elseif($report->latestCalibrationFile)
                             <div class="modal fade" id="approveNegosiasi-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -339,9 +474,6 @@
                             </div>
 
                             {{-- notes --}}
-                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalNegosiasi">
-                                <i class="fas fa-exclamation-circle"></i> Add Notes
-                            </button>
                             <div class="modal fade" id="addNotesModalNegosiasi" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -368,7 +500,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                         </td>
                         {{-- modal upload negosiasi --}}
                         <div class="modal fade" id="importNegosiasi-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelNegosiasi" aria-hidden="true">
@@ -392,25 +523,11 @@
                                 </form>
                             </div>
                         </div>
-                        @endif
-
+                       
                         {{-- spk --}}
-                        @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'spk')
                         <td>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importSpk-{{ $report->uuid }}">
-                                Check File
-                            </button>
-
-                            @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'spk')
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                                      
-
                             {{-- approve --}}
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveSpk-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
+                            @elseif($report->latestCalibrationFile)
                             <div class="modal fade" id="approveSpk-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -436,9 +553,6 @@
                             </div>
 
                             {{-- notes --}}
-                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalSpk">
-                                <i class="fas fa-exclamation-circle"></i> Add Notes
-                            </button>
                             <div class="modal fade" id="addNotesModalSpk" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -465,7 +579,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                         </td>
                         {{-- modal upload spk --}}
                         <div class="modal fade" id="importSpk-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelSpk" aria-hidden="true">
@@ -489,25 +602,11 @@
                                 </form>
                             </div>
                         </div>
-                        @endif
 
                         {{-- pelaksanaan --}}
-                        @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'pelaksanaan')
                         <td>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importPelaksanaan-{{ $report->uuid }}">
-                                Check File
-                            </button>
-
-                            @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'pelaksanaan')
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                                      
-
                             {{-- approve --}}
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePelaksanaan-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
+                            @elseif($report->latestCalibrationFile)
                             <div class="modal fade" id="approvePelaksanaan-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -533,9 +632,6 @@
                             </div>
 
                             {{-- notes --}}
-                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPelaksanaan">
-                                <i class="fas fa-exclamation-circle"></i> Add Notes
-                            </button>
                             <div class="modal fade" id="addNotesModalSpk" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -562,7 +658,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                         </td>
                         {{-- modal upload pelaksanaan --}}
                         <div class="modal fade" id="importPelaksanaan-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelPelaksanaan" aria-hidden="true">
@@ -586,25 +681,11 @@
                                 </form>
                             </div>
                         </div>
-                        @endif
 
                         {{-- BA --}}
-                        @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'ba')
                         <td>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importBa-{{ $report->uuid }}">
-                                Check File
-                            </button>
-
-                            @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'ba')
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                                      
-
                             {{-- approve --}}
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveBa-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
+                            @elseif($report->latestCalibrationFile)
                             <div class="modal fade" id="approveBa-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -630,9 +711,6 @@
                             </div>
 
                             {{-- notes --}}
-                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalBa">
-                                <i class="fas fa-exclamation-circle"></i> Add Notes
-                            </button>
                             <div class="modal fade" id="addNotesModalBa" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -659,7 +737,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                         </td>
                         {{-- modal upload BA --}}
                         <div class="modal fade" id="importBa-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelBa" aria-hidden="true">
@@ -683,25 +760,11 @@
                                 </form>
                             </div>
                         </div>
-                        @endif
 
                         {{-- PEMBAYARAN --}}
-                        @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'pembayaran')
                         <td>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importPembayaran-{{ $report->uuid }}">
-                                Check File
-                            </button>
-
-                            @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'pembayaran')
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                                      
-
                             {{-- approve --}}
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePembayaran-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
+                            @elseif($report->latestCalibrationFile)
                             <div class="modal fade" id="approvePembayaran-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -727,9 +790,6 @@
                             </div>
 
                             {{-- notes --}}
-                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPembayaran">
-                                <i class="fas fa-exclamation-circle"></i> Add Notes
-                            </button>
                             <div class="modal fade" id="addNotesModalPembayaran" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -756,7 +816,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
+                                
                         </td>
                         {{-- modal upload pembayaran --}}
                         <div class="modal fade" id="importPembayaran-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelPembayaran" aria-hidden="true">
@@ -780,25 +840,11 @@
                                 </form>
                             </div>
                         </div>
-                        @endif
-
-                        {{-- SERTIFIKAT --}}
-                        @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'sertifikat')
+                       
+                        {{-- SERTIFIKAT --}}     
                         <td>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importSertifikat-{{ $report->uuid }}">
-                                Check File
-                            </button>
-
-                            @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'sertifikat')
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                                      
-
                             {{-- approve --}}
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveSertifikat-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
+                            @elseif($report->latestCalibrationFile)
                             <div class="modal fade" id="approveSertifikat-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -824,9 +870,6 @@
                             </div>
 
                             {{-- notes --}}
-                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalSertifikat">
-                                <i class="fas fa-exclamation-circle"></i> Add Notes
-                            </button>
                             <div class="modal fade" id="addNotesModalSertifikat" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -853,7 +896,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                         </td>
                         {{-- modal upload pembayaran --}}
                         <div class="modal fade" id="importSertifikat-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelSertifikat" aria-hidden="true">
@@ -878,7 +920,6 @@
                             </div>
                         </div>
                         @endif
-
         </div>
         </tr>
         @endforeach
