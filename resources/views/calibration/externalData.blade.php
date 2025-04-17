@@ -77,116 +77,12 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
                                 Upload File
                             </button>
-                            @elseif($report->latestCalibrationFile->progress) == 'Penawaran'
+                            @elseif($report->latestCalibrationFile->progress == 'Penawaran')
+                            @if($report->latestCalibrationFile->filename == NULL)
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
                                 Upload File
                             </button>
-                            @if($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
-                            @elseif($report->latestCalibrationFile->filename != NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            @elseif($report->latestCalibrationFile->progress == 'PPBJ')
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
-                                Upload File
-                            </button>
-                            @if($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
-                            @elseif($report->latestCalibrationFile->filename != NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            @elseif($report->latestCalibrationFile->progress == 'Negosiasi')
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
-                                Upload File
-                            </button>
-                            @if($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
-                            @elseif($report->latestCalibrationFile->filename != NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            @elseif($report->latestCalibrationFile->progress == 'SPK')
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
-                                Upload File
-                            </button>
-                            @if($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
-                            @elseif($report->latestCalibrationFile->filename != NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            @elseif($report->latestCalibrationFile->progress == 'Pelaksanaan')
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
-                                Upload File
-                            </button>
-                            @if($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
-                            @elseif($report->latestCalibrationFile->filename != NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            @elseif($report->latestCalibrationFile->progress == 'BA')
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
-                                Upload File
-                            </button>
-                            @if($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
-                            @elseif($report->latestCalibrationFile->filename != NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            @elseif($report->latestCalibrationFile->progress == 'Pembayaran')
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
-                                Upload File
-                            </button>
-                            @if($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
-                                Approve
-                            </button>
-                            @elseif($report->latestCalibrationFile->filename != NULL)
-                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                {{ $report->latestCalibrationFile->filename }}
-                            </a>
-                            @elseif($report->latestCalibrationFile->progress == 'Sertifikat')
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
-                                Upload File
-                            </button>
-                            @if($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
+                            @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
                             </a>
@@ -198,6 +94,15 @@
                                 {{ $report->latestCalibrationFile->filename }}
                             </a>
                             @endif
+                            @elseif($report->latestCalibrationFile->progress == 'PPBJ')
+                            @elseif($report->latestCalibrationFile->progress == 'Negosiasi')
+                            @elseif($report->latestCalibrationFile->progress == 'SPK')
+                            @elseif($report->latestCalibrationFile->progress == 'Pelaksanaan')
+                            @elseif($report->latestCalibrationFile->progress == 'BA')
+                            @elseif($report->latestCalibrationFile->progress == 'Pembayaran')
+                            @elseif($report->latestCalibrationFile->progress == 'Sertifikat')
+                            @endif
+                            @endif
                         </td>
                         {{-- penawaran --}}
                         @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'penawaran')
@@ -207,11 +112,15 @@
                             </button>
 
                             @if($report->latestCalibrationFile && $report->latestCalibrationFile->progress == 'penawaran')
-
+                            <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                {{ $report->latestCalibrationFile->filename }}
+                            </a>
                                       
 
                             {{-- approve --}}
-
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $report->latestCalibrationFile->uuid }}">
+                                Approve
+                            </button>
                             <div class="modal fade" id="approvePenawaran-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
