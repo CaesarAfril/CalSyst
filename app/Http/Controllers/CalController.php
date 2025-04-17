@@ -102,7 +102,7 @@ class CalController extends Controller
     public function external()
     {
         $assets = Assets::whereHas('category', function ($query) {
-            $query->where('calibration', 'external');
+            $query->where('calibration', 'External');
         })->get();
         $report = External_calibration::with(['asset', 'latestCalibrationFile'])->get();
 
@@ -122,7 +122,7 @@ class CalController extends Controller
         External_calibration::create([
             'date' => $request->date,
             'asset_uuid' => $request->asset,
-            'progress_status' => 'sertifikat',
+            'progress_status' => 'Persiapan Pengajuan',
         ]);
 
         return redirect()->back();
