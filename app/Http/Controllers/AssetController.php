@@ -120,6 +120,17 @@ class AssetController extends Controller
             $department = Department::where('department', $data['departemen'])->firstOrFail();
             $category = Category::where('category', $data['kategori'])->where('calibration', $data['kalibrasi'])->firstOrFail();
 
+            $rawDate = $data['expired_date'];
+            try {
+                $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+            } catch (\Exception $e) {
+                try {
+                    $formattedDate = \Carbon\Carbon::createFromFormat('d-m-Y', $rawDate)->format('Y-m-d');
+                } catch (\Exception $e) {
+                    $formattedDate = null;
+                }
+            }
+
             Assets::create([
                 'plant_uuid' => $plant->uuid,
                 'dept_uuid' => $department->uuid,
@@ -134,7 +145,7 @@ class AssetController extends Controller
                 'correction' => floatval($data['koreksi']),
                 'uncertainty' => floatval($data['ketidakpastian']),
                 'standard' => floatval($data['standar']),
-                'expired_date' => $data['expired_date'],
+                'expired_date' => $formattedDate,
             ]);
         }
 

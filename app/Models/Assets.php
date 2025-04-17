@@ -77,7 +77,7 @@ class Assets extends Model
 
     public function latest_external_calibration()
     {
-        return $this->hasOne(External_calibration::class, 'asset_uuid')->latestOfMany('date');
+        return $this->hasOne(External_calibration::class, 'asset_uuid', 'uuid')->latestOfMany('date');
     }
 
     public function latest_temp_calibration()

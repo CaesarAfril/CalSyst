@@ -93,16 +93,22 @@
         
         </thead>
         <tbody>
+          @forelse ($assets as $index => $asset)
             <tr>
-                <th>1</th>
-                <td>Timbangan</td>
-                <td>C117648682</td>
-                <td>Sausage</td>
-                <td>23</td>
-                <td>Kalibrasi</td>
-                <td>Progress</td>
+                <th>{{ $loop->iteration }}</th>
+                <td>{{ $asset->category->category }}</td>
+                <td>{{ $asset->series_number }}</td>
+                <td>{{ $asset->department->department }}</td>
+                <td>{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-y') }}</td>
+                <td>{{ $asset->category->calibration }}</td>
+                <td> {{ $asset->latest_external_calibration->progress_status ?? '-' }}</td>
                 <td>Status</td>
             </tr>
+            @empty
+            <tr>
+                <td colspan="10" class="text-center">Tidak ada data.</td>
+            </tr>
+          @endforelse
         </tbody>
     </table>
 </div>
