@@ -4,9 +4,12 @@
     <div class="card">
         <h5 class="card-header d-flex justify-content-between align-items-center">
             Data Sertifikat Kalibrasi Eksternal
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addExternalModal">
-                +
-            </button>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addExternalModal">
+                    +
+                </button>
+            </div>
         </h5>
 
         <!-- Add External Modal -->
@@ -66,7 +69,7 @@
                     <tr>
                         <th>{{$loop->iteration}}</th>
                         <td>{{$report->date}}</td>
-                        <td>{{$report->latestCalibrationFile->progress }}
+                        <td>{{$report->progress_status }}
                         </td>
                         
                         {{-- penawaran --}}

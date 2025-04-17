@@ -27,7 +27,8 @@ class Assets extends Model
         'resolution',
         'correction',
         'uncertainty',
-        'standard'
+        'standard',
+        'expired_date'
     ];
 
     protected static function boot()

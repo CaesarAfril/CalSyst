@@ -102,5 +102,4 @@ Route::middleware(['auth'])->group(function () {
     Route::post('sertifikat/eksternal/sertifikatFilestore/{uuid}', [CalController::class, 'sertifikatFilestore'])->name('sertifikatFileStore');
     Route::post('/sertifikat/eksternal/{uuid}/add-notes-sertifikat', [CalController::class, 'addNotesSertifikat'])->name('external.save-notes-sertifikat');
     Route::post('/sertifikat/eksternal/{uuid}/add-approve-sertifikat', [CalController::class, 'addApproveSertifikat'])->name('external.addApproveSertifikat');
-
 });
