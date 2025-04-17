@@ -133,7 +133,8 @@ class AssetController extends Controller
                 'resolution' => $data['resolusi'],
                 'correction' => floatval($data['koreksi']),
                 'uncertainty' => floatval($data['ketidakpastian']),
-                'standard' => floatval($data['standar'])
+                'standard' => floatval($data['standar']),
+                'expired_date' => $data['expired_date'],
             ]);
         }
 
