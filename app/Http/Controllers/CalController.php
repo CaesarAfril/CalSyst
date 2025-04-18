@@ -176,14 +176,12 @@ class CalController extends Controller
         $approvalConfirm->approval = '1';
         $approvalConfirm->save();
 
-
-
         $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
         $calibration->progress_status = 'PPBJ';
         $calibration->save();
 
         external_calibration_file::create([
-            'calibration_uuid' => $uuid,
+            'calibration_uuid' => $calibration->uuid,
             'progress' => $calibration->progress_status,
         ]);
         return redirect()->back();
@@ -193,6 +191,9 @@ class CalController extends Controller
     public function ppbjFileStore(Request $request, $uuid)
     {
         $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+        $update = $calibration->update([
+            'progress_status' => 'PPBJ'
+        ]);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -204,7 +205,7 @@ class CalController extends Controller
 
             external_calibration_file::create([
                 'calibration_uuid' => $uuid,
-                'progress' => 'ppbj',
+                'progress' => $calibration->progress_status,
                 'upload_date' => $request->date_file,
                 'path' => $path,
                 'filename' => $filename,
@@ -237,6 +238,11 @@ class CalController extends Controller
         $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
         $calibration->progress_status = 'Negosiasi';
         $calibration->save();
+
+        external_calibration_file::create([
+            'calibration_uuid' => $calibration->uuid,
+            'progress' => $calibration->progress_status,
+        ]);
         return redirect()->back();
     }
 
@@ -244,6 +250,10 @@ class CalController extends Controller
     public function negosiasiFileStore(Request $request, $uuid)
     {
         $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+
+        $update = $calibration->update([
+            'progress_status' => 'Negosiasi'
+        ]);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -255,7 +265,7 @@ class CalController extends Controller
 
             external_calibration_file::create([
                 'calibration_uuid' => $uuid,
-                'progress' => 'negosiasi',
+                'progress' => $calibration->progress_status,
                 'upload_date' => $request->date_file,
                 'path' => $path,
                 'filename' => $filename,
@@ -288,6 +298,11 @@ class CalController extends Controller
         $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
         $calibration->progress_status = 'SPK';
         $calibration->save();
+
+        external_calibration_file::create([
+            'calibration_uuid' => $calibration->uuid,
+            'progress' => $calibration->progress_status,
+        ]);
         return redirect()->back();
     }
 
@@ -295,6 +310,9 @@ class CalController extends Controller
     public function spkFileStore(Request $request, $uuid)
     {
         $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+        $update = $calibration->update([
+            'progress_status' => 'SPK'
+        ]);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -306,7 +324,7 @@ class CalController extends Controller
 
             external_calibration_file::create([
                 'calibration_uuid' => $uuid,
-                'progress' => 'spk',
+                'progress' => $calibration->progress_status,
                 'upload_date' => $request->date_file,
                 'path' => $path,
                 'filename' => $filename,
@@ -339,6 +357,11 @@ class CalController extends Controller
         $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
         $calibration->progress_status = 'Pelaksanaan';
         $calibration->save();
+
+        external_calibration_file::create([
+            'calibration_uuid' => $calibration->uuid,
+            'progress' => $calibration->progress_status,
+        ]);
         return redirect()->back();
     }
 
@@ -346,6 +369,9 @@ class CalController extends Controller
     public function pelaksanaanFileStore(Request $request, $uuid)
     {
         $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+        $update = $calibration->update([
+            'progress_status' => 'Pelaksanaan'
+        ]);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -357,7 +383,7 @@ class CalController extends Controller
 
             external_calibration_file::create([
                 'calibration_uuid' => $uuid,
-                'progress' => 'pelaksanaan',
+                'progress' => $calibration->progress_status,
                 'upload_date' => $request->date_file,
                 'path' => $path,
                 'filename' => $filename,
@@ -390,6 +416,11 @@ class CalController extends Controller
         $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
         $calibration->progress_status = 'BA';
         $calibration->save();
+
+        external_calibration_file::create([
+            'calibration_uuid' => $calibration->uuid,
+            'progress' => $calibration->progress_status,
+        ]);
         return redirect()->back();
     }
 
@@ -397,6 +428,9 @@ class CalController extends Controller
     public function baFileStore(Request $request, $uuid)
     {
         $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+        $update = $calibration->update([
+            'progress_status' => 'BA'
+        ]);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -408,7 +442,7 @@ class CalController extends Controller
 
             external_calibration_file::create([
                 'calibration_uuid' => $uuid,
-                'progress' => 'ba',
+                'progress' => $calibration->progress_status,
                 'upload_date' => $request->date_file,
                 'path' => $path,
                 'filename' => $filename,
@@ -441,6 +475,11 @@ class CalController extends Controller
         $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
         $calibration->progress_status = 'Pembayaran';
         $calibration->save();
+
+        external_calibration_file::create([
+            'calibration_uuid' => $calibration->uuid,
+            'progress' => $calibration->progress_status,
+        ]);
         return redirect()->back();
     }
 
@@ -448,6 +487,9 @@ class CalController extends Controller
     public function pembayaranFileStore(Request $request, $uuid)
     {
         $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+        $update = $calibration->update([
+            'progress_status' => 'Pembayaran'
+        ]);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -459,7 +501,7 @@ class CalController extends Controller
 
             external_calibration_file::create([
                 'calibration_uuid' => $uuid,
-                'progress' => 'pembayaran',
+                'progress' => $calibration->progress_status,
                 'upload_date' => $request->date_file,
                 'path' => $path,
                 'filename' => $filename,
@@ -492,6 +534,11 @@ class CalController extends Controller
         $calibration = External_calibration::where('uuid', $approvalConfirm->calibration_uuid)->firstOrFail();
         $calibration->progress_status = 'Sertifikat';
         $calibration->save();
+
+        external_calibration_file::create([
+            'calibration_uuid' => $calibration->uuid,
+            'progress' => $calibration->progress_status,
+        ]);
         return redirect()->back();
     }
 
@@ -499,6 +546,9 @@ class CalController extends Controller
     public function sertifikatFileStore(Request $request, $uuid)
     {
         $calibration = External_calibration::where('uuid', $uuid)->firstOrFail();
+        $update = $calibration->update([
+            'progress_status' => 'Sertifikat'
+        ]);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -510,7 +560,7 @@ class CalController extends Controller
 
             external_calibration_file::create([
                 'calibration_uuid' => $uuid,
-                'progress' => 'sertifikat',
+                'progress' => $calibration->progress_status,
                 'upload_date' => $request->date_file,
                 'path' => $path,
                 'filename' => $filename,
