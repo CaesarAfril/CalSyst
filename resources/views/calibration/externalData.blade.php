@@ -59,8 +59,11 @@
                 <thead>
                     <tr class="text-nowrap">
                         <th>No.</th>
-                        <th>Tanggal</th>
-                        <th>Status</th>
+                        <th>Nama Alat</th>
+                        <th>Serial Number</th>
+                        <th>Departemen</th>
+                        <th>ED Sertifikat</th>
+                        <th>Progress</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -68,7 +71,11 @@
                     @foreach($reports as $report)
                     <tr>
                         <th>{{$loop->iteration}}</th>
-                        <td>{{$report->date}}</td>
+                        {{-- <td>{{$report->date}}</td> --}}
+                        <td>{{ $report->asset->category->category }}</td>
+                        <td>{{ $report->asset->series_number }}</td>
+                        <td>{{ $report->asset->department->department }}</td>
+                        <td>{{ \Carbon\Carbon::parse($report->asset->expired_date)->format('d-m-y') }}</td>
                         <td>{{$report->progress_status ?? '-' }}
                         </td>
                         <td>
@@ -110,6 +117,29 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importPpbj-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            {{-- modal upload ppbj --}}
+                            <div class="modal fade" id="importPpbj-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelPpbj" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('ppbjFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="label" class="form-label">Tanggal</label>
+                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                                <label for="label" class="form-label">Upload FIle</label>
+                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                                <button class="btn btn-success" type="submit">Upload</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
                             @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -121,6 +151,63 @@
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPpbj">
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
+
+                            {{-- ppbj --}}
+                            <td>
+                                {{-- approve --}}
+                                
+                                <div class="modal fade" id="approvePpbj-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah anda yakin untuk approve step ini ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <form action="{{ route('external.addApprovePpbj', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                              
+                                </div>
+
+                                {{-- notes --}}
+                                <div class="modal fade" id="addNotesModalPpbj" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('external.save-notes-ppbj', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label for="notes">Catatan:</label>
+                                                            <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <button type="submit" class="btn btn-warning">Simpan</button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </td>
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -133,6 +220,28 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importNegosiasi-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            {{-- modal upload negosiasi --}}
+                            <div class="modal fade" id="importNegosiasi-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelNegosiasi" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('negosiasiFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="label" class="form-label">Tanggal</label>
+                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                                <label for="label" class="form-label">Upload FIle</label>
+                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                                <button class="btn btn-success" type="submit">Upload</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -144,6 +253,61 @@
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalNegosiasi">
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
+                            {{-- negosiasi --}}
+                            <td>
+                                {{-- approve --}}
+                                <div class="modal fade" id="approveNegosiasi-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah anda yakin untuk approve step ini ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <form action="{{ route('external.addApproveNegosiasi', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                              
+                                </div>
+
+                                {{-- notes --}}
+                                <div class="modal fade" id="addNotesModalNegosiasi" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('external.save-notes-negosiasi', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label for="notes">Catatan:</label>
+                                                            <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <button type="submit" class="btn btn-warning">Simpan</button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </td>
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -156,6 +320,28 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importSpk-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            {{-- modal upload spk --}}
+                            <div class="modal fade" id="importSpk-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelSpk" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('spkFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="label" class="form-label">Tanggal</label>
+                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                                <label for="label" class="form-label">Upload FIle</label>
+                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                                <button class="btn btn-success" type="submit">Upload</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -167,6 +353,61 @@
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalSpk">
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
+                            {{-- spk --}}
+                            <td>
+                                {{-- approve --}}
+                                <div class="modal fade" id="approveSpk-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah anda yakin untuk approve step ini ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <form action="{{ route('external.addApproveSpk', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                              
+                                </div>
+
+                                {{-- notes --}}
+                                <div class="modal fade" id="addNotesModalSpk" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('external.save-notes-spk', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label for="notes">Catatan:</label>
+                                                            <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <button type="submit" class="btn btn-warning">Simpan</button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </td>
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -179,6 +420,28 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importPelaksanaan-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            {{-- modal upload pelaksanaan --}}
+                            <div class="modal fade" id="importPelaksanaan-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelPelaksanaan" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('pelaksanaanFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="label" class="form-label">Tanggal</label>
+                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                                <label for="label" class="form-label">Upload FIle</label>
+                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                                <button class="btn btn-success" type="submit">Upload</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -190,6 +453,62 @@
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPelaksanaan">
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
+
+                            {{-- pelaksanaan --}}
+                            <td>
+                                {{-- approve --}}
+                                <div class="modal fade" id="approvePelaksanaan-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah anda yakin untuk approve step ini ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <form action="{{ route('external.addApprovePelaksanaan', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                              
+                                </div>
+
+                                {{-- notes --}}
+                                <div class="modal fade" id="addNotesModalSpk" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('external.save-notes-pelaksanaan', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label for="notes">Catatan:</label>
+                                                            <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <button type="submit" class="btn btn-warning">Simpan</button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </td>
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -202,6 +521,28 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importBa-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            {{-- modal upload BA --}}
+                            <div class="modal fade" id="importBa-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelBa" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('baFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="label" class="form-label">Tanggal</label>
+                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                                <label for="label" class="form-label">Upload FIle</label>
+                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                                <button class="btn btn-success" type="submit">Upload</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -213,6 +554,61 @@
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalBa">
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
+                            {{-- BA --}}
+                            <td>
+                                {{-- approve --}}
+                                <div class="modal fade" id="approveBa-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah anda yakin untuk approve step ini ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <form action="{{ route('external.addApproveBa', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                              
+                                </div>
+
+                                {{-- notes --}}
+                                <div class="modal fade" id="addNotesModalBa" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('external.save-notes-ba', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label for="notes">Catatan:</label>
+                                                            <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <button type="submit" class="btn btn-warning">Simpan</button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </td>
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -225,6 +621,28 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importPembayaran-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            {{-- modal upload pembayaran --}}
+                            <div class="modal fade" id="importPembayaran-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelPembayaran" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('pembayaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="label" class="form-label">Tanggal</label>
+                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                                <label for="label" class="form-label">Upload FIle</label>
+                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                                <button class="btn btn-success" type="submit">Upload</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -236,6 +654,62 @@
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPembayaran">
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
+                            {{-- PEMBAYARAN --}}
+                            <td>
+                                {{-- approve --}}
+                                <div class="modal fade" id="approvePembayaran-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah anda yakin untuk approve step ini ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <form action="{{ route('external.addApprovePembayaran', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                              
+                                </div>
+
+                                {{-- notes --}}
+                                <div class="modal fade" id="addNotesModalPembayaran" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('external.save-notes-pembayaran', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label for="notes">Catatan:</label>
+                                                            <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <button type="submit" class="btn btn-warning">Simpan</button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                            </td>
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -248,6 +722,28 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importSertifikat-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            {{-- modal upload pembayaran --}}
+                            <div class="modal fade" id="importSertifikat-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelSertifikat" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('sertifikatFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="label" class="form-label">Tanggal</label>
+                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                                <label for="label" class="form-label">Upload FIle</label>
+                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                                <button class="btn btn-success" type="submit">Upload</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -259,6 +755,61 @@
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalSertifikat">
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
+                            {{-- SERTIFIKAT --}}     
+                            <td>
+                                {{-- approve --}}
+                                <div class="modal fade" id="approveSertifikat-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah anda yakin untuk approve step ini ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <form action="{{ route('external.addApproveSertifikat', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                              
+                                </div>
+
+                                {{-- notes --}}
+                                <div class="modal fade" id="addNotesModalSertifikat" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('external.save-notes-sertifikat', $report->latestCalibrationFile->uuid) }}" method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label for="notes">Catatan:</label>
+                                                            <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <button type="submit" class="btn btn-warning">Simpan</button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </td>
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -349,560 +900,6 @@
                         <div class="modal fade" id="importpenawaran-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <form action="{{ route('penawaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="label" class="form-label">Tanggal</label>
-                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
-                                            <label for="label" class="form-label">Upload FIle</label>
-                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
-
-                                            <button class="btn btn-success" type="submit">Upload</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        {{-- ppbj --}}
-                        <td>
-                            {{-- approve --}}
-                            @elseif($report->latestCalibrationFile)
-                            <div class="modal fade" id="approvePpbj-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Apakah anda yakin untuk approve step ini ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <form action="{{ route('external.addApprovePpbj', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success">Confirm Approve</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                          
-                            </div>
-
-                            {{-- notes --}}
-                            <div class="modal fade" id="addNotesModalPpbj" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('external.save-notes-ppbj', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="form-group">
-                                                        <label for="notes">Catatan:</label>
-                                                        <textarea name="notes" id="notes" class="form-control" required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <button type="submit" class="btn btn-warning">Simpan</button>
-                                                </div>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                        </td>
-                        {{-- modal upload ppbj --}}
-                        <div class="modal fade" id="importPpbj-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelPpbj" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ route('ppbjFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="label" class="form-label">Tanggal</label>
-                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
-                                            <label for="label" class="form-label">Upload FIle</label>
-                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
-
-                                            <button class="btn btn-success" type="submit">Upload</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        
-                        {{-- negosiasi --}}
-                        <td>
-                            {{-- approve --}}
-                            @elseif($report->latestCalibrationFile)
-                            <div class="modal fade" id="approveNegosiasi-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Apakah anda yakin untuk approve step ini ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <form action="{{ route('external.addApproveNegosiasi', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success">Confirm Approve</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                          
-                            </div>
-
-                            {{-- notes --}}
-                            <div class="modal fade" id="addNotesModalNegosiasi" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('external.save-notes-negosiasi', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="form-group">
-                                                        <label for="notes">Catatan:</label>
-                                                        <textarea name="notes" id="notes" class="form-control" required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <button type="submit" class="btn btn-warning">Simpan</button>
-                                                </div>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                        </td>
-                        {{-- modal upload negosiasi --}}
-                        <div class="modal fade" id="importNegosiasi-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelNegosiasi" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ route('negosiasiFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="label" class="form-label">Tanggal</label>
-                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
-                                            <label for="label" class="form-label">Upload FIle</label>
-                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
-
-                                            <button class="btn btn-success" type="submit">Upload</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                       
-                        {{-- spk --}}
-                        <td>
-                            {{-- approve --}}
-                            @elseif($report->latestCalibrationFile)
-                            <div class="modal fade" id="approveSpk-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Apakah anda yakin untuk approve step ini ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <form action="{{ route('external.addApproveSpk', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success">Confirm Approve</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                          
-                            </div>
-
-                            {{-- notes --}}
-                            <div class="modal fade" id="addNotesModalSpk" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('external.save-notes-spk', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="form-group">
-                                                        <label for="notes">Catatan:</label>
-                                                        <textarea name="notes" id="notes" class="form-control" required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <button type="submit" class="btn btn-warning">Simpan</button>
-                                                </div>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                        </td>
-                        {{-- modal upload spk --}}
-                        <div class="modal fade" id="importSpk-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelSpk" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ route('spkFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="label" class="form-label">Tanggal</label>
-                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
-                                            <label for="label" class="form-label">Upload FIle</label>
-                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
-
-                                            <button class="btn btn-success" type="submit">Upload</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        {{-- pelaksanaan --}}
-                        <td>
-                            {{-- approve --}}
-                            @elseif($report->latestCalibrationFile)
-                            <div class="modal fade" id="approvePelaksanaan-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Apakah anda yakin untuk approve step ini ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <form action="{{ route('external.addApprovePelaksanaan', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success">Confirm Approve</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                          
-                            </div>
-
-                            {{-- notes --}}
-                            <div class="modal fade" id="addNotesModalSpk" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('external.save-notes-pelaksanaan', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="form-group">
-                                                        <label for="notes">Catatan:</label>
-                                                        <textarea name="notes" id="notes" class="form-control" required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <button type="submit" class="btn btn-warning">Simpan</button>
-                                                </div>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                        </td>
-                        {{-- modal upload pelaksanaan --}}
-                        <div class="modal fade" id="importPelaksanaan-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelPelaksanaan" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ route('pelaksanaanFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="label" class="form-label">Tanggal</label>
-                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
-                                            <label for="label" class="form-label">Upload FIle</label>
-                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
-
-                                            <button class="btn btn-success" type="submit">Upload</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        {{-- BA --}}
-                        <td>
-                            {{-- approve --}}
-                            @elseif($report->latestCalibrationFile)
-                            <div class="modal fade" id="approveBa-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Apakah anda yakin untuk approve step ini ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <form action="{{ route('external.addApproveBa', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success">Confirm Approve</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                          
-                            </div>
-
-                            {{-- notes --}}
-                            <div class="modal fade" id="addNotesModalBa" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('external.save-notes-ba', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="form-group">
-                                                        <label for="notes">Catatan:</label>
-                                                        <textarea name="notes" id="notes" class="form-control" required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <button type="submit" class="btn btn-warning">Simpan</button>
-                                                </div>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                        </td>
-                        {{-- modal upload BA --}}
-                        <div class="modal fade" id="importBa-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelBa" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ route('baFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="label" class="form-label">Tanggal</label>
-                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
-                                            <label for="label" class="form-label">Upload FIle</label>
-                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
-
-                                            <button class="btn btn-success" type="submit">Upload</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        {{-- PEMBAYARAN --}}
-                        <td>
-                            {{-- approve --}}
-                            @elseif($report->latestCalibrationFile)
-                            <div class="modal fade" id="approvePembayaran-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Apakah anda yakin untuk approve step ini ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <form action="{{ route('external.addApprovePembayaran', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success">Confirm Approve</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                          
-                            </div>
-
-                            {{-- notes --}}
-                            <div class="modal fade" id="addNotesModalPembayaran" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('external.save-notes-pembayaran', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="form-group">
-                                                        <label for="notes">Catatan:</label>
-                                                        <textarea name="notes" id="notes" class="form-control" required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <button type="submit" class="btn btn-warning">Simpan</button>
-                                                </div>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                        </td>
-                        {{-- modal upload pembayaran --}}
-                        <div class="modal fade" id="importPembayaran-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelPembayaran" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ route('pembayaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="label" class="form-label">Tanggal</label>
-                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
-                                            <label for="label" class="form-label">Upload FIle</label>
-                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
-
-                                            <button class="btn btn-success" type="submit">Upload</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                       
-                        {{-- SERTIFIKAT --}}     
-                        <td>
-                            {{-- approve --}}
-                            @elseif($report->latestCalibrationFile)
-                            <div class="modal fade" id="approveSertifikat-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Apakah anda yakin untuk approve step ini ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <form action="{{ route('external.addApproveSertifikat', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success">Confirm Approve</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                          
-                            </div>
-
-                            {{-- notes --}}
-                            <div class="modal fade" id="addNotesModalSertifikat" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('external.save-notes-sertifikat', $report->latestCalibrationFile->uuid) }}" method="POST">
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="form-group">
-                                                        <label for="notes">Catatan:</label>
-                                                        <textarea name="notes" id="notes" class="form-control" required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <button type="submit" class="btn btn-warning">Simpan</button>
-                                                </div>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                        </td>
-                        {{-- modal upload pembayaran --}}
-                        <div class="modal fade" id="importSertifikat-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabelSertifikat" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ route('sertifikatFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <div class="modal-content">
                                         <div class="modal-header">

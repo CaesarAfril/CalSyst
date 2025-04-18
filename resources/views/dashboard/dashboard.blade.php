@@ -60,7 +60,7 @@
       <div class="col-md-3">
         <div class="stat-card">
           <div class="stat-title">TOTAL ALAT ON TRACK KALIBRASI</div>
-          <div class="stat-value">data</div>
+          <div class="stat-value">{{ $onTrackCount }}</div>
           <div class="stat-footer"></div>
         </div>
       </div>
@@ -93,16 +93,16 @@
         
         </thead>
         <tbody>
-          @forelse ($assets as $index => $asset)
+          @forelse ($onTrackAsset as $index => $onTrackAssets)
             <tr>
                 <th>{{ $loop->iteration }}</th>
-                <td>{{ $asset->category->category }}</td>
-                <td>{{ $asset->series_number }}</td>
-                <td>{{ $asset->department->department }}</td>
-                <td>{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-y') }}</td>
-                <td>{{ $asset->category->calibration }}</td>
-                <td> {{ $asset->latest_external_calibration->progress_status ?? '-' }}</td>
-                <td>Status</td>
+                <td>{{ $onTrackAssets->asset->category->category }}</td>
+                <td>{{ $onTrackAssets->asset->series_number }}</td>
+                <td>{{ $onTrackAssets->asset->department->department }}</td>
+                <td>{{ \Carbon\Carbon::parse($onTrackAssets->asset->expired_date)->format('d-m-y') }}</td>
+                <td>{{ $onTrackAssets->asset->category->calibration }}</td>
+                <td> {{ $onTrackAssets->asset->latest_external_calibration->progress_status ?? '-' }}</td>
+                <td>{!! $onTrackAssets->status_message !!}</td>
             </tr>
             @empty
             <tr>
