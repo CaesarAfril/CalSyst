@@ -296,16 +296,7 @@
                                     @endif
                                     </td>
                         <td>
-                            @if($asset->category->calibration === 'External' && $asset->latest_external_calibration)
-                            ({{$asset->latest_external_calibration->created_at->format('d-M-Y')}})
-
-                            @elseif($asset->category->calibration === 'Internal' && $asset->category->uuid === '3cfc952c-ca24-4f7e-8532-5073b3d66d34' && $asset->latest_temp_calibration)
-                            {{$asset->latest_temp_calibration->created_at->format('d-M-Y')}}
-                            @elseif($asset->category->uuid === '575261f1-039d-4fc3-bcfa-bff34999dcdc' && $asset->latest_display_calibration)
-                            {{ $asset->latest_display_calibration->created_at->format('d-M-Y') }}
-                            @else
-                            N/A
-                            @endif
+                            {{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-Y') }}
                         </td>
                         <td>
                             <!-- Edit Button -->

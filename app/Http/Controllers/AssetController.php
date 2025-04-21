@@ -121,16 +121,22 @@ class AssetController extends Controller
             $category = Category::where('category', $data['kategori'])->where('calibration', $data['kalibrasi'])->firstOrFail();
 
             $rawDate = $data['expired_date'];
+            $formattedDate = null;
+
             try {
-                $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
-            } catch (\Exception $e) {
+                $formattedDate = \Carbon\Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
+            } catch (\Exception $e1) {
                 try {
-                    $formattedDate = \Carbon\Carbon::createFromFormat('d-m-Y', $rawDate)->format('Y-m-d');
-                } catch (\Exception $e) {
+                    $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+                } catch (\Exception $e2) {
                     $formattedDate = null;
                 }
             }
 
+            $resolution = str_replace(',', '.', $data['resolusi']);
+            $correction = str_replace(',', '.', $data['koreksi']);
+            $uncertainty = str_replace(',', '.', $data['ketidakpastian']);
+            $standard = str_replace(',', '.', $data['standar']);
             Assets::create([
                 'plant_uuid' => $plant->uuid,
                 'dept_uuid' => $department->uuid,
@@ -141,12 +147,16 @@ class AssetController extends Controller
                 'series_number' => $data['nomor_seri'],
                 'capacity' => $data['kapasitas'],
                 'range' => $data['range'],
-                'resolution' => $data['resolusi'],
-                'correction' => floatval($data['koreksi']),
-                'uncertainty' => floatval($data['ketidakpastian']),
-                'standard' => floatval($data['standar']),
+                'resolution' => floatval($resolution),
+                'correction' => floatval($correction),
+                'uncertainty' => floatval($uncertainty),
+                'standard' => floatval($standard),
                 'expired_date' => $formattedDate,
             ]);
+            DB::listen(function ($query) {
+                dump($query->sql);
+                dump($query->bindings);
+            });
         }
 
         fclose($file);
