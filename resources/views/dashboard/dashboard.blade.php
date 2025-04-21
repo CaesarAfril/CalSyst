@@ -159,7 +159,7 @@
                     @endphp
                     <span style="color: red;">{{ $date->format('d-m-y') }}</span>
 
-                    @elseif($asset->category->category === 'Scale' && $asset->latest_scale_calibration)
+                    @elseif($asset->category->category === 'Timbangan' && $asset->latest_scale_calibration)
                     @php
                         $date = \Carbon\Carbon::parse($asset->latest_scale_calibration->expired_date);
                         $daysLeft = now()->diffInDays($date, false);

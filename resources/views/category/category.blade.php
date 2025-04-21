@@ -58,6 +58,7 @@
                     <tr class="text-nowrap">
                         <th>No.</th>
                         <th>category</th>
+                        <th>Kalibrasi</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -66,6 +67,7 @@
                     <tr>
                         <th>{{$loop->iteration}}</th>
                         <td>{{$category->category}}</td>
+                        <td>{{$category->calibration}}</td>
                         <td>
                             <!-- Edit Button -->
                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editcategoryModal{{$category->id}}">
