@@ -250,6 +250,18 @@
                             </li>
                         </ul>
                     </li>
+
+                    <!--***********************************
+                    ---------- Menu Total Alat Telat KAlibrasi --------
+                    ************************************-->
+                    <li class="menu-item">
+                        <a href="{{route('telat-calibration')}}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
+                            <div data-i18n="Basic" class="custom-sidebar-text">Total Alat Telat Kalibrasi</div>
+                        </a>
+                    </li>
+
+
                     <!--***********************************
                     ---------- Menu Reference --------
                     ************************************-->
