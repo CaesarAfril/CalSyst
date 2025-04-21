@@ -1,5 +1,4 @@
 @extends('templates.templates')
-
 @section('style')
 <style>
     .container {
@@ -40,83 +39,18 @@
 </style>
 @endsection
 @section('content')
-{{-- total section --}}
-<div class="container width-full">
-    <div class="row g-3">
-      <div class="col-md-3">
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="col-md-3">
         <div class="stat-card">
-          <div class="stat-title">TOTAL MESIN DAN PERALATAN</div>
-          <div class="stat-value">{{ $totalAssets }}</div>
+          <div class="stat-title">TOTAL ALAT TELAT KALIBRASI</div>
+          <div class="stat-value">{{ $expiredCount }}</div>
           <div class="stat-footer"></div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="stat-card">
-          <div class="stat-title">TOTAL ALAT SUDAH KALIBRASI</div>
-          <div class="stat-value">{{ $calibratedCount }}</div>
-          <div class="stat-footer"></div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="stat-card">
-          <div class="stat-title">TOTAL ALAT ON TRACK KALIBRASI</div>
-          <div class="stat-value">{{ $onTrackCount }}</div>
-          <div class="stat-footer"></div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="stat-card">
-          <div class="stat-title">TOTAL ALAT MENDEKATI ED KALIBRASI</div>
-          <div class="stat-value">{{ $approachingEDCount }}</div>
-          <div class="stat-footer"></div>
-        </div>
-      </div>
     </div>
-</div>
 
-{{-- data alat kalibrasi --}}
+    {{-- data alat mendekati ED --}}
 <div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow">
-    <h2 class="mt-5 mb-5 text-center">DATA ALAT PROSES KALIBRASI</h2>
-    <hr class="mb-5" text-center>
-    <table class="table table-bordered text-center align-middle mx-2">
-        <thead>
-            <tr class="text-nowrap">
-                <th>No.</th>
-                <th>Nama Alat</th>
-                <th>Serial Number</th>
-                <th>Departemen</th>
-                <th>ED Sertifikat</th>
-                <th>Kalibrasi</th>
-                <th>Progress</th>
-                <th>Status</th>
-            </tr>
-        
-        </thead>
-        <tbody>
-          @forelse ($onTrackAsset as $index => $onTrackAssets)
-            <tr>
-                <th>{{ $loop->iteration }}</th>
-                <td>{{ $onTrackAssets->asset->category->category }}</td>
-                <td>{{ $onTrackAssets->asset->series_number }}</td>
-                <td>{{ $onTrackAssets->asset->department->department }}</td>
-                <td>{{ \Carbon\Carbon::parse($onTrackAssets->asset->expired_date)->format('d-m-y') }}</td>
-                <td>{{ $onTrackAssets->asset->category->calibration }}</td>
-                <td> {{ $onTrackAssets->asset->latest_external_calibration->progress_status ?? '-' }}</td>
-                <td>{!! $onTrackAssets->status_message !!}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="10" class="text-center">Tidak ada data.</td>
-            </tr>
-          @endforelse
-        </tbody>
-    </table>
-</div>
-
-{{-- data alat mendekati ED --}}
-<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow">
-    <h2 class="mt-5 mb-5 text-center">DATA ALAT MENDEKATI ED KALIBRASI</h2>
+    <h2 class="mt-5 mb-5 text-center">DATA ALAT TELAT KALIBRASI</h2>
     <hr class="mb-5" text-center>
     <table class="table table-bordered text-center align-middle mx-2">
         <thead>
@@ -131,12 +65,12 @@
         
         </thead>
         <tbody>
-        @forelse ($assets as $index => $asset)
+        @forelse ($expiredAssets as $index => $asset)
         <tr>
             <td>{{ $loop->iteration }}</td>
-            <td>{{ $asset->category->category }}</td>
-            <td>{{ $asset->series_number }}</td>
-            <td>{{ $asset->department->department }}</td>
+            <td>{{ $asset->category->category }}</td> <!-- Nama alat -->
+            <td>{{ $asset->series_number }}</td> <!-- Serial Number -->
+            <td>{{ $asset->department->department }}</td> <!-- Departemen -->
             <td>
                 @if($asset->category->calibration === 'External' && $asset->latest_external_calibration)
                     @php
@@ -170,7 +104,7 @@
                     <span style="color: gray;">N/A</span>
                 @endif
             </td>
-            <td>{{ $asset->category->calibration }}</td>
+            <td>{{ $asset->category->calibration }}</td> <!-- Kalibrasi -->
         </tr>
 @empty
 <tr>
@@ -183,7 +117,10 @@
     </table>
 
 </div>
+</div>
 @endsection
 @section('script')
+<script>
+    // Optional: You can implement JavaScript to handle dynamic form population, if necessary.
+</script>
 @endsection
-

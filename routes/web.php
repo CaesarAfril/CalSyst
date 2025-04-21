@@ -10,6 +10,7 @@ use App\Http\Controllers\MachineController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\RefController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TelatController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Validation_assetController;
 use App\Http\Controllers\WeightController;
@@ -102,4 +103,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('sertifikat/eksternal/sertifikatFilestore/{uuid}', [CalController::class, 'sertifikatFilestore'])->name('sertifikatFileStore');
     Route::post('/sertifikat/eksternal/{uuid}/add-notes-sertifikat', [CalController::class, 'addNotesSertifikat'])->name('external.save-notes-sertifikat');
     Route::post('/sertifikat/eksternal/{uuid}/add-approve-sertifikat', [CalController::class, 'addApproveSertifikat'])->name('external.addApproveSertifikat');
+
+    Route::get('telat-kalibrasi', [TelatController::class, 'index'])->name('telat-calibration');
 });
