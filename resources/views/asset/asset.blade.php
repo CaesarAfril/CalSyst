@@ -219,7 +219,7 @@
                 <tbody>
                     @foreach($assets as $asset)
                     <tr>
-                        <th>{{$loop->iteration}}</th>
+                        <th>{{ ($assets->currentPage() - 1) * $assets->perPage() + $loop->iteration }}</th>
                         <td>{{$asset->department->department}}</td>
                         <td>{{$asset->plant->plant}}</td>
                         <td>{{$asset->location}}</td>
@@ -521,6 +521,9 @@
                         </td>
                     </tr>
                     @endforeach
+                    <div class="d-flex justify-content-center mt-3">
+                        {{ $assets->links('pagination::bootstrap-5') }}
+                    </div>
                 </tbody>
             </table>
         </div>

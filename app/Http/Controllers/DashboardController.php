@@ -157,6 +157,7 @@ class DashboardController extends Controller
         });
         $approachingEDCount = $expiringAssets->count();
 
+
         // total alat sudah kalibrasi
         $year = now()->year;
         $calibratedAssets = $assets->filter(function ($asset) use ($year) {
@@ -174,6 +175,12 @@ class DashboardController extends Controller
         });
         $calibratedCount = $calibratedAssets->count();
 
+        // reminder
+        $expiringAssets->map(function ($asset) {
+            $asset->reminder_status = $this->getReminderStatus($asset->expired_date);
+            return $asset;
+        });
+
         return view('dashboard.dashboard', [
             'onTrackAsset' => $onTrackAsset,
             'assets' => $expiringAssets,
@@ -182,5 +189,23 @@ class DashboardController extends Controller
             'onTrackCount' => $onTrackCount,
             'approachingEDCount' => $approachingEDCount,
         ]);
+    }
+
+    private function getReminderStatus($expiredDate, $reminderDays = 30)
+    {
+        if (!$expiredDate)
+            return '-';
+
+        $now = \Carbon\Carbon::today();
+        $expired = \Carbon\Carbon::parse($expiredDate);
+        $daysRemaining = $now->diffInDays($expired, false);
+
+        if ($daysRemaining < 0) {
+            return "❌ Expired " . abs($daysRemaining) . " hari lalu";
+        } elseif ($daysRemaining <= $reminderDays) {
+            return "⚠️ Expired dalam {$daysRemaining} hari";
+        } else {
+            return "✅ Aman ({$daysRemaining} hari lagi)";
+        }
     }
 }

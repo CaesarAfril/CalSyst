@@ -90,6 +90,7 @@
                 <th>Kalibrasi</th>
                 <th>Progress</th>
                 <th>Status</th>
+                <th>Reminder</th>
             </tr>
         
         </thead>
@@ -104,6 +105,7 @@
                 <td>{{ $onTrackAssets->asset->category->calibration }}</td>
                 <td> {{ $onTrackAssets->asset->latest_external_calibration->progress_status ?? '-' }}</td>
                 <td>{!! $onTrackAssets->status_message !!}</td>
+                <td>{!! $asset->reminder_status !!}</td>
             </tr>
             @empty
             <tr>
