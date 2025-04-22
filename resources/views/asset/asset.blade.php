@@ -521,11 +521,11 @@
                         </td>
                     </tr>
                     @endforeach
-                    <div class="d-flex justify-content-center mt-3">
-                        {{ $assets->links('pagination::bootstrap-5') }}
-                    </div>
                 </tbody>
             </table>
+            <div class="d-flex justify-content-end mt-3">
+                {{ $assets->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>
