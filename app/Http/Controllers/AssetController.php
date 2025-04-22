@@ -103,63 +103,63 @@ class AssetController extends Controller
 
     public function importCsv(Request $request)
     {
-        $request->validate([
-            'csv_file' => 'required|mimes:csv,txt'
-        ]);
+        try {
+            $request->validate([
+                'csv_file' => 'required|mimes:csv,txt'
+            ]);
 
-        $file = fopen($request->file('csv_file'), 'r');
-        $header = fgetcsv($file);
+            $file = fopen($request->file('csv_file'), 'r');
+            $header = fgetcsv($file, 0, ';');
 
-        $file = fopen($request->file('csv_file'), 'r');
-        $header = fgetcsv($file, 0, ';');
+            while ($row = fgetcsv($file, 0, ';')) {
+                $data = array_combine($header, $row);
 
-        while ($row = fgetcsv($file, 0, ';')) {
-            $data = array_combine($header, $row);
+                $plant = Plant::where('plant', $data['plant'])->firstOrFail();
+                $department = Department::where('department', $data['departemen'])->firstOrFail();
+                $category = Category::where('category', $data['kategori'])->where('calibration', $data['kalibrasi'])->firstOrFail();
 
-            $plant = Plant::where('plant', $data['plant'])->firstOrFail();
-            $department = Department::where('department', $data['departemen'])->firstOrFail();
-            $category = Category::where('category', $data['kategori'])->where('calibration', $data['kalibrasi'])->firstOrFail();
+                $rawDate = $data['expired_date'];
+                $formattedDate = $rawDate ?? null;
 
-            $rawDate = $data['expired_date'];
-            $formattedDate = null;
+                $capacity = mb_convert_encoding($data['kapasitas'], 'UTF-8', 'Windows-1252');
 
-            try {
-                $formattedDate = \Carbon\Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
-            } catch (\Exception $e1) {
-                try {
-                    $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
-                } catch (\Exception $e2) {
-                    $formattedDate = null;
-                }
+                // try {
+                //     $formattedDate = \Carbon\Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
+                // } catch (\Exception $e1) {
+                //     try {
+                //         $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+                //     } catch (\Exception $e2) {
+                //         $formattedDate = null;
+                //     }
+                // }
+
+                $resolution = str_replace(',', '.', $data['resolusi']);
+                $correction = str_replace(',', '.', $data['koreksi']);
+                $uncertainty = str_replace(',', '.', $data['ketidakpastian']);
+                $standard = str_replace(',', '.', $data['standar']);
+                // dd($formattedDate);
+                Assets::create([
+                    'plant_uuid' => $plant->uuid,
+                    'dept_uuid' => $department->uuid,
+                    'location' => $data['lokasi'],
+                    'category_uuid' => $category->uuid,
+                    'merk' => $data['merk'],
+                    'type' => $data['tipe'],
+                    'series_number' => $data['nomor_seri'],
+                    'capacity' => $capacity,
+                    'range' => $data['range'],
+                    'resolution' => floatval($resolution),
+                    'correction' => floatval($correction),
+                    'uncertainty' => floatval($uncertainty),
+                    'standard' => floatval($standard),
+                    'expired_date' => $formattedDate,
+                ]);
             }
 
-            $resolution = str_replace(',', '.', $data['resolusi']);
-            $correction = str_replace(',', '.', $data['koreksi']);
-            $uncertainty = str_replace(',', '.', $data['ketidakpastian']);
-            $standard = str_replace(',', '.', $data['standar']);
-            Assets::create([
-                'plant_uuid' => $plant->uuid,
-                'dept_uuid' => $department->uuid,
-                'location' => $data['lokasi'],
-                'category_uuid' => $category->uuid,
-                'merk' => $data['merk'],
-                'type' => $data['tipe'],
-                'series_number' => $data['nomor_seri'],
-                'capacity' => $data['kapasitas'],
-                'range' => $data['range'],
-                'resolution' => floatval($resolution),
-                'correction' => floatval($correction),
-                'uncertainty' => floatval($uncertainty),
-                'standard' => floatval($standard),
-                'expired_date' => $formattedDate,
-            ]);
-            DB::listen(function ($query) {
-                dump($query->sql);
-                dump($query->bindings);
-            });
+            fclose($file);
+            return back()->with('success', 'Import CSV berhasil');
+        } catch (\Exception $e) {
+            dd($e); // This will dump the error and stop execution
         }
-
-        fclose($file);
-        return back()->with('success', 'Import CSV berhasil');
     }
 }

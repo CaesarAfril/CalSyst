@@ -79,8 +79,7 @@
                                     class="form-control"
                                     id="asset_location"
                                     name="asset_location"
-                                    placeholder="Masukkan Lokasi"
-                                    required>
+                                    placeholder="Masukkan Lokasi">
                             </div>
                             <div class="mb-3">
                                 <label for="asset_category" class="form-label">Kategori</label>
