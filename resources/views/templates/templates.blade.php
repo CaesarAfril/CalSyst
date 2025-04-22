@@ -104,173 +104,181 @@
                         </a>
                     </li>
 
-                    <!------------------- Master Data------------------------->
-                    <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text custom-sidebar-text">Master Data</span>
-                    </li>
-
-                    <!--***********************************
-                    ---------- Menu Data User -------
-                    ************************************-->
-                    <li class="menu-item">
-                        <a href="{{route('user')}}" class="menu-link">
-                            <i class="menu-icon bx bxs-bot custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Data User</div>
-                        </a>
-                    </li>
-
-                    <!--***********************************
-                    ---------- Menu Data Plant -------
-                    ************************************-->
-                    <li class="menu-item">
-                        <a href="{{route('plant.index')}}" class="menu-link">
-                            <i class="menu-icon bx bxs-institution custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Data Plant</div>
-                        </a>
-                    </li>
-
-                    <!--***********************************
-                    ---------- Menu Data Department -------
-                    ************************************-->
-                    <li class="menu-item">
-                        <a href="{{route('department.index')}}" class="menu-link">
-                            <i class="menu-icon bx bxs-home custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Data Department</div>
-                        </a>
-                    </li>
-
-                    <!--***********************************
-                    ---------- Menu Data Category -------
-                    ************************************-->
-                    <li class="menu-item">
-                        <a href="{{route('category.index')}}" class="menu-link">
-                            <i class='menu-icon bx bx-category custom-sidebar-text'></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Kategori Alat Ukur</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item">
-                        <a href="{{route('machine.index')}}" class="menu-link">
-                            <i class='menu-icon bx bx-dish custom-sidebar-text'></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Mesin</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item">
-                        <a href="{{route('weight.index')}}" class="menu-link">
-                            <i class='menu-icon bx bx-layer custom-sidebar-text'></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Anak Timbang</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text custom-sidebar-text">Details</span>
-                    </li>
-                    <!--***********************************
-                    ---------- Menu E-Report Validasi Internal -------
-                    ************************************-->
-                    <li class="menu-item">
+                    <li class="menu-item mt-2">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon bx bxs-brain custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Report Kalibrasi Internal</div>
+                            <i class="menu-icon bx bxs-data custom-sidebar-text"></i>
+                            <div data-i18n="Basic" class="custom-sidebar-text">Database</div>
                         </a>
                         <ul class="menu-sub">
+                            <!--***********************************
+                            ---------- Menu Data User -------
+                            ************************************-->
                             <li class="menu-item">
-                                <a href="{{ route('report.temperature') }}" class="menu-link">
-                                    <div data-i18n="report.temperature" class="custom-sidebar-text">Report Temperatur</div>
+                                <a href="{{route('user')}}" class="menu-link">
+                                    <i class="menu-icon bx bxs-bot custom-sidebar-text"></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text">Data User</div>
                                 </a>
                             </li>
+
+                            <!--***********************************
+                            ---------- Menu Data Plant -------
+                            ************************************-->
                             <li class="menu-item">
-                                <a href="{{ route('report.display') }}" class="menu-link">
-                                    <div data-i18n="report.display" class="custom-sidebar-text">Report Display Suhu</div>
+                                <a href="{{route('plant.index')}}" class="menu-link">
+                                    <i class="menu-icon bx bxs-institution custom-sidebar-text"></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text">Data Plant</div>
                                 </a>
                             </li>
+
+                            <!--***********************************
+                            ---------- Menu Data Department -------
+                            ************************************-->
                             <li class="menu-item">
-                                <a href="{{ route('report.scale') }}" class="menu-link">
-                                    <div data-i18n="report.scale" class="custom-sidebar-text">Report Timbangan</div>
+                                <a href="{{route('department.index')}}" class="menu-link">
+                                    <i class="menu-icon bx bxs-home custom-sidebar-text"></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text">Data Department</div>
+                                </a>
+                            </li>
+
+                            <!--***********************************
+                            ---------- Menu Data Category -------
+                            ************************************-->
+                            <li class="menu-item">
+                                <a href="{{route('category.index')}}" class="menu-link">
+                                    <i class='menu-icon bx bx-category custom-sidebar-text'></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text">Kategori Alat Ukur</div>
+                                </a>
+                            </li>
+
+                            <li class="menu-item">
+                                <a href="{{route('machine.index')}}" class="menu-link">
+                                    <i class='menu-icon bx bx-dish custom-sidebar-text'></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text">Mesin</div>
+                                </a>
+                            </li>
+
+                            <li class="menu-item">
+                                <a href="{{route('weight.index')}}" class="menu-link">
+                                    <i class='menu-icon bx bx-layer custom-sidebar-text'></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text">Anak Timbang</div>
+                                </a>
+                            </li>
+
+                            <!--***********************************
+                            ---------- Menu Aset Alat Ukur --------
+                            ************************************-->
+                            <li class="menu-item">
+                                <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                    <i class="menu-icon tf-icons bx bxs-cog custom-sidebar-text"></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text">Aset</div>
+                                </a>
+                                <ul class="menu-sub">
+                                    <li class="menu-item">
+                                        <a href="{{route('asset.index')}}" class="menu-link">
+                                            <div class="custom-sidebar-text">Aset Alat Ukur</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="{{route('validation_asset.index')}}" class="menu-link">
+                                            <div class="custom-sidebar-text">Aset Mesin Pemasakan</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!--***********************************
+                            ---------- Menu Total Alat Telat KAlibrasi --------
+                            ************************************-->
+                            <li class="menu-item">
+                                <a href="{{route('telat-calibration')}}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text">Total Alat Telat Kalibrasi</div>
                                 </a>
                             </li>
                         </ul>
-                    </li>
-                    <!--***********************************
-                    ---------- Menu E-Sertifikat Kalibrasi Internal --------
-                    ************************************-->
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bxs-blanket custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Sertifikat Kalibrasi Internal</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="{{ route('Internal_calibration.temperature') }}" class="menu-link">
-                                    <div data-i18n="report.temperature" class="custom-sidebar-text">Temperatur</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="{{ route('Internal_calibration.display') }}" class="menu-link">
-                                    <div data-i18n="report.display" class="custom-sidebar-text">Display Suhu</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="{{ route('Internal_calibration.scale') }}" class="menu-link">
-                                    <div data-i18n="report.scale" class="custom-sidebar-text">Timbangan</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!--***********************************
-                    ---------- Menu Sertifikat Kalibrasi Eksternal --------
-                    ************************************-->
-                    <li class="menu-item">
-                        <a href="{{route('External_calibration')}}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bxs-blanket custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Sertifikat Kalibrasi Eksternal</div>
-                        </a>
-                    </li>
-
-                    <!--***********************************
-                    ---------- Menu Aset Alat Ukur --------
-                    ************************************-->
-                    <li class="menu-item">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bxs-cog custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Aset</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="{{route('asset.index')}}" class="menu-link">
-                                    <div class="custom-sidebar-text">Aset Alat Ukur</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="{{route('validation_asset.index')}}" class="menu-link">
-                                    <div class="custom-sidebar-text">Aset Mesin Pemasakan</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!--***********************************
-                    ---------- Menu Total Alat Telat KAlibrasi --------
-                    ************************************-->
-                    <li class="menu-item">
-                        <a href="{{route('telat-calibration')}}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Total Alat Telat Kalibrasi</div>
-                        </a>
-                    </li>
 
 
-                    <!--***********************************
-                    ---------- Menu Reference --------
-                    ************************************-->
-                    <li class="menu-item">
-                        <a href="{{route('references')}}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bxs-file-blank custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Referensi</div>
-                        </a>
-                    </li>
+                        <li class="menu-item mt-2">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="menu-icon bx bxs-report custom-sidebar-text"></i>
+                                <div data-i18n="Basic" class="custom-sidebar-text">Report</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <!--***********************************
+                                ---------- Menu E-Report Validasi Internal -------
+                                ************************************-->
+                                <li class="menu-item">
+                                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                        <i class="menu-icon bx bxs-brain custom-sidebar-text"></i>
+                                        <div data-i18n="Basic" class="custom-sidebar-text">Report Kalibrasi Internal</div>
+                                    </a>
+                                    <ul class="menu-sub">
+                                        <li class="menu-item">
+                                            <a href="{{ route('report.temperature') }}" class="menu-link">
+                                                <div data-i18n="report.temperature" class="custom-sidebar-text">Report Temperatur</div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="{{ route('report.display') }}" class="menu-link">
+                                                <div data-i18n="report.display" class="custom-sidebar-text">Report Display Suhu</div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="{{ route('report.scale') }}" class="menu-link">
+                                                <div data-i18n="report.scale" class="custom-sidebar-text">Report Timbangan</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!--***********************************
+                                ---------- Menu E-Sertifikat Kalibrasi Internal --------
+                                ************************************-->
+                                <li class="menu-item">
+                                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                        <i class="menu-icon tf-icons bx bxs-blanket custom-sidebar-text"></i>
+                                        <div data-i18n="Basic" class="custom-sidebar-text">Sertifikat Kalibrasi Internal</div>
+                                    </a>
+                                    <ul class="menu-sub">
+                                        <li class="menu-item">
+                                            <a href="{{ route('Internal_calibration.temperature') }}" class="menu-link">
+                                                <div data-i18n="report.temperature" class="custom-sidebar-text">Temperatur</div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="{{ route('Internal_calibration.display') }}" class="menu-link">
+                                                <div data-i18n="report.display" class="custom-sidebar-text">Display Suhu</div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="{{ route('Internal_calibration.scale') }}" class="menu-link">
+                                                <div data-i18n="report.scale" class="custom-sidebar-text">Timbangan</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!--***********************************
+                                ---------- Menu Sertifikat Kalibrasi Eksternal --------
+                                ************************************-->
+                                <li class="menu-item">
+                                    <a href="{{route('External_calibration')}}" class="menu-link">
+                                        <i class="menu-icon tf-icons bx bxs-blanket custom-sidebar-text"></i>
+                                        <div data-i18n="Basic" class="custom-sidebar-text">Sertifikat Kalibrasi Eksternal</div>
+                                    </a>
+                                </li>
+
+                                <!--***********************************
+                                ---------- Menu Reference --------
+                                ************************************-->
+                                <li class="menu-item">
+                                    <a href="{{route('references')}}" class="menu-link">
+                                        <i class="menu-icon tf-icons bx bxs-file-blank custom-sidebar-text"></i>
+                                        <div data-i18n="Basic" class="custom-sidebar-text">Referensi</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    
                 </ul>
             </aside>
 

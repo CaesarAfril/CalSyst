@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Department;
 use App\Models\Plant;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class AssetController extends Controller
@@ -20,7 +21,7 @@ class AssetController extends Controller
             'latest_external_calibration',
             'latest_temp_calibration',
             'latest_display_calibration'
-        ])->get();
+        ])->paginate(10);
 
         $plant = Plant::all();
         $category = Category::all();
@@ -132,6 +133,12 @@ class AssetController extends Controller
                 //         $formattedDate = null;
                 //     }
                 // }
+
+                if (Carbon::hasFormat($rawDate, 'Y/m/d')) {
+                    $formattedDate = Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
+                } elseif (Carbon::hasFormat($rawDate, 'd/m/Y')) {
+                    $formattedDate = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+                }
 
                 $resolution = str_replace(',', '.', $data['resolusi']);
                 $correction = str_replace(',', '.', $data['koreksi']);
