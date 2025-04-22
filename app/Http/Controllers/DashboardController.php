@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assets;
+use App\Mail\AssetReminderEmail;
 use App\Models\External_calibration;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -175,9 +177,15 @@ class DashboardController extends Controller
         });
         $calibratedCount = $calibratedAssets->count();
 
-        // reminder
+        // Send email reminders for expiring assets
         $expiringAssets->map(function ($asset) {
             $asset->reminder_status = $this->getReminderStatus($asset->expired_date);
+
+            // Send email only if the asset is expiring in the next 30 days
+            if ($this->shouldSendReminder($asset->expired_date)) {
+                Mail::to('rizalfahadian7@gmail.com')->send(new AssetReminderEmail($asset));
+            }
+
             return $asset;
         });
 
@@ -207,5 +215,17 @@ class DashboardController extends Controller
         } else {
             return "✅ Aman ({$daysRemaining} hari lagi)";
         }
+    }
+
+    private function shouldSendReminder($expiredDate, $reminderDays = 30)
+    {
+        if (!$expiredDate)
+            return false;
+
+        $now = \Carbon\Carbon::today();
+        $expired = \Carbon\Carbon::parse($expiredDate);
+        $daysRemaining = $now->diffInDays($expired, false);
+
+        return $daysRemaining >= 0 && $daysRemaining <= $reminderDays;
     }
 }

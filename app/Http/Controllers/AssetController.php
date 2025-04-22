@@ -134,10 +134,20 @@ class AssetController extends Controller
                 //     }
                 // }
 
-                if (Carbon::hasFormat($rawDate, 'Y/m/d')) {
-                    $formattedDate = Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
-                } elseif (Carbon::hasFormat($rawDate, 'd/m/Y')) {
-                    $formattedDate = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+                // if (Carbon::hasFormat($rawDate, 'Y/m/d')) {
+                //     $formattedDate = Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
+                // } elseif (Carbon::hasFormat($rawDate, 'd/m/Y')) {
+                //     $formattedDate = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+                // }
+
+                if (!empty($rawDate) && !Carbon::hasFormat($rawDate, 'Y-m-d')) {
+                    if (Carbon::hasFormat($rawDate, 'Y/m/d')) {
+                        $formattedDate = Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
+                    } elseif (Carbon::hasFormat($rawDate, 'd/m/Y')) {
+                        $formattedDate = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+                    } else {
+                        $formattedDate = $rawDate;
+                    }
                 }
 
                 $resolution = str_replace(',', '.', $data['resolusi']);

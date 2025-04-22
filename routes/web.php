@@ -16,6 +16,9 @@ use App\Http\Controllers\Validation_assetController;
 use App\Http\Controllers\WeightController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
+use App\Mail\AssetReminderEmail;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Assets;
 
 Route::get('/', [AuthController::class, 'loginForm'])->name('login');
 Route::post('actionLogin', [AuthController::class, 'actionLogin'])->name('actionLogin');
@@ -105,4 +108,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sertifikat/eksternal/{uuid}/add-approve-sertifikat', [CalController::class, 'addApproveSertifikat'])->name('external.addApproveSertifikat');
 
     Route::get('telat-kalibrasi', [TelatController::class, 'index'])->name('telat-calibration');
+
+    Route::get('/test-email', function () {
+        $asset = \App\Models\Assets::first(); // ambil salah satu asset
+        \Illuminate\Support\Facades\Mail::to('rizalfahadian7@gmail.com')->send(new \App\Mail\AssetReminderEmail($asset));
+        return "Email sent!";
+    });
 });
