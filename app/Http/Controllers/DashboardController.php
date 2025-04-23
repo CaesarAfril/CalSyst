@@ -322,7 +322,7 @@ class DashboardController extends Controller
         } elseif ($daysRemaining <= $reminderDays) {
             return "⚠️ Expired dalam {$daysRemaining} hari";
         } else {
-            return "✅ Sesuai Jadwal ({$daysRemaining} hari lagi)";
+            return "{$daysRemaining} hari lagi";
         }
     }
 }
