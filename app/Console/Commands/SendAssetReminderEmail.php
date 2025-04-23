@@ -37,7 +37,7 @@ class SendAssetReminderEmail extends Command
 
             if ($daysRemaining >= 0 && $daysRemaining <= 60) {
                 $asset->reminder_status = $this->getReminderStatus($asset->expired_date);
-                Mail::to('example@gmail.com')->send(new AssetReminderEmail($asset));
+                Mail::to('rizalfahadian7@gmail.com')->send(new AssetReminderEmail($asset));
             }
         }
 
@@ -46,7 +46,8 @@ class SendAssetReminderEmail extends Command
 
     private function getReminderStatus($expiredDate, $reminderDays = 60)
     {
-        if (!$expiredDate) return '-';
+        if (!$expiredDate)
+            return '-';
 
         $now = Carbon::today();
         $expired = Carbon::parse($expiredDate);

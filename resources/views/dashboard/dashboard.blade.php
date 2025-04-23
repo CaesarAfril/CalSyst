@@ -101,7 +101,7 @@
                 <td>{{ $onTrackAssets->asset->category->category }}</td>
                 <td>{{ $onTrackAssets->asset->series_number }}</td>
                 <td>{{ $onTrackAssets->asset->department->department }}</td>
-                <td>{{ \Carbon\Carbon::parse($onTrackAssets->asset->expired_date)->format('d-m-y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($onTrackAssets->asset->expired_date)->format('d-m-Y') }}</td>
                 <td>{{ $onTrackAssets->asset->category->calibration }}</td>
                 <td> {{ $onTrackAssets->asset->latest_external_calibration->progress_status ?? '-' }}</td>
                 <td>{!! $onTrackAssets->status_message !!}</td>
@@ -140,42 +140,9 @@
             <td>{{ $asset->category->category }}</td>
             <td>{{ $asset->series_number }}</td>
             <td>{{ $asset->department->department }}</td>
-            {{-- <td>
-                @if($asset->category->calibration === 'External' && $asset->latest_external_calibration)
-                    @php
-                        $date = \Carbon\Carbon::parse($asset->latest_external_calibration->expired_date);
-                        $daysLeft = now()->diffInDays($date, false);
-                    @endphp
-                    <span style="color: red;">{{ $date->format('d-m-y') }}</span>
-
-                @elseif($asset->category->calibration === 'Internal' && $asset->category->category === 'Thermometer' && $asset->latest_temp_calibration)
-                    @php
-                        $date = \Carbon\Carbon::parse($asset->latest_temp_calibration->expired_date);
-                        $daysLeft = now()->diffInDays($date, false);
-                    @endphp
-                    <span style="color: red;">{{ $date->format('d-m-y') }}</span>
-
-                @elseif($asset->category->category === 'Display Suhu' && $asset->latest_display_calibration)
-                    @php
-                        $date = \Carbon\Carbon::parse($asset->latest_display_calibration->expired_date);
-                        $daysLeft = now()->diffInDays($date, false);
-                    @endphp
-                    <span style="color: red;">{{ $date->format('d-m-y') }}</span>
-
-                    @elseif($asset->category->category === 'Timbangan' && $asset->latest_scale_calibration)
-                    @php
-                        $date = \Carbon\Carbon::parse($asset->latest_scale_calibration->expired_date);
-                        $daysLeft = now()->diffInDays($date, false);
-                    @endphp
-                    <span style="color: red;">{{ $date->format('d-m-y') }}</span>
-
-                @else
-                    <span style="color: gray;">N/A</span>
-                @endif
-            </td> --}}
             <td>
               @if($asset->expired_date)
-                  <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-y') }}</span>
+                  <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-Y') }}</span>
               @else
                   <span style="color: gray;">N/A</span>
               @endif

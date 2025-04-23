@@ -2,16 +2,27 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="card">
-        <h5 class="card-header d-flex justify-content-between align-items-center">
-            <span>Data Aset Alat Ukur</span>
-            <div class="d-flex gap-2">
-                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importCsvModal">
-                    Import CSV
-                </button>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addassetModal">
-                    +
-                </button>
+        <h5 class="card-header d-flex justify-content-between align-items-center align-content-center">
+            <span>Data Aset Alat Ukur</span> 
+            <div class="d-flex justify-content-between align-items-center gap-5">
+                <form id="searchForm" method="GET" class="d-flex align-items-center gap-2 mb-0">
+                    <div class="input-group">
+                        <input type="search" class="form-control" placeholder="Ketik untuk mencari" name="search" value="{{ request('search') }}">
+                        <button class="btn btn-info" type="submit">Search</button>
+                        <a href="{{ route('asset.index') }}" class="btn-reset btn btn-primary">Reset</a>
+                    </div>
+                </form>
+            
+                <div class="d-flex gap-2">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importCsvModal">
+                        Import CSV
+                    </button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addassetModal">
+                        +
+                    </button>
+                </div>
             </div>
+            
         </h5>
         <div class="modal fade" id="importCsvModal" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -193,7 +204,7 @@
             </div>
         </div>
 
-        <div class="table-responsive text-nowrap">
+        <div class="table-responsive text-nowrap" id="asset-table">
             <table class="table">
                 <thead>
                     <tr class="text-nowrap">
@@ -532,6 +543,5 @@
 @endsection
 @section('script')
 <script>
-    // Optional: You can implement JavaScript to handle dynamic form population, if necessary.
 </script>
 @endsection

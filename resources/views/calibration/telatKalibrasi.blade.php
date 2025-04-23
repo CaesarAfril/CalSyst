@@ -40,18 +40,34 @@
 @endsection
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <div class="col-md-3">
-        <div class="stat-card">
-          <div class="stat-title">TOTAL ALAT TELAT KALIBRASI</div>
-          <div class="stat-value">{{ $expiredCount }}</div>
-          <div class="stat-footer"></div>
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="stat-title">TOTAL ALAT TELAT KALIBRASI</div>
+                    <div class="stat-value">{{ $expiredCount }}</div>
+                    <div class="stat-footer"></div>
+                </div>
         </div>
-    </div>
+</div>
 
     {{-- data alat mendekati ED --}}
 <div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow">
     <h2 class="mt-5 mb-5 text-center">DATA ALAT TELAT KALIBRASI</h2>
-    <hr class="mb-5" text-center>
+    <hr class="mb-3" text-center>
+
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-end">
+            <form id="searchForm" method="GET" action="{{ route('telat-calibration') }}" class=" d-flex align-items-center gap-2">
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control" placeholder="Ketik untuk mencari" name="search" value="{{ request('search') }}">
+                    <button class="btn btn-info" type="submit">Search</button>
+                    <a href="{{ route('telat-calibration') }}" class="btn-reset btn btn-primary">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
     <table class="table table-bordered text-center align-middle mx-2">
         <thead>
             <tr class="text-nowrap">
@@ -113,16 +129,17 @@
             </td>
             <td>{{ $asset->category->calibration }}</td> <!-- Kalibrasi -->
         </tr>
-@empty
-<tr>
-    <td colspan="10" class="text-center">Tidak ada data.</td>
-</tr>
-@endforelse
+        @empty
+        <tr>
+            <td colspan="10" class="text-center">Tidak ada data.</td>
+        </tr>
+        @endforelse
 
         </tbody>
-
     </table>
-
+    <div class="d-flex justify-content-end mt-3">
+        {{ $expiredAssets->links('pagination::bootstrap-5') }}
+    </div>
 </div>
 </div>
 @endsection
