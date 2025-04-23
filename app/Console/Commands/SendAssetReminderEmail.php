@@ -35,16 +35,16 @@ class SendAssetReminderEmail extends Command
         foreach ($assets as $asset) {
             $daysRemaining = Carbon::today()->diffInDays(Carbon::parse($asset->expired_date), false);
 
-            if ($daysRemaining >= 0 && $daysRemaining <= 30) {
+            if ($daysRemaining >= 0 && $daysRemaining <= 60) {
                 $asset->reminder_status = $this->getReminderStatus($asset->expired_date);
-                Mail::to('rizalfahadian7@gmail.com')->send(new AssetReminderEmail($asset));
+                Mail::to('example@gmail.com')->send(new AssetReminderEmail($asset));
             }
         }
 
         $this->info('Email pengingat asset berhasil dikirim.');
     }
 
-    private function getReminderStatus($expiredDate, $reminderDays = 30)
+    private function getReminderStatus($expiredDate, $reminderDays = 60)
     {
         if (!$expiredDate) return '-';
 

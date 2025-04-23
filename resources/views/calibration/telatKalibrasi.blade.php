@@ -71,7 +71,7 @@
             <td>{{ $asset->category->category }}</td> <!-- Nama alat -->
             <td>{{ $asset->series_number }}</td> <!-- Serial Number -->
             <td>{{ $asset->department->department }}</td> <!-- Departemen -->
-            <td>
+            {{-- <td>
                 @if($asset->category->calibration === 'External' && $asset->latest_external_calibration)
                     @php
                         $date = \Carbon\Carbon::parse($asset->latest_external_calibration->expired_date);
@@ -100,6 +100,13 @@
                     @endphp
                     <span style="color: red;">{{ $date->format('d-m-y') }}</span>
 
+                @else
+                    <span style="color: gray;">N/A</span>
+                @endif
+            </td> --}}
+            <td>
+                @if($asset->expired_date)
+                    <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-y') }}</span>
                 @else
                     <span style="color: gray;">N/A</span>
                 @endif

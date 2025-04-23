@@ -69,31 +69,95 @@ class DashboardController extends Controller
 
         $progressStages = array_keys($progressTimeline);
 
+        // $onTrackAsset->map(function ($item) use ($progressTimeline) {
+        //     $asset = $item->asset;
+        //     $progress = $asset->latest_external_calibration->progress_status ?? null;
+
+        //     $startDate = Carbon::parse($asset->expired_date ?? $item->created_at);
+        //     $now = now();
+
+        //     if ($progress && isset($progressTimeline[$progress])) {
+        //         // Dapatkan semua kunci
+        //         $progressKeys = array_keys($progressTimeline);
+        //         $currentIndex = array_search($progress, $progressKeys);
+
+        //         if ($currentIndex !== false) {
+        //             // Hitung jumlah hari dari tahap-tahap setelah progress saat ini
+        //             $remainingStages = array_slice($progressTimeline, $currentIndex + 1);
+        //             $totalRemainingDays = array_sum($remainingStages);
+
+        //             // Ubah startDate ke awal (dengan mundur dari expired)
+        //             $startDate = $startDate->subDays($totalRemainingDays);
+        //         }
+        //     }
+
+        //     $daysPassed = (int) $startDate->diffInDays($now, false);
+
+        //     // Hitung total ideal waktu sampai progress saat ini
+        //     $expectedDays = 0;
+        //     foreach ($progressTimeline as $key => $days) {
+        //         $expectedDays += $days;
+        //         if ($key == $progress)
+        //             break;
+        //     }
+
+        //     if ($progress) {
+        //         if ($daysPassed > $expectedDays) {
+        //             $delay = $daysPassed - $expectedDays;
+
+        //             // Cari tahap seharusnya sekarang
+        //             $total = 0;
+        //             $shouldBeStage = null;
+        //             foreach ($progressTimeline as $key => $val) {
+        //                 $total += $val;
+        //                 if ($daysPassed <= $total) {
+        //                     $shouldBeStage = $key;
+        //                     break;
+        //                 }
+        //             }
+
+        //             $item->status_message = "Telat proses <span class='text-danger font-semibold'>{$delay} hari</span>, seharusnya sudah sampai tahap <span class='text-danger font-semibold'>" . ($shouldBeStage ?? 'Selesai') . "</span>";
+        //         } else {
+        //             $item->status_message = 'Sesuai Jadwal';
+        //         }
+        //     } else {
+        //         $item->status_message = '-';
+        //     }
+
+        //     return $item;
+        // });
+
+        // total alat on track kalibrasi
+        // $onTrackCount = $onTrackAsset->filter(function ($item) use ($progressStages) {
+        //     $progress = $item->asset->latest_external_calibration->progress_status ?? null;
+        //     return in_array($progress, $progressStages);
+        // })->count();
+
         $onTrackAsset->map(function ($item) use ($progressTimeline) {
             $asset = $item->asset;
+
+            // Ambil progress_status dari latest_external_calibration
             $progress = $asset->latest_external_calibration->progress_status ?? null;
 
+            // Ambil expired_date dari asset
             $startDate = Carbon::parse($asset->expired_date ?? $item->created_at);
             $now = now();
 
             if ($progress && isset($progressTimeline[$progress])) {
-                // Dapatkan semua kunci
                 $progressKeys = array_keys($progressTimeline);
                 $currentIndex = array_search($progress, $progressKeys);
 
                 if ($currentIndex !== false) {
-                    // Hitung jumlah hari dari tahap-tahap setelah progress saat ini
                     $remainingStages = array_slice($progressTimeline, $currentIndex + 1);
                     $totalRemainingDays = array_sum($remainingStages);
 
-                    // Ubah startDate ke awal (dengan mundur dari expired)
+                    // Mundur dari expired_date untuk dapat tanggal awal proses
                     $startDate = $startDate->subDays($totalRemainingDays);
                 }
             }
 
             $daysPassed = (int) $startDate->diffInDays($now, false);
 
-            // Hitung total ideal waktu sampai progress saat ini
             $expectedDays = 0;
             foreach ($progressTimeline as $key => $days) {
                 $expectedDays += $days;
@@ -105,7 +169,6 @@ class DashboardController extends Controller
                 if ($daysPassed > $expectedDays) {
                     $delay = $daysPassed - $expectedDays;
 
-                    // Cari tahap seharusnya sekarang
                     $total = 0;
                     $shouldBeStage = null;
                     foreach ($progressTimeline as $key => $val) {
@@ -127,38 +190,74 @@ class DashboardController extends Controller
             return $item;
         });
 
-        // total alat on track kalibrasi
         $onTrackCount = $onTrackAsset->filter(function ($item) use ($progressStages) {
+            // Tetap gunakan latest_external_calibration untuk ambil progress_status
             $progress = $item->asset->latest_external_calibration->progress_status ?? null;
             return in_array($progress, $progressStages);
         })->count();
 
-        $expiringAssets = $assets->filter(function ($asset) {
-            $now = now();
-            $internalLimit = $now->copy()->addMonths(3); // untuk kalibrasi internal
-            $externalLimit = $now->copy()->addMonths(6); // untuk kalibrasi eksternal
+        // total alat mendekati ED kalibrasi
+        // $expiringAssets = $assets->filter(function ($asset) {
+        //     $now = now();
+        //     $internalLimit = $now->copy()->addMonths(3); // untuk kalibrasi internal
+        //     $externalLimit = $now->copy()->addMonths(6); // untuk kalibrasi eksternal
 
-            $external = $asset->latest_external_calibration;
-            $temp = $asset->latest_temp_calibration;
-            $display = $asset->latest_display_calibration;
-            $scale = $asset->latest_scale_calibration;
+        //     $external = $asset->latest_external_calibration;
+        //     $temp = $asset->latest_temp_calibration;
+        //     $display = $asset->latest_display_calibration;
+        //     $scale = $asset->latest_scale_calibration;
 
-            $externalExpiring =
-                Carbon::parse($asset->expired_date)->between($now, $externalLimit);
+        //     $externalExpiring =
+        //         Carbon::parse($asset->expired_date)->between($now, $externalLimit);
 
-            $tempExpiring = $temp && $temp->expired_date &&
-                Carbon::parse($temp->expired_date)->between($now, $internalLimit);
+        //     $tempExpiring = $temp && $temp->expired_date &&
+        //         Carbon::parse($temp->expired_date)->between($now, $internalLimit);
 
-            $displayExpiring = $display && $display->expired_date &&
-                Carbon::parse($display->expired_date)->between($now, $internalLimit);
+        //     $displayExpiring = $display && $display->expired_date &&
+        //         Carbon::parse($display->expired_date)->between($now, $internalLimit);
 
-            $scaleExpiring = $scale && $scale->expired_date &&
-                Carbon::parse($scale->expired_date)->between($now, $internalLimit);
+        //     $scaleExpiring = $scale && $scale->expired_date &&
+        //         Carbon::parse($scale->expired_date)->between($now, $internalLimit);
 
-            return $externalExpiring || $tempExpiring || $displayExpiring || $scaleExpiring;
+        //     return $externalExpiring || $tempExpiring || $displayExpiring || $scaleExpiring;
+        // });
+        // $approachingEDCount = $expiringAssets->count();
+        // $expiringAssets = $assets->filter(function ($asset) {
+        //     $now = now();
+
+        //     if (!$asset->expired_date) {
+        //         return false;
+        //     }
+
+        //     $expiredDate = Carbon::parse($asset->expired_date);
+        //     $calibrationType = $asset->category->calibration ?? null;
+
+        //     if ($calibrationType === 'Internal') {
+        //         return $expiredDate->between($now, $now->copy()->addMonths(3));
+        //     } elseif ($calibrationType === 'External') {
+        //         return $expiredDate->between($now, $now->copy()->addMonths(6));
+        //     }
+
+        //     return false;
+        // });
+
+        // menampilkan 3-6 bulan untuk data mendekati ED
+        $now = now();
+        $threeMonthsLater = $now->copy()->addMonths(3);
+        $sixMonthsLater = $now->copy()->addMonths(6);
+
+        $expiringAssets = $assets->filter(function ($asset) use ($now, $threeMonthsLater, $sixMonthsLater) {
+            if (!$asset->expired_date) {
+                return false;
+            }
+
+            $expiredDate = Carbon::parse($asset->expired_date);
+            return $expiredDate->between($threeMonthsLater, $sixMonthsLater);
         });
-        $approachingEDCount = $expiringAssets->count();
 
+        $expiringCount = $expiringAssets->count();
+
+        $approachingEDCount = $expiringAssets->count();
 
         // total alat sudah kalibrasi
         $year = now()->year;
@@ -189,6 +288,18 @@ class DashboardController extends Controller
             return $asset;
         });
 
+        $onTrackAsset->map(function ($item) {
+            $asset = $item->asset;
+
+            $asset->reminder_status = app(DashboardController::class)->getReminderStatus($asset->expired_date);
+
+            if (app(DashboardController::class)->shouldSendReminder($asset->expired_date)) {
+                Mail::to('rizalfahadian7@gmail.com')->send(new AssetReminderEmail($asset));
+            }
+
+            return $item;
+        });
+
         return view('dashboard.dashboard', [
             'onTrackAsset' => $onTrackAsset,
             'assets' => $expiringAssets,
@@ -199,7 +310,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    private function getReminderStatus($expiredDate, $reminderDays = 30)
+    private function getReminderStatus($expiredDate, $reminderDays = 60)
     {
         if (!$expiredDate)
             return '-';
@@ -217,7 +328,7 @@ class DashboardController extends Controller
         }
     }
 
-    private function shouldSendReminder($expiredDate, $reminderDays = 30)
+    private function shouldSendReminder($expiredDate, $reminderDays = 60)
     {
         if (!$expiredDate)
             return false;
