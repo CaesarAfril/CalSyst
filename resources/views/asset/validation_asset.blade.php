@@ -2,13 +2,6 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="card">
-        {{-- <h5 class="card-header d-flex justify-content-between align-items-center">
-            Data Aset Mesin Pemasakan
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addassetModal">
-                +
-            </button>
-        </h5> --}}
-
         <h5 class="card-header d-flex justify-content-between align-items-center">
             <span>Data Aset Mesin Pemasakan</span>
             <div class="d-flex gap-2">

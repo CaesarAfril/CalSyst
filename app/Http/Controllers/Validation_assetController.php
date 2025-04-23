@@ -27,8 +27,6 @@ class Validation_assetController extends Controller
             'plants' => $plant,
             'machines' => $machine,
         ]);
-
-        
     }
 
     public function store(Request $request)
@@ -42,7 +40,7 @@ class Validation_assetController extends Controller
         ];
 
         $validated = $request->validate($rules);
-        
+
         Validation_asset::create([
             'plant_uuid' => $validated['asset_plant'],
             'dept_uuid' => $validated['asset_department'],
@@ -58,13 +56,11 @@ class Validation_assetController extends Controller
     {
         $asset = Validation_asset::findOrFail($id);
         $asset->delete();
-
         return redirect()->back();
     }
 
     public function importCsv(Request $request)
     {
-
         $request->validate([
             'csv_file' => 'required|mimes:csv,txt'
         ]);

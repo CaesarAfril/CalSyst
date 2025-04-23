@@ -12,25 +12,74 @@ use Illuminate\Support\Facades\DB;
 
 class AssetController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     $assets = Assets::with([
+    //         'department',
+    //         'plant',
+    //         'category',
+    //         'latest_external_calibration',
+    //         'latest_temp_calibration',
+    //         'latest_display_calibration'
+    //     ])->paginate(10);
+
+    //     $plant = Plant::all();
+    //     $category = Category::all();
+    //     $department = Department::all();
+    //     return view('asset.asset', [
+    //         'assets' => $assets,
+    //         'categories' => $category,
+    //         'departments' => $department,
+    //         'plants' => $plant
+    //     ]);
+    // }
+
+    public function index(Request $request)
     {
-        $assets = Assets::with([
+        $search = $request->input('search');
+
+        $query = Assets::with([
             'department',
             'plant',
             'category',
             'latest_external_calibration',
             'latest_temp_calibration',
             'latest_display_calibration'
-        ])->paginate(10);
+        ]);
 
-        $plant = Plant::all();
-        $category = Category::all();
-        $department = Department::all();
+        // Kalau ada keyword pencarian, filter data
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('merk', 'like', "%{$search}%")
+                    ->orWhere('type', 'like', "%{$search}%")
+                    ->orWhere('series_number', 'like', "%{$search}%")
+                    ->orWhere('capacity', 'like', "%{$search}%")
+                    ->orWhere('range', 'like', "%{$search}%")
+                    ->orWhere('resolution', 'like', "%{$search}%")
+                    ->orWhere('correction', 'like', "%{$search}%")
+                    ->orWhere('uncertainty', 'like', "%{$search}%")
+                    ->orWhere('standard', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%");
+            })
+                ->orWhereHas('category', function ($q) use ($search) {
+                    $q->where('category', 'like', "%{$search}%");
+                })
+                ->orWhereHas('department', function ($q) use ($search) {
+                    $q->where('department', 'like', "%{$search}%");
+                })
+                ->orWhereHas('plant', function ($q) use ($search) {
+                    $q->where('plant', 'like', "%{$search}%");
+                });
+        }
+
+        $assets = $query->paginate(10);
+
         return view('asset.asset', [
             'assets' => $assets,
-            'categories' => $category,
-            'departments' => $department,
-            'plants' => $plant
+            'categories' => Category::all(),
+            'departments' => Department::all(),
+            'plants' => Plant::all(),
+            'search' => $search, // Kirim ke view agar form tetap terisi
         ]);
     }
 
@@ -123,22 +172,6 @@ class AssetController extends Controller
                 $formattedDate = $rawDate ?? null;
 
                 $capacity = mb_convert_encoding($data['kapasitas'], 'UTF-8', 'Windows-1252');
-
-                // try {
-                //     $formattedDate = \Carbon\Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
-                // } catch (\Exception $e1) {
-                //     try {
-                //         $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
-                //     } catch (\Exception $e2) {
-                //         $formattedDate = null;
-                //     }
-                // }
-
-                // if (Carbon::hasFormat($rawDate, 'Y/m/d')) {
-                //     $formattedDate = Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
-                // } elseif (Carbon::hasFormat($rawDate, 'd/m/Y')) {
-                //     $formattedDate = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
-                // }
 
                 if (!empty($rawDate) && !Carbon::hasFormat($rawDate, 'Y-m-d')) {
                     if (Carbon::hasFormat($rawDate, 'Y/m/d')) {
