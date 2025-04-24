@@ -57,11 +57,11 @@
 
     <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
-            <form id="searchForm" method="GET" action="{{ route('telat-calibration') }}" class=" d-flex align-items-center gap-2">
+            <form id="searchForm" method="GET" action="{{ route('late-calibration') }}" class=" d-flex align-items-center gap-2">
                 <div class="input-group mb-3">
                     <input type="search" class="form-control" placeholder="Ketik untuk mencari" name="search" value="{{ request('search') }}">
                     <button class="btn btn-info" type="submit">Search</button>
-                    <a href="{{ route('telat-calibration') }}" class="btn-reset btn btn-primary">Reset</a>
+                    <a href="{{ route('late-calibration') }}" class="btn-reset btn btn-primary">Reset</a>
                 </div>
             </form>
         </div>

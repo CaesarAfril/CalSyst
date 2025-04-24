@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -239,20 +240,27 @@ class DashboardController extends Controller
         $now = now();
         $threeMonthsLater = $now->copy()->addMonths(3);
         $sixMonthsLater = $now->copy()->addMonths(6);
-        $expiringAssets = $assets->filter(function ($asset) use ($now, $threeMonthsLater, $sixMonthsLater) {
-            if (!$asset->expired_date) {
-                return false;
-            }
+        $sortColumn = request()->get('sort', 'category.calibration');
+        $sortDirection = request()->get('direction', 'asc');
+        // $expiringAssets = $assets->filter(function ($asset) use ($now, $threeMonthsLater, $sixMonthsLater) {
+        //     if (!$asset->expired_date) {
+        //         return false;
+        //     }
 
-            $expiredDate = Carbon::parse($asset->expired_date);
-            return $expiredDate->between($threeMonthsLater, $sixMonthsLater);
-        });
-
+        //     $expiredDate = Carbon::parse($asset->expired_date);
+        //     return $expiredDate->between($threeMonthsLater, $sixMonthsLater);
+        // });
+        $expiringAssets = Assets::with('category')
+            ->join('category', 'category.uuid', '=', 'assets.category_uuid') // join dengan table category
+            ->select('assets.*') // <-- PENTING: agar yang dikembalikan tetap instance model Assets
+            ->whereNotNull('assets.expired_date')
+            ->whereBetween('assets.expired_date', [$threeMonthsLater, $sixMonthsLater])
+            ->orderBy('category.calibration', $sortDirection)
+            ->paginate(10);
         $expiringCount = $expiringAssets->count();
+        $approachingEDCount = $expiringAssets->total();
 
-        $approachingEDCount = $expiringAssets->count();
-
-
+        // total alat sudah kalibrasi
         // $calibratedAssets = $assets->filter(function ($asset) use ($year) {
         //     $external = optional($asset->latest_external_calibration)->certificate_date;
         //     $temp = optional($asset->latest_temp_calibration)->date;

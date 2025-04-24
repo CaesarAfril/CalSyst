@@ -1,5 +1,9 @@
 @extends('templates.templates')
 
+<head>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
 @section('style')
 <style>
     .container {
@@ -128,8 +132,32 @@
                 <th>Serial Number</th>
                 <th>Departemen</th>
                 <th>ED Sertifikat</th>
-                <th>Kalibrasi</th>
-                <th>reminder</th>
+                <th>
+                  @php
+                      $currentSort = request()->get('sort');
+                      $currentDirection = request()->get('direction', 'asc');
+                      $column = 'category.calibration';
+                      $isSorted = $currentSort === $column;
+                      $nextDirection = $isSorted && $currentDirection === 'asc' ? 'desc' : 'asc';
+                  @endphp
+              
+                  <a href="{{ route('dashboard', [
+                          'sort' => $column, 
+                          'direction' => $nextDirection
+                      ]) }}" class="d-flex align-items-center justify-content-center gap-1 text-decoration-none" style="color: #566A7F;">
+                      <span>KALIBRASI</span>
+                      @if ($isSorted)
+                          @if ($currentDirection === 'asc')
+                              <i class='bx bx-sort-a-z bx-xs text-primary'></i>
+                          @else
+                              <i class='bx bx-sort-z-a bx-xs text-primary'></i>
+                          @endif
+                      @else
+                          <i class='bx bx-sort-a-z bx-xs'></i>
+                      @endif
+                  </a>
+              </th>
+              <th>reminder</th>
             </tr>
         
         </thead>
@@ -159,6 +187,9 @@
         </tbody>
 
     </table>
+    <div class="d-flex justify-content-end mt-3">
+      {{ $assets->links('pagination::bootstrap-5') }}
+    </div>
 
 </div>
 @endsection

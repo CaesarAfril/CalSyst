@@ -107,7 +107,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sertifikat/eksternal/{uuid}/add-notes-sertifikat', [CalController::class, 'addNotesSertifikat'])->name('external.save-notes-sertifikat');
     Route::post('/sertifikat/eksternal/{uuid}/add-approve-sertifikat', [CalController::class, 'addApproveSertifikat'])->name('external.addApproveSertifikat');
 
-    Route::get('telat-kalibrasi', [TelatController::class, 'index'])->name('telat-calibration');
+    // Route::get('telat-kalibrasi', [TelatController::class, 'index'])->name('telat-calibration');
+    Route::get('/calibration/late-calibration', [CalController::class, 'lateCalibration'])->name('late-calibration');
+
+    Route::get('/calibration/calibrated-assets', [CalController::class, 'calibratedAssets'])->name('calibrated-assets');
 
     Route::get('/test-email', function () {
         $asset = \App\Models\Assets::first(); // ambil salah satu asset
