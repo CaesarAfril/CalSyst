@@ -258,4 +258,103 @@ class CalController extends Controller
     {
         return $this->approveProgress($uuid, 'Sertifikat');
     }
+
+    public function lateCalibration(Request $request)
+    {
+        $search = $request->input('search');
+        $today = now();
+
+        $query = Assets::with(['department', 'plant', 'category'])
+            ->whereNotNull('expired_date')
+            ->whereDate('expired_date', '<=', $today);
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('merk', 'like', "%{$search}%")
+                    ->orWhere('type', 'like', "%{$search}%")
+                    ->orWhere('series_number', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%");
+            })
+                ->orWhereHas('category', function ($q) use ($search) {
+                    $q->where('category', 'like', "%{$search}%");
+                })
+                ->orWhereHas('department', function ($q) use ($search) {
+                    $q->where('department', 'like', "%{$search}%");
+                })
+                ->orWhereHas('plant', function ($q) use ($search) {
+                    $q->where('plant', 'like', "%{$search}%");
+                });
+        }
+
+        // Clone the query to get the correct count
+        $countQuery = clone $query;
+
+        $expiredAssets = $query->paginate(10);
+        $totalAssets = Assets::count();
+        $expiredCount = $countQuery->count();
+
+        return view('calibration.lateCalibration', [
+            'totalAssets' => $totalAssets,
+            'expiredCount' => $expiredCount,
+            'expiredAssets' => $expiredAssets,
+            'search' => $search,
+        ]);
+    }
+
+    public function calibratedAssets(Request $request)
+    {
+        $year = now()->year;
+        $assets = Assets::with([
+            'department',
+            'plant',
+            'category',
+            'latest_external_calibration',
+            'latest_temp_calibration',
+            'latest_display_calibration',
+            'latest_scale_calibration',
+        ])->get();
+
+        // Filter hanya yang expired masih masa depan dan ada kalibrasi terakhir
+        $calibratedAssets = $assets->filter(function ($asset) {
+            $expired = $asset->expired_date;
+
+            $latestCalibration = collect([
+                optional($asset->latest_external_calibration)->certificate_date,
+                optional($asset->latest_temp_calibration)->date,
+                optional($asset->latest_display_calibration)->date,
+                optional($asset->latest_scale_calibration)->date,
+            ])->filter()->sortDesc()->first();
+
+            return $expired && Carbon::parse($expired)->isFuture() && $latestCalibration;
+        });
+        $calibratedCount = $calibratedAssets->count();
+
+        $inProgressAssets = $assets->filter(function ($asset) {
+            $expired = $asset->expired_date;    
+            $external = optional($asset->latest_external_calibration);
+
+            if (!$external || !$expired || !Carbon::parse($expired)->isFuture()) {
+                return false;
+            }
+
+            $progress = $external->progress_status ?? '';
+            $certDate = $external->certificate_date ?? null;
+
+            if (
+                in_array($progress, ['Persiapan Pengajuan', 'Penawaran', 'PPBJ', 'Negosiasi', 'SPK', 'Pelaksanaan', 'BA', 'Pembayaran'])
+            ) {
+                return true;
+            }
+
+            return false;
+        });
+
+
+        return view('calibration.calibratedAsset', [
+            'expiredAssets' => $calibratedAssets,
+            'calibratedCount' => $calibratedCount,
+            'inProgressAssets' => $inProgressAssets,
+            'inProgressCount' => $inProgressAssets->count(),
+        ]);
+    }
 }

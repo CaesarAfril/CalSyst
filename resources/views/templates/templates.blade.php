@@ -190,9 +190,19 @@
                             ---------- Menu Total Alat Telat KAlibrasi --------
                             ************************************-->
                             <li class="menu-item">
-                                <a href="{{route('telat-calibration')}}" class="menu-link">
+                                <a href="{{route('late-calibration')}}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
                                     <div data-i18n="Basic" class="custom-sidebar-text">Total Alat Telat Kalibrasi</div>
+                                </a>
+                            </li>
+
+                            <!--***********************************
+                            ---------- Menu Total Alat Terkalibrasi --------
+                            ************************************-->
+                            <li class="menu-item">
+                                <a href="{{route('calibrated-assets')}}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text">Total Alat Terkalibrasi</div>
                                 </a>
                             </li>
                         </ul>
