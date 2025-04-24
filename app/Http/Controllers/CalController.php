@@ -309,50 +309,53 @@ class CalController extends Controller
             'plant',
             'category',
             'latest_external_calibration',
-            'latest_external_calibration.latestCalibrationFile', // Eager load latestCalibrationFile
+            'latest_external_calibration.latestCalibrationFile',
             'latest_temp_calibration',
             'latest_display_calibration',
             'latest_scale_calibration',
         ])->get();
 
-        $missingCalibrationCount = 0;
+        $missingCalibratedAssets = [];
+        $calibratedAssets = [];
 
         foreach ($assets as $asset) {
             $ed = Carbon::parse($asset->expired_date)->year;
 
             if ($nextYear == $ed) {
-                // For latest external calibration, check if it has associated files with 'Sertifikat' progress
-                $latestCalibrationFile = $asset->latest_external_calibration
-                    ? $asset->latest_external_calibration->latestCalibrationFile
-                    : null;
+                // Get the latest external calibration file
+                $latestCalibrationFile = optional($asset->latest_external_calibration)->latestCalibrationFile;
 
-                $shouldCount = false;
-
-                if ($latestCalibrationFile && $latestCalibrationFile->progress === 'Sertifikat') {
-                    // Check if filename and path are both null
-                    if (is_null($latestCalibrationFile->filename) && is_null($latestCalibrationFile->path)) {
-                        $shouldCount = true;
+                $externalComplete = false;
+                if ($latestCalibrationFile) {
+                    if (
+                        $latestCalibrationFile->progress === 'Sertifikat' &&
+                        !is_null($latestCalibrationFile->filename) &&
+                        !is_null($latestCalibrationFile->path)
+                    ) {
+                        $externalComplete = true;
                     }
                 }
 
-                if (!$shouldCount) {
-                    // Check other calibrations if needed
-                    $latestCalibration = collect([
-                        optional($asset->latest_temp_calibration)->date,
-                        optional($asset->latest_display_calibration)->date,
-                        optional($asset->latest_scale_calibration)->date,
-                    ])->filter()->sortDesc()->first();
+                // Check if the asset has other calibrations
+                $hasOtherCalibration = collect([
+                    optional($asset->latest_temp_calibration)->date,
+                    optional($asset->latest_display_calibration)->date,
+                    optional($asset->latest_scale_calibration)->date,
+                ])->filter()->isNotEmpty();
 
-                    if (!$latestCalibration) {
-                        $missingCalibrationCount++;
-                    }
+                // Add to the right list
+                if ($externalComplete || $hasOtherCalibration) {
+                    $calibratedAssets[] = $asset;
+                } else {
+                    $missingCalibratedAssets[] = $asset;
                 }
             }
         }
 
-        dd($missingCalibrationCount); // Check the count
         return view('calibration.calibratedAsset', [
-            'missingCalibrationCount' => $missingCalibrationCount,
+            'missingCalibrationCount' => count($missingCalibratedAssets),
+            'missingCalibrationAsset' => $missingCalibratedAssets,
+            'calibratedAssets' => $calibratedAssets, // ✅ Send calibrated assets to the view
         ]);
     }
 }
