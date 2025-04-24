@@ -292,8 +292,14 @@ class DashboardController extends Controller
             // Cek apakah expired masih masa depan dan ada kalibrasi terakhir
             return $expired && Carbon::parse($expired)->isFuture() && $latestCalibration;
         });
-        // $calibratedCount = $calibratedAssets->count();
-        $calibratedCount = $totalAssets - ($onTrackCount + $approachingEDCount);
+        $nextYear = now()->addYear()->year;
+        $calibratedCount = 0;
+        foreach ($assets as $asset) {
+            $ed = Carbon::parse($asset->expired_date)->year;
+            if ($nextYear == $ed) {
+                $calibratedCount++;
+            }
+        }
 
         // show reminder
         $expiringAssets->map(function ($asset) {

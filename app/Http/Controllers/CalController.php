@@ -301,60 +301,58 @@ class CalController extends Controller
         ]);
     }
 
-    public function calibratedAssets(Request $request)
+    public function calibratedAssets()
     {
-        $year = now()->year;
+        $nextYear = now()->addYear()->year;
         $assets = Assets::with([
             'department',
             'plant',
             'category',
             'latest_external_calibration',
+            'latest_external_calibration.latestCalibrationFile', // Eager load latestCalibrationFile
             'latest_temp_calibration',
             'latest_display_calibration',
             'latest_scale_calibration',
         ])->get();
 
-        // Filter hanya yang expired masih masa depan dan ada kalibrasi terakhir
-        $calibratedAssets = $assets->filter(function ($asset) {
-            $expired = $asset->expired_date;
+        $missingCalibrationCount = 0;
 
-            $latestCalibration = collect([
-                optional($asset->latest_external_calibration)->certificate_date,
-                optional($asset->latest_temp_calibration)->date,
-                optional($asset->latest_display_calibration)->date,
-                optional($asset->latest_scale_calibration)->date,
-            ])->filter()->sortDesc()->first();
+        foreach ($assets as $asset) {
+            $ed = Carbon::parse($asset->expired_date)->year;
 
-            return $expired && Carbon::parse($expired)->isFuture() && $latestCalibration;
-        });
-        $calibratedCount = $calibratedAssets->count();
+            if ($nextYear == $ed) {
+                // For latest external calibration, check if it has associated files with 'Sertifikat' progress
+                $latestCalibrationFile = $asset->latest_external_calibration
+                    ? $asset->latest_external_calibration->latestCalibrationFile
+                    : null;
 
-        $inProgressAssets = $assets->filter(function ($asset) {
-            $expired = $asset->expired_date;    
-            $external = optional($asset->latest_external_calibration);
+                $shouldCount = false;
 
-            if (!$external || !$expired || !Carbon::parse($expired)->isFuture()) {
-                return false;
+                if ($latestCalibrationFile && $latestCalibrationFile->progress === 'Sertifikat') {
+                    // Check if filename and path are both null
+                    if (is_null($latestCalibrationFile->filename) && is_null($latestCalibrationFile->path)) {
+                        $shouldCount = true;
+                    }
+                }
+
+                if (!$shouldCount) {
+                    // Check other calibrations if needed
+                    $latestCalibration = collect([
+                        optional($asset->latest_temp_calibration)->date,
+                        optional($asset->latest_display_calibration)->date,
+                        optional($asset->latest_scale_calibration)->date,
+                    ])->filter()->sortDesc()->first();
+
+                    if (!$latestCalibration) {
+                        $missingCalibrationCount++;
+                    }
+                }
             }
+        }
 
-            $progress = $external->progress_status ?? '';
-            $certDate = $external->certificate_date ?? null;
-
-            if (
-                in_array($progress, ['Persiapan Pengajuan', 'Penawaran', 'PPBJ', 'Negosiasi', 'SPK', 'Pelaksanaan', 'BA', 'Pembayaran'])
-            ) {
-                return true;
-            }
-
-            return false;
-        });
-
-
+        dd($missingCalibrationCount); // Check the count
         return view('calibration.calibratedAsset', [
-            'expiredAssets' => $calibratedAssets,
-            'calibratedCount' => $calibratedCount,
-            'inProgressAssets' => $inProgressAssets,
-            'inProgressCount' => $inProgressAssets->count(),
+            'missingCalibrationCount' => $missingCalibrationCount,
         ]);
     }
 }
