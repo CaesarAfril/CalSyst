@@ -1,10 +1,10 @@
 @extends('templates.templates')
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y px-0">
     <div class="card">
         <h5 class="card-header d-flex justify-content-between align-items-center">
             Data User
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
                 +
             </button>
         </h5>

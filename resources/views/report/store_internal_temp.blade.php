@@ -1,6 +1,6 @@
 @extends('templates.templates')
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y px-0">
     {{-- Flash Messages --}}
     @if (session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">

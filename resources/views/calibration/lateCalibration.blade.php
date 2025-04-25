@@ -39,7 +39,7 @@
 </style>
 @endsection
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y px-0">
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6">
                 <div class="stat-card">
@@ -51,12 +51,12 @@
 </div>
 
     {{-- data alat mendekati ED --}}
-<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow">
+<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow px-2">
     <h2 class="mt-5 mb-5 text-center">DATA ALAT TELAT KALIBRASI</h2>
     <hr class="mb-3" text-center>
 
-    <div class="row">
-        <div class="col-md-12 d-flex justify-content-end">
+    <div class="row mx-0 px-0">
+        <div class="col-md-12 d-flex justify-content-end mx-0 px-0">
             <form id="searchForm" method="GET" action="{{ route('late-calibration') }}" class=" d-flex align-items-center gap-2">
                 <div class="input-group mb-3">
                     <input type="search" class="form-control" placeholder="Ketik untuk mencari" name="search" value="{{ request('search') }}">
@@ -68,7 +68,7 @@
     </div>
     
 
-    <table class="table table-bordered text-center align-middle mx-2">
+    <table class="table table-bordered text-center align-middle">
         <thead>
             <tr class="text-nowrap">
                 <th>No.</th>
@@ -87,42 +87,9 @@
             <td>{{ $asset->category->category }}</td> <!-- Nama alat -->
             <td>{{ $asset->series_number }}</td> <!-- Serial Number -->
             <td>{{ $asset->department->department }}</td> <!-- Departemen -->
-            {{-- <td>
-                @if($asset->category->calibration === 'External' && $asset->latest_external_calibration)
-                    @php
-                        $date = \Carbon\Carbon::parse($asset->latest_external_calibration->expired_date);
-                        $daysLeft = now()->diffInDays($date, false);
-                    @endphp
-                    <span style="color: red;">{{ $date->format('d-m-y') }}</span>
-
-                @elseif($asset->category->calibration === 'Internal' && $asset->category->category === 'Thermometer' && $asset->latest_temp_calibration)
-                    @php
-                        $date = \Carbon\Carbon::parse($asset->latest_temp_calibration->expired_date);
-                        $daysLeft = now()->diffInDays($date, false);
-                    @endphp
-                    <span style="color: red;">{{ $date->format('d-m-y') }}</span>
-
-                @elseif($asset->category->category === 'Display Suhu' && $asset->latest_display_calibration)
-                    @php
-                        $date = \Carbon\Carbon::parse($asset->latest_display_calibration->expired_date);
-                        $daysLeft = now()->diffInDays($date, false);
-                    @endphp
-                    <span style="color: red;">{{ $date->format('d-m-y') }}</span>
-
-                    @elseif($asset->category->category === 'Scale' && $asset->latest_scale_calibration)
-                    @php
-                        $date = \Carbon\Carbon::parse($asset->latest_scale_calibration->expired_date);
-                        $daysLeft = now()->diffInDays($date, false);
-                    @endphp
-                    <span style="color: red;">{{ $date->format('d-m-y') }}</span>
-
-                @else
-                    <span style="color: gray;">N/A</span>
-                @endif
-            </td> --}}
             <td>
                 @if($asset->expired_date)
-                    <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-y') }}</span>
+                    <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-Y') }}</span>
                 @else
                     <span style="color: gray;">N/A</span>
                 @endif

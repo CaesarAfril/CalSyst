@@ -1,6 +1,6 @@
 @extends('templates.templates')
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y px-0">
     <div class="card">
         <h5 class="card-header d-flex justify-content-between align-items-center">
             Data Verifikasi Alat Ukur Temperatur

@@ -15,6 +15,8 @@ use App\Models\temp_calibration;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class CalController extends Controller
 {
@@ -273,7 +275,8 @@ class CalController extends Controller
                 $q->where('merk', 'like', "%{$search}%")
                     ->orWhere('type', 'like', "%{$search}%")
                     ->orWhere('series_number', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%");
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('expired_date', 'like', "%{$search}%");
             })
                 ->orWhereHas('category', function ($q) use ($search) {
                     $q->where('category', 'like', "%{$search}%");
@@ -352,9 +355,24 @@ class CalController extends Controller
             }
         }
 
+        // 👉 Manual pagination untuk missingCalibratedAssets
+        $page = request()->get('page', 1);
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
+        $pagedMissingAssets = array_slice($missingCalibratedAssets, $offset, $perPage);
+
+        $missingAssetsPaginated = new LengthAwarePaginator(
+            $pagedMissingAssets,
+            count($missingCalibratedAssets),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
         return view('calibration.calibratedAsset', [
             'missingCalibrationCount' => count($missingCalibratedAssets),
-            'missingCalibrationAsset' => $missingCalibratedAssets,
+            // 'missingCalibrationAsset' => $missingCalibratedAssets,
+            'missingCalibrationAsset' => $missingAssetsPaginated,
             'calibratedAssets' => $calibratedAssets, // ✅ Send calibrated assets to the view
         ]);
     }
