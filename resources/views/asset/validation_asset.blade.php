@@ -1,14 +1,14 @@
 @extends('templates.templates')
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y px-0">
     <div class="card">
         <h5 class="card-header d-flex justify-content-between align-items-center">
             <span>Data Aset Mesin Pemasakan</span>
             <div class="d-flex gap-2">
-                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importCsvModal">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importCsvModal">
                     Import CSV
                 </button>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addassetModal">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addassetModal">
                     +
                 </button>
             </div>

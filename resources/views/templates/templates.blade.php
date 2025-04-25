@@ -70,6 +70,11 @@
     .custom-sidebar {
         background-color: #FFDE95;
     }
+
+    .menu-toggle::after {
+        color: #C14600 !important;
+        font-weight: bold;
+    }
 </style>
 
 @yield('style')
@@ -93,7 +98,7 @@
 
                 <div class="menu-inner-shadow"></div>
 
-                <ul class="menu-inner py-1">
+                <ul class="menu-inner py-1" style="margin-top: 2rem;">
                     <!--***********************************
                     ---------- Button Dashboard ----------
                     ************************************-->
@@ -109,7 +114,7 @@
                             <i class="menu-icon bx bxs-data custom-sidebar-text"></i>
                             <div data-i18n="Basic" class="custom-sidebar-text">Database</div>
                         </a>
-                        <ul class="menu-sub">
+                        <ul class="menu-sub" style="margin-left: -.1rem;">
                             <!--***********************************
                             ---------- Menu Data User -------
                             ************************************-->
@@ -172,7 +177,7 @@
                                     <i class="menu-icon tf-icons bx bxs-cog custom-sidebar-text"></i>
                                     <div data-i18n="Basic" class="custom-sidebar-text">Aset</div>
                                 </a>
-                                <ul class="menu-sub">
+                                <ul class="menu-sub" style="margin-left: -.1rem;">
                                     <li class="menu-item">
                                         <a href="{{route('asset.index')}}" class="menu-link">
                                             <div class="custom-sidebar-text">Aset Alat Ukur</div>
@@ -185,8 +190,15 @@
                                     </li>
                                 </ul>
                             </li>
+                        </ul>
 
-                            <!--***********************************
+                        <li class="menu-item mt-2">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="menu-icon bx bx-desktop custom-sidebar-text"></i>
+                                <div data-i18n="Basic" class="custom-sidebar-text">Monitoring</div>
+                            </a>
+                            <ul class="menu-sub" style="margin-left: -.1rem;">
+                                <!--***********************************
                             ---------- Menu Total Alat Telat KAlibrasi --------
                             ************************************-->
                             <li class="menu-item">
@@ -201,19 +213,19 @@
                             ************************************-->
                             <li class="menu-item">
                                 <a href="{{route('calibrated-assets')}}" class="menu-link">
-                                    <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
+                                    <i class="menu-icon tf-icons bx bx-check-double custom-sidebar-text"></i>
                                     <div data-i18n="Basic" class="custom-sidebar-text">Total Alat Terkalibrasi</div>
                                 </a>
                             </li>
-                        </ul>
-
+                            </ul>
+                        </li>
 
                         <li class="menu-item mt-2">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon bx bxs-report custom-sidebar-text"></i>
                                 <div data-i18n="Basic" class="custom-sidebar-text">Report</div>
                             </a>
-                            <ul class="menu-sub">
+                            <ul class="menu-sub" style="margin-left: -.1rem;">
                                 <!--***********************************
                                 ---------- Menu E-Report Validasi Internal -------
                                 ************************************-->
@@ -240,7 +252,16 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <!--***********************************
+                            </ul>
+                        </li>
+
+                        <li class="menu-item mt-2">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="menu-icon bx bxs-file-pdf custom-sidebar-text"></i>
+                                <div data-i18n="Basic" class="custom-sidebar-text">Sertifikat</div>
+                            </a>
+                            <ul class="menu-sub" style="margin-left: -.1rem;">
+                               <!--***********************************
                                 ---------- Menu E-Sertifikat Kalibrasi Internal --------
                                 ************************************-->
                                 <li class="menu-item">

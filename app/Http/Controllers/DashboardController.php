@@ -242,14 +242,7 @@ class DashboardController extends Controller
         $sixMonthsLater = $now->copy()->addMonths(6);
         $sortColumn = request()->get('sort', 'category.calibration');
         $sortDirection = request()->get('direction', 'asc');
-        // $expiringAssets = $assets->filter(function ($asset) use ($now, $threeMonthsLater, $sixMonthsLater) {
-        //     if (!$asset->expired_date) {
-        //         return false;
-        //     }
 
-        //     $expiredDate = Carbon::parse($asset->expired_date);
-        //     return $expiredDate->between($threeMonthsLater, $sixMonthsLater);
-        // });
         $expiringAssets = Assets::with('category')
             ->join('category', 'category.uuid', '=', 'assets.category_uuid') // join dengan table category
             ->select('assets.*') // <-- PENTING: agar yang dikembalikan tetap instance model Assets

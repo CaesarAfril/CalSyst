@@ -59,7 +59,8 @@ class AssetController extends Controller
                     ->orWhere('correction', 'like', "%{$search}%")
                     ->orWhere('uncertainty', 'like', "%{$search}%")
                     ->orWhere('standard', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%");
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('expired_date', 'like', "%{$search}%");
             })
                 ->orWhereHas('category', function ($q) use ($search) {
                     $q->where('category', 'like', "%{$search}%");

@@ -44,40 +44,25 @@
 </style>
 @endsection
 @section('content')
-{{-- <div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y px-0">
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6">
                 <div class="stat-card">
-                    <div class="stat-title">TOTAL ALAT TERKALIBRASI</div>
-                    <div class="stat-value">{{ $calibratedCount }}</div>
-<div class="stat-footer"></div>
-</div>
-</div>
-</div> --}}
+                    <div class="stat-title">TOTAL ALAT TERKALIBRASI YANG BELUM UPLOAD SERTIFIKAT</div>
+                    <div class="stat-value">{{ $missingCalibrationCount }}</div>
+                    <div class="stat-footer"></div>
+                </div>
+            </div>
+        </div>
 
-<h4>Aset dalam proses kalibrasi (status sampai Pembayaran, belum ada sertifikat): {{ $missingCalibrationCount }}</h4>
-
-
+{{-- <h4>Aset dalam proses kalibrasi yang belum ada sertifikat: {{ $missingCalibrationCount }}</h4> --}}
 
 {{-- data alat terkalibrasi --}}
-<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow">
+<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow px-2">
     <h2 class="mt-5 mb-5 text-center">DATA ALAT TERKALIBRASI</h2>
     <hr class="mb-3" text-center>
 
-    {{-- <div class="row">
-        <div class="col-md-12 d-flex justify-content-end">
-            <form id="searchForm" method="GET" action="{{ route('late-calibration') }}" class=" d-flex align-items-center gap-2">
-    <div class="input-group mb-3">
-        <input type="search" class="form-control" placeholder="Ketik untuk mencari" name="search" value="{{ request('search') }}">
-        <button class="btn btn-info" type="submit">Search</button>
-        <a href="{{ route('late-calibration') }}" class="btn-reset btn btn-primary">Reset</a>
-    </div>
-    </form>
-</div>
-</div> --}}
-
-
-<table class="table table-bordered text-center align-middle mx-2">
+<table class="table table-bordered text-center align-middle mt-5">
     <thead>
         <tr class="text-nowrap">
             <th>No.</th>
@@ -98,7 +83,7 @@
             <td>{{ $asset->department->department }}</td>
             <td>
                 @if($asset->expired_date)
-                <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-y') }}</span>
+                <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-Y') }}</span>
                 @else
                 <span style="color: gray;">N/A</span>
                 @endif
@@ -113,9 +98,9 @@
 
     </tbody>
 </table>
-{{-- <div class="d-flex justify-content-end mt-3">
-        {{ $expiredAssets->links('pagination::bootstrap-5') }}
-</div> --}}
+<div class="d-flex justify-content-end mt-3">
+    {{ $missingCalibrationAsset->links('pagination::bootstrap-5') }}
+</div>
 </div>
 </div>
 @endsection

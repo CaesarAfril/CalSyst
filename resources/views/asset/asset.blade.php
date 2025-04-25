@@ -1,6 +1,6 @@
 @extends('templates.templates')
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y px-0">
     <div class="card">
         <h5 class="card-header d-flex justify-content-between align-items-center align-content-center">
             <span>Data Aset Alat Ukur</span> 
@@ -223,7 +223,7 @@
                         <th>Ketidakpastian</th>
                         <th>Standar</th>
                         <th>Status Kelayakan</th>
-                        <th>Kalibrasi Terakhir</th>
+                        <th>ED Sertifikat</th>
                         <th>Action</th>
                     </tr>
                 </thead>

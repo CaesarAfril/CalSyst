@@ -6,84 +6,107 @@
 
 @section('style')
 <style>
-    .container {
+  .container {
         margin-top: 4rem;
-    }
-.stat-card {
-    background-color: white;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    height: 100%;
   }
-  .stat-title {
-    font-weight: bold;
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
-  .stat-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin: 10px 0;
-  }
-  .stat-footer {
-    font-size: 0.9rem;
-    color: #555;
-    margin-top: 10px;
-  }
+  .stat-card-custom {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 24px 36px;
+  transition: all 0.3s ease;
+  text-align: left;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 200px;
+  position: relative;
+  overflow: hidden;
+}
 
-  .shadow {
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
+.stat-card-custom:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
 
-  th, td {
-    padding: 10px 0px !important;
-    width: fit-content !important;
-  }
+.stat-card-custom:hover .stat-title {
+  color: #C14600; /* Misal biru Bootstrap */
+}
+
+.stat-card-custom:hover .stat-value {
+  color: #C14600;
+}
+
+.stat-title {
+  font-size: 0.9rem;
+  color: #566A7F;
+  font-weight: 600;
+  text-transform: uppercase;
+  width: 80%; /* atau bisa 80% kalau ingin lebih sempit */
+  margin-bottom: .5rem;
+  text-transform: uppercase;
+  word-wrap: break-word;
+  z-index: 99;
+}
+
+.stat-value {
+  font-size: 2.2rem;
+  margin-left: 1rem;
+  font-weight: bold;
+  color: #343a40;
+  z-index: 99;
+}
+
+.image-card {
+  width: 90%;
+  position: absolute;
+  top: -4.5rem;
+  right: -5rem;
+}
+
 </style>
 @endsection
 @section('content')
 {{-- total section --}}
-<div class="container width-full">
-    <div class="row g-3">
-      <div class="col-md-3">
-        <div class="stat-card">
-          <div class="stat-title">TOTAL MESIN DAN PERALATAN</div>
-          <div class="stat-value">{{ $totalAssets }}</div>
-          <div class="stat-footer"></div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="stat-card">
-          <div class="stat-title">TOTAL ALAT SUDAH KALIBRASI</div>
-          <div class="stat-value">{{ $calibratedCount }}</div>
-          <div class="stat-footer"></div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="stat-card">
-          <div class="stat-title">TOTAL ALAT ON TRACK KALIBRASI</div>
-          <div class="stat-value">{{ $onTrackCount }}</div>
-          <div class="stat-footer"></div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="stat-card">
-          <div class="stat-title">TOTAL ALAT MENDEKATI ED KALIBRASI</div>
-          <div class="stat-value">{{ $approachingEDCount }}</div>
-          <div class="stat-footer"></div>
-        </div>
+<div class="container width-full mx-0 px-0 mt-4">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <div class="stat-card-custom">
+        <img src="{{ url('/image/asset.svg') }}" alt="asset" class="image-card">
+        <div class="stat-title">TOTAL MESIN DAN PERALATAN</div>
+        <div class="stat-value">{{ $totalAssets }}</div>
       </div>
     </div>
+    <div class="col-md-3">
+      <div class="stat-card-custom">
+        <img src="{{ url('/image/done.svg') }}" alt="asset" class="image-card">
+        <div class="stat-title">TOTAL ALAT SUDAH KALIBRASI</div>
+        <div class="stat-value">{{ $calibratedCount }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card-custom">
+        <img src="{{ url('/image/ontrack.svg') }}" alt="asset" class="image-card">
+        <div class="stat-title">TOTAL ALAT ON TRACK KALIBRASI</div>
+        <div class="stat-value">{{ $onTrackCount }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card-custom">
+        <img src="{{ url('/image/ed.svg') }}" alt="asset" class="image-card">
+        <div class="stat-title">TOTAL ALAT MENDEKATI ED KALIBRASI</div>
+        <div class="stat-value">{{ $approachingEDCount }}</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {{-- data alat kalibrasi --}}
-<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow">
-    <h2 class="mt-5 mb-5 text-center">DATA ALAT PROSES KALIBRASI</h2>
-    <hr class="mb-5" text-center>
-    <table class="table table-bordered text-center align-middle mx-2">
+<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow px-2">
+    <h3 class="text-center mt-4 mb-4">DATA ALAT PROSES KALIBRASI</h3>
+    <hr class="mb-4" text-center>
+    <table class="table table-bordered text-center align-middle">
         <thead>
             <tr class="text-nowrap">
                 <th>No.</th>
@@ -121,10 +144,10 @@
 </div>
 
 {{-- data alat mendekati ED --}}
-<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow">
-    <h2 class="mt-5 mb-5 text-center">DATA ALAT MENDEKATI ED KALIBRASI</h2>
-    <hr class="mb-5" text-center>
-    <table class="table table-bordered text-center align-middle mx-2">
+<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow px-2">
+    <h3 class="mt-4 mb-4 text-center">DATA ALAT MENDEKATI ED KALIBRASI</h3>
+    <hr class="mb-4" text-center>
+    <table class="table table-bordered text-center align-middle">
         <thead>
             <tr class="text-nowrap">
                 <th>No.</th>
@@ -187,7 +210,7 @@
         </tbody>
 
     </table>
-    <div class="d-flex justify-content-end mt-3">
+    <div class="d-flex justify-content-end mt-5">
       {{ $assets->links('pagination::bootstrap-5') }}
     </div>
 
