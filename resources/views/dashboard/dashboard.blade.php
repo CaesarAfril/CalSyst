@@ -38,13 +38,29 @@
   color: #C14600;
 }
 
+.stat-card-custom:hover .image-card {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+.image-card {
+  width: 90%;
+  opacity: 0.7;
+  position: absolute;
+  top: -4.5rem;
+  right: -5rem;
+  filter: grayscale(30%);
+  transition: all 0.3s ease;
+}
+
 .stat-title {
   font-size: 0.9rem;
   color: #566A7F;
   font-weight: 600;
   text-transform: uppercase;
-  width: 80%; /* atau bisa 80% kalau ingin lebih sempit */
+  width: 80%;
   margin-bottom: .5rem;
+  margin-top: 1.5rem;
   text-transform: uppercase;
   word-wrap: break-word;
   z-index: 99;
@@ -52,17 +68,35 @@
 
 .stat-value {
   font-size: 2.2rem;
-  margin-left: 1rem;
+  margin-left: .5rem;
   font-weight: bold;
   color: #343a40;
   z-index: 99;
 }
 
-.image-card {
-  width: 90%;
+.tooltip-custom {
   position: absolute;
-  top: -4.5rem;
-  right: -5rem;
+  display: none;
+  background: rgb(66, 73, 92);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.tooltip-custom::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 20%;
+  margin-left: -5px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid rgb(66, 73, 92);
 }
 
 </style>
@@ -70,54 +104,54 @@
 @section('content')
 {{-- total section --}}
 <div class="container width-full mx-0 px-0 mt-4">
-  <div class="row g-3">
+  <div class="row g-4">
     <div class="col-md-3">
-      <div class="stat-card-custom">
+      <div class="stat-card-custom" id="totalAssetCard" style="cursor: pointer;">
         <img src="{{ url('/image/asset.svg') }}" alt="asset" class="image-card">
         <div class="stat-title">TOTAL MESIN DAN PERALATAN</div>
         <div class="stat-value">{{ $totalAssets }}</div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="stat-card-custom">
+      <div class="stat-card-custom" id="totalCalibratedCard" style="cursor: pointer;">
         <img src="{{ url('/image/done.svg') }}" alt="asset" class="image-card">
         <div class="stat-title">TOTAL ALAT SUDAH KALIBRASI</div>
         <div class="stat-value">{{ $calibratedCount }}</div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="stat-card-custom">
+      <div class="stat-card-custom" id="onTrackCard" style="cursor: pointer;">
         <img src="{{ url('/image/ontrack.svg') }}" alt="asset" class="image-card">
         <div class="stat-title">TOTAL ALAT ON TRACK KALIBRASI</div>
         <div class="stat-value">{{ $onTrackCount }}</div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="stat-card-custom">
+      <div class="stat-card-custom" id="onEDCard" style="cursor: pointer;">
         <img src="{{ url('/image/ed.svg') }}" alt="asset" class="image-card">
         <div class="stat-title">TOTAL ALAT MENDEKATI ED KALIBRASI</div>
         <div class="stat-value">{{ $approachingEDCount }}</div>
       </div>
     </div>
   </div>
+  <div id="customTooltip" class="tooltip-custom"></div>
 </div>
 
-{{-- data alat kalibrasi --}}
-<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow px-2">
-    <h3 class="text-center mt-4 mb-4">DATA ALAT PROSES KALIBRASI</h3>
-    <hr class="mb-4" text-center>
+{{-- data alat on track kalibrasi --}}
+<div class="table-responsive text-nowrap mt-5 bg-white shadow px-5 py-5" id="onTrackTable" style="display: none; border-radius: 16px;">
+    <h3 class="text-center mb-5">DATA ALAT PROSES KALIBRASI</h3>
     <table class="table table-bordered text-center align-middle">
         <thead>
-            <tr class="text-nowrap">
-                <th>No.</th>
-                <th>Nama Alat</th>
-                <th>Serial Number</th>
-                <th>Departemen</th>
-                <th>ED Sertifikat</th>
-                <th>Kalibrasi</th>
-                <th>Progress</th>
-                <th>Status</th>
-                <th>Reminder</th>
+            <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
+                <th style="color: #fff">No.</th>
+                <th style="color: #fff">Nama Alat</th>
+                <th style="color: #fff">Serial Number</th>
+                <th style="color: #fff">Departemen</th>
+                <th style="color: #fff">ED Sertifikat</th>
+                <th style="color: #fff">Kalibrasi</th>
+                <th style="color: #fff">Progress</th>
+                <th style="color: #fff">Status</th>
+                <th style="color: #fff">Reminder</th>
             </tr>
         
         </thead>
@@ -144,18 +178,17 @@
 </div>
 
 {{-- data alat mendekati ED --}}
-<div class="table-responsive text-nowrap mt-5 bg-white rounded-2 shadow px-2">
-    <h3 class="mt-4 mb-4 text-center">DATA ALAT MENDEKATI ED KALIBRASI</h3>
-    <hr class="mb-4" text-center>
+<div class="table-responsive text-nowrap mt-5 bg-white shadow px-5 py-5" id="onEDTable" style="display: none; border-radius: 16px;">
+    <h3 class="text-center mb-5">DATA ALAT MENDEKATI ED KALIBRASI</h3>
     <table class="table table-bordered text-center align-middle">
         <thead>
-            <tr class="text-nowrap">
-                <th>No.</th>
-                <th>Nama Alat</th>
-                <th>Serial Number</th>
-                <th>Departemen</th>
-                <th>ED Sertifikat</th>
-                <th>
+            <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
+                <th style="color: #fff">No.</th>
+                <th style="color: #fff">Nama Alat</th>
+                <th style="color: #fff">Serial Number</th>
+                <th style="color: #fff">Departemen</th>
+                <th style="color: #fff">ED Sertifikat</th>
+                <th style="color: #fff">
                   @php
                       $currentSort = request()->get('sort');
                       $currentDirection = request()->get('direction', 'asc');
@@ -167,22 +200,21 @@
                   <a href="{{ route('dashboard', [
                           'sort' => $column, 
                           'direction' => $nextDirection
-                      ]) }}" class="d-flex align-items-center justify-content-center gap-1 text-decoration-none" style="color: #566A7F;">
+                      ]) }}" class="d-flex align-items-center justify-content-center gap-1 text-decoration-none" style="color: #fff;">
                       <span>KALIBRASI</span>
                       @if ($isSorted)
                           @if ($currentDirection === 'asc')
-                              <i class='bx bx-sort-a-z bx-xs text-primary'></i>
+                              <i class='bx bx-sort-a-z bx-xs text-white'></i>
                           @else
-                              <i class='bx bx-sort-z-a bx-xs text-primary'></i>
+                              <i class='bx bx-sort-z-a bx-xs text-white'></i>
                           @endif
                       @else
                           <i class='bx bx-sort-a-z bx-xs'></i>
                       @endif
                   </a>
               </th>
-              <th>reminder</th>
+              <th style="color: #fff">reminder</th>
             </tr>
-        
         </thead>
         <tbody>
         @forelse ($assets as $index => $asset)
@@ -201,21 +233,76 @@
             <td>{{ $asset->category->calibration }}</td>
             <td>{!! $asset->reminder_status !!}</td>
         </tr>
-@empty
-<tr>
-    <td colspan="10" class="text-center">Tidak ada data.</td>
-</tr>
-@endforelse
-
+        @empty
+        <tr>
+            <td colspan="10" class="text-center">Tidak ada data.</td>
+        </tr>
+        @endforelse
         </tbody>
-
     </table>
-    <div class="d-flex justify-content-end mt-5">
+    <div class="d-flex justify-content-end mt-4">
       {{ $assets->links('pagination::bootstrap-5') }}
     </div>
 
 </div>
 @endsection
+
 @section('script')
+<script>
+  // card control
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleTable = (cardId, tableId) => {
+      const card = document.getElementById(cardId);
+      const table = document.getElementById(tableId);
+      if (card && table) {
+        card.addEventListener("click", () => {
+          table.style.display = (table.style.display === "none" || table.style.display === "") ? "block" : "none";
+        });
+      }
+    };
+
+    const redirectOnClick = (cardId, url) => {
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.addEventListener("click", () => {
+          window.location.href = url;
+        });
+      }
+    };
+
+    toggleTable("onTrackCard", "onTrackTable");
+    toggleTable("onEDCard", "onEDTable");
+    redirectOnClick("totalAssetCard", "/asset");
+    redirectOnClick("totalCalibratedCard", "/calibration/calibrated-assets");
+  });
+
+  // tooltips
+  document.addEventListener("DOMContentLoaded", function () {
+    const tooltip = document.getElementById("customTooltip");
+
+    const cardsWithTooltip = [
+      { id: "onTrackCard", message: "Click to view On Track Assets" },
+      { id: "onEDCard", message: "Click to view Expiring Assets" },
+      { id: "totalAssetCard", message: "Click to view All Assets" },
+      { id: "totalCalibratedCard", message: "Click to view Calibrated Assets" },
+    ];
+
+    cardsWithTooltip.forEach(({ id, message }) => {
+      const card = document.getElementById(id);
+      if (card) {
+        card.addEventListener("mousemove", function (e) {
+          tooltip.style.display = "block";
+          tooltip.textContent = message;
+          tooltip.style.left = e.pageX + 95 + "px";
+          tooltip.style.top = e.pageY + 0 + "px";
+        });
+
+        card.addEventListener("mouseleave", function () {
+          tooltip.style.display = "none";
+        });
+      }
+    });
+  });
+</script>
 @endsection
 

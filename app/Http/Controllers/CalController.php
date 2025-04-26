@@ -304,6 +304,79 @@ class CalController extends Controller
         ]);
     }
 
+    // public function calibratedAssets()
+    // {
+    //     $nextYear = now()->addYear()->year;
+    //     $assets = Assets::with([
+    //         'department',
+    //         'plant',
+    //         'category',
+    //         'latest_external_calibration',
+    //         'latest_external_calibration.latestCalibrationFile',
+    //         'latest_temp_calibration',
+    //         'latest_display_calibration',
+    //         'latest_scale_calibration',
+    //     ])->get();
+
+    //     $missingCalibratedAssets = [];
+    //     $calibratedAssets = [];
+
+    //     foreach ($assets as $asset) {
+    //         $ed = Carbon::parse($asset->expired_date)->year;
+
+    //         if ($nextYear == $ed) {
+    //             // Get the latest external calibration file
+    //             $latestCalibrationFile = optional($asset->latest_external_calibration)->latestCalibrationFile;
+
+    //             $externalComplete = false;
+    //             if ($latestCalibrationFile) {
+    //                 if (
+    //                     $latestCalibrationFile->progress === 'Sertifikat' &&
+    //                     !is_null($latestCalibrationFile->filename) &&
+    //                     !is_null($latestCalibrationFile->path)
+    //                 ) {
+    //                     $externalComplete = true;
+    //                 }
+    //             }
+
+    //             // Check if the asset has other calibrations
+    //             $hasOtherCalibration = collect([
+    //                 optional($asset->latest_temp_calibration)->date,
+    //                 optional($asset->latest_display_calibration)->date,
+    //                 optional($asset->latest_scale_calibration)->date,
+    //             ])->filter()->isNotEmpty();
+
+    //             // Add to the right list
+    //             if ($externalComplete || $hasOtherCalibration) {
+    //                 $calibratedAssets[] = $asset;
+    //             } else {
+    //                 $missingCalibratedAssets[] = $asset;
+    //             }
+    //         }
+    //     }
+
+    //     // 👉 Manual pagination untuk missingCalibratedAssets
+    //     $page = request()->get('page', 1);
+    //     $perPage = 10;
+    //     $offset = ($page - 1) * $perPage;
+    //     $pagedMissingAssets = array_slice($missingCalibratedAssets, $offset, $perPage);
+
+    //     $missingAssetsPaginated = new LengthAwarePaginator(
+    //         $pagedMissingAssets,
+    //         count($missingCalibratedAssets),
+    //         $perPage,
+    //         $page,
+    //         ['path' => request()->url(), 'query' => request()->query()]
+    //     );
+
+    //     return view('calibration.calibratedAsset', [
+    //         'missingCalibrationCount' => count($missingCalibratedAssets),
+    //         // 'missingCalibrationAsset' => $missingCalibratedAssets,
+    //         'missingCalibrationAsset' => $missingAssetsPaginated,
+    //         'calibratedAssets' => $calibratedAssets, // ✅ Send calibrated assets to the view
+    //     ]);
+    // }
+
     public function calibratedAssets()
     {
         $nextYear = now()->addYear()->year;
@@ -320,33 +393,41 @@ class CalController extends Controller
 
         $missingCalibratedAssets = [];
         $calibratedAssets = [];
+        $certifiedAssets = [];
 
         foreach ($assets as $asset) {
+            $latestCalibrationFile = optional($asset->latest_external_calibration)->latestCalibrationFile;
+
+            // ✅ Cek apakah asset sudah upload sertifikat & progress-nya 'Sertifikat'
+            if (
+                $latestCalibrationFile &&
+                $latestCalibrationFile->progress === 'Sertifikat' &&
+                !is_null($latestCalibrationFile->filename) &&
+                !is_null($latestCalibrationFile->path)
+            ) {
+                $certifiedAssets[] = $asset;
+            }
+
+            // Cek expired date
             $ed = Carbon::parse($asset->expired_date)->year;
-
             if ($nextYear == $ed) {
-                // Get the latest external calibration file
-                $latestCalibrationFile = optional($asset->latest_external_calibration)->latestCalibrationFile;
-
                 $externalComplete = false;
-                if ($latestCalibrationFile) {
-                    if (
-                        $latestCalibrationFile->progress === 'Sertifikat' &&
-                        !is_null($latestCalibrationFile->filename) &&
-                        !is_null($latestCalibrationFile->path)
-                    ) {
-                        $externalComplete = true;
-                    }
+
+                if (
+                    $latestCalibrationFile &&
+                    $latestCalibrationFile->progress === 'Sertifikat' &&
+                    !is_null($latestCalibrationFile->filename) &&
+                    !is_null($latestCalibrationFile->path)
+                ) {
+                    $externalComplete = true;
                 }
 
-                // Check if the asset has other calibrations
                 $hasOtherCalibration = collect([
                     optional($asset->latest_temp_calibration)->date,
                     optional($asset->latest_display_calibration)->date,
                     optional($asset->latest_scale_calibration)->date,
                 ])->filter()->isNotEmpty();
 
-                // Add to the right list
                 if ($externalComplete || $hasOtherCalibration) {
                     $calibratedAssets[] = $asset;
                 } else {
@@ -361,7 +442,7 @@ class CalController extends Controller
         $offset = ($page - 1) * $perPage;
         $pagedMissingAssets = array_slice($missingCalibratedAssets, $offset, $perPage);
 
-        $missingAssetsPaginated = new LengthAwarePaginator(
+        $missingAssetsPaginated = new \Illuminate\Pagination\LengthAwarePaginator(
             $pagedMissingAssets,
             count($missingCalibratedAssets),
             $perPage,
@@ -371,9 +452,10 @@ class CalController extends Controller
 
         return view('calibration.calibratedAsset', [
             'missingCalibrationCount' => count($missingCalibratedAssets),
-            // 'missingCalibrationAsset' => $missingCalibratedAssets,
             'missingCalibrationAsset' => $missingAssetsPaginated,
-            'calibratedAssets' => $calibratedAssets, // ✅ Send calibrated assets to the view
+            'calibratedAssets' => $calibratedAssets,
+            'certifiedAssets' => $certifiedAssets,
+            'certifiedAssetsCount' => count($certifiedAssets),
         ]);
     }
 }

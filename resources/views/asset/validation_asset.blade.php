@@ -1,8 +1,8 @@
 @extends('templates.templates')
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y px-0">
-    <div class="card">
-        <h5 class="card-header d-flex justify-content-between align-items-center">
+    <div class="card px-5 py-5" style="border-radius: 1rem;">
+        <h5 class="card-header d-flex justify-content-between align-items-center p-0 mb-4">
             <span>Data Aset Mesin Pemasakan</span>
             <div class="d-flex gap-2">
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importCsvModal">
@@ -115,16 +115,16 @@
         </div>
 
         <div class="table-responsive text-nowrap">
-            <table class="table">
+            <table class="table table-bordered text-center align-middle">
                 <thead>
-                    <tr class="text-nowrap">
-                        <th>No.</th>
-                        <th>Departemen</th>
-                        <th>Plant</th>
-                        <th>Lokasi</th>
-                        <th>Nama Mesin</th>
-                        <th>Detail</th>
-                        <th>Action</th>
+                    <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
+                        <th style="color: #fff">No.</th>
+                        <th style="color: #fff">Departemen</th>
+                        <th style="color: #fff">Plant</th>
+                        <th style="color: #fff">Lokasi</th>
+                        <th style="color: #fff">Nama Mesin</th>
+                        <th style="color: #fff">Detail</th>
+                        <th style="color: #fff">Action</th>
                     </tr>
                 </thead>
                 <tbody>

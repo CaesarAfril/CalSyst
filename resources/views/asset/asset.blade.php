@@ -1,8 +1,8 @@
 @extends('templates.templates')
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y px-0">
-    <div class="card">
-        <h5 class="card-header d-flex justify-content-between align-items-center align-content-center">
+    <div class="card px-5 py-5" style="border-radius: 1rem;">
+        <h5 class="card-header d-flex justify-content-between align-items-center align-content-center p-0 mb-4">
             <span>Data Aset Alat Ukur</span> 
             <div class="d-flex justify-content-between align-items-center gap-5">
                 <form id="searchForm" method="GET" class="d-flex align-items-center gap-2 mb-0">
@@ -205,26 +205,26 @@
         </div>
 
         <div class="table-responsive text-nowrap" id="asset-table">
-            <table class="table">
+            <table class="table table-bordered text-center align-middle">
                 <thead>
-                    <tr class="text-nowrap">
-                        <th>No.</th>
-                        <th>Departemen</th>
-                        <th>Plant</th>
-                        <th>Lokasi</th>
-                        <th>Kategori</th>
-                        <th>Merk</th>
-                        <th>Tipe</th>
-                        <th>Nomor Seri</th>
-                        <th>Kapasitas</th>
-                        <th>Range</th>
-                        <th>Resolusi</th>
-                        <th>Koreksi</th>
-                        <th>Ketidakpastian</th>
-                        <th>Standar</th>
-                        <th>Status Kelayakan</th>
-                        <th>ED Sertifikat</th>
-                        <th>Action</th>
+                    <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
+                        <th style="color: #fff">No.</th>
+                        <th style="color: #fff">Departemen</th>
+                        <th style="color: #fff">Plant</th>
+                        <th style="color: #fff">Lokasi</th>
+                        <th style="color: #fff">Kategori</th>
+                        <th style="color: #fff">Merk</th>
+                        <th style="color: #fff">Tipe</th>
+                        <th style="color: #fff">Nomor Seri</th>
+                        <th style="color: #fff">Kapasitas</th>
+                        <th style="color: #fff">Range</th>
+                        <th style="color: #fff">Resolusi</th>
+                        <th style="color: #fff">Koreksi</th>
+                        <th style="color: #fff">Ketidakpastian</th>
+                        <th style="color: #fff">Standar</th>
+                        <th style="color: #fff">Status Kelayakan</th>
+                        <th style="color: #fff">ED Sertifikat</th>
+                        <th style="color: #fff">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -534,7 +534,7 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="d-flex justify-content-end mt-3">
+            <div class="d-flex justify-content-end mt-4">
                 {{ $assets->links('pagination::bootstrap-5') }}
             </div>
         </div>
