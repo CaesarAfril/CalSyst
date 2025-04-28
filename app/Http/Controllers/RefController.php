@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\References;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class RefController extends Controller
 {
@@ -38,14 +39,39 @@ class RefController extends Controller
         return redirect()->back()->with('success', 'Files Uploaded Successfully');
     }
 
-    public function update(Request $request, $uuid)
+    // public function update(Request $request, $uuid)
+    // {
+    //     $request->validate([
+    //         'edit_document_name' => 'required|string|max:255',
+    //         'edit_document_file' => 'required|file'
+    //     ]);
+
+    //     $update = References::where('uuid', $uuid)->FirstOrFail();
+
+    //     if ($request->hasFile('edit_document_file')) {
+    //         $file = $request->file('edit_document_file');
+    //         $filename = $file->getClientOriginalName();
+    //         $folder = "document/references";
+    //         $path = $file->storeAs($folder, $filename, 'public');
+
+    //         $update->update([
+    //             'document_name' => $request->edit_document_name,
+    //             'filename' => $filename,
+    //             'path' => $path
+    //         ]);
+    //     }
+
+    //     return redirect()->back()->with('success', 'Files Uploaded Successfully');
+    // }
+
+    public function update(Request $request, $id)
     {
         $request->validate([
             'edit_document_name' => 'required|string|max:255',
             'edit_document_file' => 'required|file'
         ]);
 
-        $update =  References::where('uuid', $uuid)->FirstOrFail();
+        $update = References::findOrFail($id);
 
         if ($request->hasFile('edit_document_file')) {
             $file = $request->file('edit_document_file');
@@ -60,6 +86,19 @@ class RefController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Files Uploaded Successfully');
+        return redirect()->back()->with('success', 'Files Updated Successfully');
+    }
+
+    public function destroy($id)
+    {
+        $reference = References::findOrFail($id);
+
+        if ($reference->path && Storage::disk('public')->exists($reference->path)) {
+            Storage::disk('public')->delete($reference->path);
+        }
+
+        $reference->delete();
+
+        return redirect()->back()->with('success', 'Dokumen berhasil dihapus.');
     }
 }

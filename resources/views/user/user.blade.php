@@ -96,14 +96,14 @@
         <div class="table-responsive text-nowrap">
             <table class="table table-bordered text-center align-middle">
                 <thead>
-                    <tr class="text-nowrap">
-                        <th rowspan="2">No.</th>
-                        <th rowspan="2">Username</th>
-                        <th rowspan="2">Nama</th>
-                        <th rowspan="2">Email</th>
-                        <th>Departemen</th>
-                        <th rowspan="2">Plant</th>
-                        <th rowspan="2">Action</th>
+                    <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
+                        <th rowspan="2" style="color: #fff">No.</th>
+                        <th rowspan="2" style="color: #fff">Username</th>
+                        <th rowspan="2" style="color: #fff">Nama</th>
+                        <th rowspan="2" style="color: #fff">Email</th>
+                        <th style="color: #fff">Departemen</th>
+                        <th rowspan="2" style="color: #fff">Plant</th>
+                        <th rowspan="2" style="color: #fff">Action</th>
                     </tr>
                     <tr>
                         <th>

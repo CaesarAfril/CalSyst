@@ -436,7 +436,6 @@ class CalController extends Controller
             }
         }
 
-        // 👉 Manual pagination untuk missingCalibratedAssets
         $page = request()->get('page', 1);
         $perPage = 10;
         $offset = ($page - 1) * $perPage;
