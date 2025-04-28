@@ -19,7 +19,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets') }}/sneat/assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -87,7 +87,7 @@
             <!-- Menu -->
             <aside id="layout-menu" class="layout-menu menu-vertical menu custom-sidebar">
                 <div class="app-brand demo">
-                    <a class="app-brand-link">
+                    <a class="app-brand-link" href="{{route('dashboard')}}">
                         <img src="{{ url('/image/icon.png') }}" alt="icon" style="width: 200px;">
                     </a>
 
@@ -105,14 +105,14 @@
                     <li class="menu-item">
                         <a href="{{route('dashboard')}}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle custom-sidebar-text"></i>
-                            <div data-i18n="Analytics" class="custom-sidebar-text">Dashboard</div>
+                            <div data-i18n="Analytics" class="custom-sidebar-text" style="font-size: 18px">Dashboard</div>
                         </a>
                     </li>
 
                     <li class="menu-item mt-2">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon bx bxs-data custom-sidebar-text"></i>
-                            <div data-i18n="Basic" class="custom-sidebar-text">Database</div>
+                            <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Database</div>
                         </a>
                         <ul class="menu-sub" style="margin-left: -.1rem;">
                             <!--***********************************
@@ -121,7 +121,7 @@
                             <li class="menu-item">
                                 <a href="{{route('user')}}" class="menu-link">
                                     <i class="menu-icon bx bxs-bot custom-sidebar-text"></i>
-                                    <div data-i18n="Basic" class="custom-sidebar-text">Data User</div>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Data User</div>
                                 </a>
                             </li>
 
@@ -131,7 +131,7 @@
                             <li class="menu-item">
                                 <a href="{{route('plant.index')}}" class="menu-link">
                                     <i class="menu-icon bx bxs-institution custom-sidebar-text"></i>
-                                    <div data-i18n="Basic" class="custom-sidebar-text">Data Plant</div>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Data Plant</div>
                                 </a>
                             </li>
 
@@ -141,7 +141,7 @@
                             <li class="menu-item">
                                 <a href="{{route('department.index')}}" class="menu-link">
                                     <i class="menu-icon bx bxs-home custom-sidebar-text"></i>
-                                    <div data-i18n="Basic" class="custom-sidebar-text">Data Department</div>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Data Department</div>
                                 </a>
                             </li>
 
@@ -151,21 +151,21 @@
                             <li class="menu-item">
                                 <a href="{{route('category.index')}}" class="menu-link">
                                     <i class='menu-icon bx bx-category custom-sidebar-text'></i>
-                                    <div data-i18n="Basic" class="custom-sidebar-text">Kategori Alat Ukur</div>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Kategori Alat Ukur</div>
                                 </a>
                             </li>
 
                             <li class="menu-item">
                                 <a href="{{route('machine.index')}}" class="menu-link">
                                     <i class='menu-icon bx bx-dish custom-sidebar-text'></i>
-                                    <div data-i18n="Basic" class="custom-sidebar-text">Mesin</div>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Mesin</div>
                                 </a>
                             </li>
 
                             <li class="menu-item">
                                 <a href="{{route('weight.index')}}" class="menu-link">
                                     <i class='menu-icon bx bx-layer custom-sidebar-text'></i>
-                                    <div data-i18n="Basic" class="custom-sidebar-text">Anak Timbang</div>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Anak Timbang</div>
                                 </a>
                             </li>
 
@@ -175,17 +175,17 @@
                             <li class="menu-item">
                                 <a href="javascript:void(0)" class="menu-link menu-toggle">
                                     <i class="menu-icon tf-icons bx bxs-cog custom-sidebar-text"></i>
-                                    <div data-i18n="Basic" class="custom-sidebar-text">Aset</div>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Aset</div>
                                 </a>
                                 <ul class="menu-sub" style="margin-left: -.1rem;">
                                     <li class="menu-item">
                                         <a href="{{route('asset.index')}}" class="menu-link">
-                                            <div class="custom-sidebar-text">Aset Alat Ukur</div>
+                                            <div class="custom-sidebar-text" style="font-size: 18px">Aset Alat Ukur</div>
                                         </a>
                                     </li>
                                     <li class="menu-item">
                                         <a href="{{route('validation_asset.index')}}" class="menu-link">
-                                            <div class="custom-sidebar-text">Aset Mesin Pemasakan</div>
+                                            <div class="custom-sidebar-text" style="font-size: 18px">Aset Mesin Pemasakan</div>
                                         </a>
                                     </li>
                                 </ul>
@@ -195,7 +195,7 @@
                         <li class="menu-item mt-2">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon bx bx-desktop custom-sidebar-text"></i>
-                                <div data-i18n="Basic" class="custom-sidebar-text">Monitoring</div>
+                                <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Monitoring</div>
                             </a>
                             <ul class="menu-sub" style="margin-left: -.1rem;">
                                 <!--***********************************
@@ -204,7 +204,7 @@
                             <li class="menu-item">
                                 <a href="{{route('late-calibration')}}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
-                                    <div data-i18n="Basic" class="custom-sidebar-text">Total Alat Telat Kalibrasi</div>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Total Alat Telat Kalibrasi</div>
                                 </a>
                             </li>
 
@@ -214,7 +214,7 @@
                             <li class="menu-item">
                                 <a href="{{route('calibrated-assets')}}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-check-double custom-sidebar-text"></i>
-                                    <div data-i18n="Basic" class="custom-sidebar-text">Total Alat Terkalibrasi</div>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Total Alat Terkalibrasi</div>
                                 </a>
                             </li>
                             </ul>
@@ -223,7 +223,7 @@
                         <li class="menu-item mt-2">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon bx bxs-report custom-sidebar-text"></i>
-                                <div data-i18n="Basic" class="custom-sidebar-text">Report</div>
+                                <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Report</div>
                             </a>
                             <ul class="menu-sub" style="margin-left: -.1rem;">
                                 <!--***********************************
@@ -232,22 +232,22 @@
                                 <li class="menu-item">
                                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                                         <i class="menu-icon bx bxs-brain custom-sidebar-text"></i>
-                                        <div data-i18n="Basic" class="custom-sidebar-text">Report Kalibrasi Internal</div>
+                                        <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Report Kalibrasi Internal</div>
                                     </a>
                                     <ul class="menu-sub">
                                         <li class="menu-item">
                                             <a href="{{ route('report.temperature') }}" class="menu-link">
-                                                <div data-i18n="report.temperature" class="custom-sidebar-text">Report Temperatur</div>
+                                                <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Report Temperatur</div>
                                             </a>
                                         </li>
                                         <li class="menu-item">
                                             <a href="{{ route('report.display') }}" class="menu-link">
-                                                <div data-i18n="report.display" class="custom-sidebar-text">Report Display Suhu</div>
+                                                <div data-i18n="report.display" class="custom-sidebar-text" style="font-size: 18px">Report Display Suhu</div>
                                             </a>
                                         </li>
                                         <li class="menu-item">
                                             <a href="{{ route('report.scale') }}" class="menu-link">
-                                                <div data-i18n="report.scale" class="custom-sidebar-text">Report Timbangan</div>
+                                                <div data-i18n="report.scale" class="custom-sidebar-text" style="font-size: 18px">Report Timbangan</div>
                                             </a>
                                         </li>
                                     </ul>
@@ -258,7 +258,7 @@
                         <li class="menu-item mt-2">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon bx bxs-file-pdf custom-sidebar-text"></i>
-                                <div data-i18n="Basic" class="custom-sidebar-text">Sertifikat</div>
+                                <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Sertifikat</div>
                             </a>
                             <ul class="menu-sub" style="margin-left: -.1rem;">
                                <!--***********************************
@@ -267,22 +267,22 @@
                                 <li class="menu-item">
                                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                                         <i class="menu-icon tf-icons bx bxs-blanket custom-sidebar-text"></i>
-                                        <div data-i18n="Basic" class="custom-sidebar-text">Sertifikat Kalibrasi Internal</div>
+                                        <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Sertifikat Kalibrasi Internal</div>
                                     </a>
                                     <ul class="menu-sub">
                                         <li class="menu-item">
                                             <a href="{{ route('Internal_calibration.temperature') }}" class="menu-link">
-                                                <div data-i18n="report.temperature" class="custom-sidebar-text">Temperatur</div>
+                                                <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Temperatur</div>
                                             </a>
                                         </li>
                                         <li class="menu-item">
                                             <a href="{{ route('Internal_calibration.display') }}" class="menu-link">
-                                                <div data-i18n="report.display" class="custom-sidebar-text">Display Suhu</div>
+                                                <div data-i18n="report.display" class="custom-sidebar-text" style="font-size: 18px">Display Suhu</div>
                                             </a>
                                         </li>
                                         <li class="menu-item">
                                             <a href="{{ route('Internal_calibration.scale') }}" class="menu-link">
-                                                <div data-i18n="report.scale" class="custom-sidebar-text">Timbangan</div>
+                                                <div data-i18n="report.scale" class="custom-sidebar-text" style="font-size: 18px">Timbangan</div>
                                             </a>
                                         </li>
                                     </ul>
@@ -294,7 +294,7 @@
                                 <li class="menu-item">
                                     <a href="{{route('External_calibration')}}" class="menu-link">
                                         <i class="menu-icon tf-icons bx bxs-blanket custom-sidebar-text"></i>
-                                        <div data-i18n="Basic" class="custom-sidebar-text">Sertifikat Kalibrasi Eksternal</div>
+                                        <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Sertifikat Kalibrasi Eksternal</div>
                                     </a>
                                 </li>
 
@@ -304,7 +304,7 @@
                                 <li class="menu-item">
                                     <a href="{{route('references')}}" class="menu-link">
                                         <i class="menu-icon tf-icons bx bxs-file-blank custom-sidebar-text"></i>
-                                        <div data-i18n="Basic" class="custom-sidebar-text">Referensi</div>
+                                        <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Referensi</div>
                                     </a>
                                 </li>
                             </ul>
@@ -328,8 +328,6 @@
                             <div class="nav-item d-flex align-items-center">
                                 <div> Hai, {{Auth::user()->name}}! You are logged in.
                                 </div>
-                                <!-- <i class="bx bx-search fs-4 lh-0"></i>
-                                <input type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..." /> -->
                             </div>
                         </div>
 

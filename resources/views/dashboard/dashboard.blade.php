@@ -20,7 +20,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 200px;
+  min-height: 270px;
   position: relative;
   overflow: hidden;
 }
@@ -44,31 +44,31 @@
 }
 
 .image-card {
-  width: 90%;
+  width: 85%;
   opacity: 0.7;
   position: absolute;
-  top: -4.5rem;
-  right: -5rem;
+  top: -9rem;
+  right: -10.1rem;
   filter: grayscale(30%);
   transition: all 0.3s ease;
 }
 
 .stat-title {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: #566A7F;
   font-weight: 600;
   text-transform: uppercase;
   width: 80%;
   margin-bottom: .5rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   text-transform: uppercase;
   word-wrap: break-word;
   z-index: 99;
 }
 
 .stat-value {
-  font-size: 2.2rem;
-  margin-left: .5rem;
+  font-size: 3rem;
+  margin-left: 1rem;
   font-weight: bold;
   color: #343a40;
   z-index: 99;
@@ -104,29 +104,29 @@
 @section('content')
 {{-- total section --}}
 <div class="container width-full mx-0 px-0 mt-4">
-  <div class="row g-4">
-    <div class="col-md-3">
+  <div class="row g-5">
+    <div class="col-md-6">
       <div class="stat-card-custom" id="totalAssetCard" style="cursor: pointer;">
         <img src="{{ url('/image/asset.svg') }}" alt="asset" class="image-card">
         <div class="stat-title">TOTAL MESIN DAN PERALATAN</div>
         <div class="stat-value">{{ $totalAssets }}</div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="stat-card-custom" id="totalCalibratedCard" style="cursor: pointer;">
         <img src="{{ url('/image/done.svg') }}" alt="asset" class="image-card">
         <div class="stat-title">TOTAL ALAT SUDAH KALIBRASI</div>
         <div class="stat-value">{{ $calibratedCount }}</div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="stat-card-custom" id="onTrackCard" style="cursor: pointer;">
         <img src="{{ url('/image/ontrack.svg') }}" alt="asset" class="image-card">
         <div class="stat-title">TOTAL ALAT ON TRACK KALIBRASI</div>
         <div class="stat-value">{{ $onTrackCount }}</div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="stat-card-custom" id="onEDCard" style="cursor: pointer;">
         <img src="{{ url('/image/ed.svg') }}" alt="asset" class="image-card">
         <div class="stat-title">TOTAL ALAT MENDEKATI ED KALIBRASI</div>

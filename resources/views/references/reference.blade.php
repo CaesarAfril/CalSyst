@@ -92,6 +92,7 @@
                                                         class="form-control"
                                                         id="edit_document_name"
                                                         name="edit_document_name"
+                                                        value="{{ $document->document_name }}"
                                                         placeholder="Masukkan Nama Dokumen"
                                                         required>
                                                 </div>
@@ -105,8 +106,14 @@
                                                         name="edit_document_file"
                                                         accept=".pdf,.doc,.docx"
                                                         required>
+                                                        <div class="mb-2 mt-2">
+                                                            <small>File saat ini: 
+                                                                <a href="{{ asset('storage/' . $document->path) }}" target="_blank">
+                                                                    {{ $document->filename }}
+                                                                </a>
+                                                            </small>
+                                                        </div>
                                                 </div>
-
                                                 <!-- Plant Dropdown -->
                                             </div>
                                             <div class="modal-footer">
@@ -146,6 +153,9 @@
                                 </div>
                             </div>
 
+                            <a href="{{ asset('storage/' . $document->path) }}" target="_blank" class="btn btn-info btn-sm">
+                                Cetak
+                            </a>
                         </td>
                     </tr>
                     @endforeach
