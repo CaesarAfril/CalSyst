@@ -116,7 +116,7 @@
         <tbody>
         @forelse ($expiredAssets as $index => $asset)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ ($expiredAssets->currentPage() - 1) * $expiredAssets->perPage() + $loop->iteration }}</td>
             <td>{{ $asset->category->category }}</td> <!-- Nama alat -->
             <td>{{ $asset->series_number }}</td> <!-- Serial Number -->
             <td>{{ $asset->department->department }}</td> <!-- Departemen -->

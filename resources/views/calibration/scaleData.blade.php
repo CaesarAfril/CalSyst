@@ -27,15 +27,12 @@
                         <td>
                             <!-- Edit Button -->
                             <button type="button" class="btn btn-warning btn-sm" onclick="printPDF('{{ route('Internal_calibration.PrintPDFScale', $report->uuid) }}')">
-                                Cetak
+                                Cetak PDF
                             </button>
 
                             <script>
                                 function printPDF(pdfUrl) {
                                     var win = window.open(pdfUrl, '_blank');
-                                    win.onload = function() {
-                                        win.print();
-                                    };
                                 }
                             </script>
                         </td>

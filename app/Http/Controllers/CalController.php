@@ -30,7 +30,9 @@ class CalController extends Controller
 
     public function temperature()
     {
-        $report = temp_calibration::with(['actual_temps', 'asset'])->get();
+        $report = temp_calibration::with(['actual_temps', 'asset'])
+            ->where('approval', 1)
+            ->get();
 
         return view('calibration.temperatureData', [
             'reports' => $report
@@ -52,7 +54,9 @@ class CalController extends Controller
 
     public function display()
     {
-        $report = Display_calibration::with(['actual_displays', 'asset'])->get();
+        $report = Display_calibration::with(['actual_displays', 'asset'])
+            ->where('approval', 1)
+            ->get();
 
         return view('calibration.displayData', [
             'reports' => $report
@@ -74,7 +78,9 @@ class CalController extends Controller
 
     public function scale()
     {
-        $report = Scale_calibration::with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])->get();
+        $report = Scale_calibration::with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])
+            ->where('approval', 1)
+            ->get();
 
         return view('calibration.scaleData', [
             'reports' => $report
@@ -399,11 +405,21 @@ class CalController extends Controller
             $latestCalibrationFile = optional($asset->latest_external_calibration)->latestCalibrationFile;
 
             // ✅ Cek apakah asset sudah upload sertifikat & progress-nya 'Sertifikat'
+            // if (
+            //     $latestCalibrationFile &&
+            //     $latestCalibrationFile->progress === 'Sertifikat' &&
+            //     !is_null($latestCalibrationFile->filename) &&
+            //     !is_null($latestCalibrationFile->path)
+            // ) {
+            //     $certifiedAssets[] = $asset;
+            // }
+
             if (
                 $latestCalibrationFile &&
                 $latestCalibrationFile->progress === 'Sertifikat' &&
                 !is_null($latestCalibrationFile->filename) &&
-                !is_null($latestCalibrationFile->path)
+                !is_null($latestCalibrationFile->path) &&
+                Carbon::parse($asset->expired_date)->year === $nextYear
             ) {
                 $certifiedAssets[] = $asset;
             }

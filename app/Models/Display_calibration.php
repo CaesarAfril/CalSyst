@@ -30,7 +30,8 @@ class Display_calibration extends Model
         'veff',
         'k',
         'u95',
-        'expired_date'
+        'expired_date',
+        'approval'
     ];
 
     protected static function boot()
