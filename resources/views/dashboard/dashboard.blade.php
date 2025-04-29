@@ -120,146 +120,155 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="stat-card-custom" id="onTrackCard" style="cursor: pointer;">
-        <img src="{{ url('/image/ontrack.svg') }}" alt="asset" class="image-card">
-        <div class="stat-title">TOTAL ALAT ON TRACK KALIBRASI</div>
-        <div class="stat-value">{{ $onTrackCount }}</div>
-      </div>
+      <a href="{{ route('dashboard.toggleTable', 'onTrackTable') }}" style="text-decoration: none;">
+        <div class="stat-card-custom" id="onTrackCard" style="cursor: pointer;">
+          <img src="{{ url('/image/ontrack.svg') }}" alt="asset" class="image-card">
+          <div class="stat-title">TOTAL ALAT ON TRACK KALIBRASI</div>
+          <div class="stat-value">{{ $onTrackCount }}</div>
+        </div>
+      </a>
     </div>
     <div class="col-md-6">
-      <div class="stat-card-custom" id="onEDCard" style="cursor: pointer;">
-        <img src="{{ url('/image/ed.svg') }}" alt="asset" class="image-card">
-        <div class="stat-title">TOTAL ALAT MENDEKATI ED KALIBRASI</div>
-        <div class="stat-value">{{ $approachingEDCount }}</div>
-      </div>
+      <a href="{{ route('dashboard.toggleTable', 'onEDTable') }}" style="text-decoration: none;">
+        <div class="stat-card-custom" id="onEDCard" style="cursor: pointer;">
+          <img src="{{ url('/image/ED.svg') }}" alt="asset" class="image-card">
+          <div class="stat-title">TOTAL ALAT MENDEKATI ED KALIBRASI</div>
+          <div class="stat-value">{{ $approachingEDCount }}</div>
+        </div>
+      </a>
     </div>
   </div>
   <div id="customTooltip" class="tooltip-custom"></div>
 </div>
 
 {{-- data alat on track kalibrasi --}}
-<div class="table-responsive text-nowrap mt-5 bg-white shadow px-5 py-5" id="onTrackTable" style="display: none; border-radius: 16px;">
-    <h3 class="text-center mb-5">DATA ALAT PROSES KALIBRASI</h3>
-    <table class="table table-bordered text-center align-middle">
-        <thead>
-            <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
-                <th style="color: #fff">No.</th>
-                <th style="color: #fff">Nama Alat</th>
-                <th style="color: #fff">Serial Number</th>
-                <th style="color: #fff">Departemen</th>
-                <th style="color: #fff">ED Sertifikat</th>
-                <th style="color: #fff">Kalibrasi</th>
-                <th style="color: #fff">Progress</th>
-                <th style="color: #fff">Status</th>
-                <th style="color: #fff">Reminder</th>
-            </tr>
-        
-        </thead>
-        <tbody>
-          @forelse ($onTrackAsset as $index => $onTrackAssets)
-            <tr>
-                <th>{{ $loop->iteration }}</th>
-                <td>{{ $onTrackAssets->asset->category->category }}</td>
-                <td>{{ $onTrackAssets->asset->series_number }}</td>
-                <td>{{ $onTrackAssets->asset->department->department }}</td>
-                <td>{{ \Carbon\Carbon::parse($onTrackAssets->asset->expired_date)->format('d-m-Y') }}</td>
-                <td>{{ $onTrackAssets->asset->category->calibration }}</td>
-                <td> {{ $onTrackAssets->asset->latest_external_calibration->progress_status ?? '-' }}</td>
-                <td>{!! $onTrackAssets->status_message !!}</td>
-                <td>{!! $onTrackAssets->asset->reminder_status !!}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="10" class="text-center">Tidak ada data.</td>
-            </tr>
-          @endforelse
-        </tbody>
-    </table>
-</div>
+@if(session('onTrackTable'))
+  <div class="table-responsive text-nowrap mt-5 bg-white shadow px-5 py-5" id="onTrackTable" style="border-radius: 16px;">
+      <h3 class="text-center mb-5">DATA ALAT PROSES KALIBRASI</h3>
+      <table class="table table-bordered text-center align-middle">
+          <thead>
+              <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
+                  <th style="color: #fff">No.</th>
+                  <th style="color: #fff">Nama Alat</th>
+                  <th style="color: #fff">Serial Number</th>
+                  <th style="color: #fff">Departemen</th>
+                  <th style="color: #fff">ED Sertifikat</th>
+                  <th style="color: #fff">Kalibrasi</th>
+                  <th style="color: #fff">Progress</th>
+                  <th style="color: #fff">Status</th>
+                  <th style="color: #fff">Reminder</th>
+              </tr>
+          
+          </thead>
+          <tbody>
+            @forelse ($onTrackAsset as $index => $onTrackAssets)
+              <tr>
+                  <th>{{ $loop->iteration }}</th>
+                  <td>{{ $onTrackAssets->asset->category->category }}</td>
+                  <td>{{ $onTrackAssets->asset->series_number }}</td>
+                  <td>{{ $onTrackAssets->asset->department->department }}</td>
+                  <td>{{ \Carbon\Carbon::parse($onTrackAssets->asset->expired_date)->format('d-m-Y') }}</td>
+                  <td>{{ $onTrackAssets->asset->category->calibration }}</td>
+                  <td> {{ $onTrackAssets->asset->latest_external_calibration->progress_status ?? '-' }}</td>
+                  <td>{!! $onTrackAssets->status_message !!}</td>
+                  <td>{!! $onTrackAssets->asset->reminder_status !!}</td>
+              </tr>
+              @empty
+              <tr>
+                  <td colspan="10" class="text-center">Tidak ada data.</td>
+              </tr>
+            @endforelse
+          </tbody>
+      </table>
+  </div>
+@endif
 
 {{-- data alat mendekati ED --}}
-<div class="table-responsive text-nowrap mt-5 bg-white shadow px-5 py-5" id="onEDTable" style="display: none; border-radius: 16px;">
-    <h3 class="text-center mb-5">DATA ALAT MENDEKATI ED KALIBRASI</h3>
-    <table class="table table-bordered text-center align-middle">
-        <thead>
-            <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
-                <th style="color: #fff">No.</th>
-                <th style="color: #fff">Nama Alat</th>
-                <th style="color: #fff">Serial Number</th>
-                <th style="color: #fff">Departemen</th>
-                <th style="color: #fff">ED Sertifikat</th>
-                <th style="color: #fff">
-                  @php
-                      $currentSort = request()->get('sort');
-                      $currentDirection = request()->get('direction', 'asc');
-                      $column = 'category.calibration';
-                      $isSorted = $currentSort === $column;
-                      $nextDirection = $isSorted && $currentDirection === 'asc' ? 'desc' : 'asc';
-                  @endphp
-              
-                  <a href="{{ route('dashboard', [
-                          'sort' => $column, 
-                          'direction' => $nextDirection
-                      ]) }}" class="d-flex align-items-center justify-content-center gap-1 text-decoration-none" style="color: #fff;">
-                      <span>KALIBRASI</span>
-                      @if ($isSorted)
-                          @if ($currentDirection === 'asc')
-                              <i class='bx bx-sort-a-z bx-xs text-white'></i>
-                          @else
-                              <i class='bx bx-sort-z-a bx-xs text-white'></i>
-                          @endif
-                      @else
-                          <i class='bx bx-sort-a-z bx-xs'></i>
-                      @endif
-                  </a>
-              </th>
-              <th style="color: #fff">reminder</th>
-            </tr>
-        </thead>
-        <tbody>
-        @forelse ($assets as $index => $asset)
-        <tr>
-            <td>{{ $loop->iteration }}</td>
-            <td>{{ $asset->category->category }}</td>
-            <td>{{ $asset->series_number }}</td>
-            <td>{{ $asset->department->department }}</td>
-            <td>
-              @if($asset->expired_date)
-                  <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-Y') }}</span>
-              @else
-                  <span style="color: gray;">N/A</span>
-              @endif
-          </td>
-            <td>{{ $asset->category->calibration }}</td>
-            <td>{!! $asset->reminder_status !!}</td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="10" class="text-center">Tidak ada data.</td>
-        </tr>
-        @endforelse
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-end mt-4">
-      {{ $assets->links('pagination::bootstrap-5') }}
-    </div>
+@if(session('onEDTable'))
+  <div class="table-responsive text-nowrap mt-5 bg-white shadow px-5 py-5" id="onEDTable" style="border-radius: 16px;">
+      <h3 class="text-center mb-5">DATA ALAT MENDEKATI ED KALIBRASI</h3>
+      <table class="table table-bordered text-center align-middle">
+          <thead>
+              <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
+                  <th style="color: #fff">No.</th>
+                  <th style="color: #fff">Nama Alat</th>
+                  <th style="color: #fff">Serial Number</th>
+                  <th style="color: #fff">Departemen</th>
+                  <th style="color: #fff">ED Sertifikat</th>
+                  <th style="color: #fff">
+                    @php
+                        $currentSort = request()->get('sort');
+                        $currentDirection = request()->get('direction', 'asc');
+                        $column = 'category.calibration';
+                        $isSorted = $currentSort === $column;
+                        $nextDirection = $isSorted && $currentDirection === 'asc' ? 'desc' : 'asc';
+                    @endphp
+                
+                    <a href="{{ route('dashboard', [
+                            'sort' => $column, 
+                            'direction' => $nextDirection
+                        ]) }}" class="d-flex align-items-center justify-content-center gap-1 text-decoration-none" style="color: #fff;">
+                        <span>KALIBRASI</span>
+                        @if ($isSorted)
+                            @if ($currentDirection === 'asc')
+                                <i class='bx bx-sort-a-z bx-xs text-white'></i>
+                            @else
+                                <i class='bx bx-sort-z-a bx-xs text-white'></i>
+                            @endif
+                        @else
+                            <i class='bx bx-sort-a-z bx-xs'></i>
+                        @endif
+                    </a>
+                </th>
+                <th style="color: #fff">reminder</th>
+              </tr>
+          </thead>
+          <tbody>
+          @forelse ($assets as $index => $asset)
+          <tr>
+              <td>{{ ($assets->currentPage() - 1) * $assets->perPage() + $loop->iteration }}</td>
+              <td>{{ $asset->category->category }}</td>
+              <td>{{ $asset->series_number }}</td>
+              <td>{{ $asset->department->department }}</td>
+              <td>
+                @if($asset->expired_date)
+                    <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-Y') }}</span>
+                @else
+                    <span style="color: gray;">N/A</span>
+                @endif
+            </td>
+              <td>{{ $asset->category->calibration }}</td>
+              <td>{!! $asset->reminder_status !!}</td>
+          </tr>
+          @empty
+          <tr>
+              <td colspan="10" class="text-center">Tidak ada data.</td>
+          </tr>
+          @endforelse
+          </tbody>
+      </table>
+      <div class="d-flex justify-content-end mt-4">
+        {{ $assets->links('pagination::bootstrap-5') }}
+      </div>
 
-</div>
+  </div>
+@endif
+
 @endsection
 
 @section('script')
 <script>
   // card control
   document.addEventListener("DOMContentLoaded", function () {
-    const toggleTable = (cardId, tableId) => {
-      const card = document.getElementById(cardId);
-      const table = document.getElementById(tableId);
-      if (card && table) {
-        card.addEventListener("click", () => {
-          table.style.display = (table.style.display === "none" || table.style.display === "") ? "block" : "none";
-        });
-      }
-    };
+    // const toggleTable = (cardId, tableId) => {
+    //   const card = document.getElementById(cardId);
+    //   const table = document.getElementById(tableId);
+    //   if (card && table) {
+    //     card.addEventListener("click", () => {
+    //       table.style.display = (table.style.display === "none" || table.style.display === "") ? "block" : "none";
+    //     });
+    //   }
+    // };
 
     const redirectOnClick = (cardId, url) => {
       const card = document.getElementById(cardId);
@@ -270,8 +279,8 @@
       }
     };
 
-    toggleTable("onTrackCard", "onTrackTable");
-    toggleTable("onEDCard", "onEDTable");
+    // toggleTable("onTrackCard", "onTrackTable");
+    // toggleTable("onEDCard", "onEDTable");
     redirectOnClick("totalAssetCard", "/asset");
     redirectOnClick("totalCalibratedCard", "/calibration/calibrated-assets");
   });

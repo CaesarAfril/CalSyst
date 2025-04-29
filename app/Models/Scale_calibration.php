@@ -35,7 +35,8 @@ class Scale_calibration extends Model
         'UDrift_weight',
         'Ureadability',
         'U95',
-        'expired_date'
+        'expired_date',
+        'approval'
     ];
 
     protected static function boot()

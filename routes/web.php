@@ -61,6 +61,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('report/scale', [ReportController::class, 'scale'])->name('report.scale');
     Route::get('report/scale/addData', [ReportController::class, 'scale_addData'])->name('report.addDataScale');
     Route::post('report/scale/store', [ReportController::class, 'scale_store'])->name('report.storeDataScale');
+
+    Route::post('/report/temperature/approve/{uuid}', [ReportController::class, 'approveTemperature'])->name('temperature.approve');
+
+    Route::post('/report/display/approve/{uuid}', [ReportController::class, 'approveDisplay'])->name('display.approve');
+
+    Route::post('/report/scale/approve/{uuid}', [ReportController::class, 'approveScale'])->name('scale.approve');
     Route::get('sertifikat/internal', [CalController::class, 'internal'])->name('Internal_calibration');
     Route::get('sertifikat/internal/temperature', [CalController::class, 'temperature'])->name('Internal_calibration.temperature');
     Route::get('sertifikat/internal/temperature/{uuid}/print', [CalController::class, 'temperature_pdfPrint'])->name('Internal_calibration.PrintPDFTemperature');
@@ -107,7 +113,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sertifikat/eksternal/{uuid}/add-notes-sertifikat', [CalController::class, 'addNotesSertifikat'])->name('external.save-notes-sertifikat');
     Route::post('/sertifikat/eksternal/{uuid}/add-approve-sertifikat', [CalController::class, 'addApproveSertifikat'])->name('external.addApproveSertifikat');
 
-    // Route::get('telat-kalibrasi', [TelatController::class, 'index'])->name('telat-calibration');
     Route::get('/calibration/late-calibration', [CalController::class, 'lateCalibration'])->name('late-calibration');
 
     Route::get('/calibration/calibrated-assets', [CalController::class, 'calibratedAssets'])->name('calibrated-assets');
@@ -117,4 +122,6 @@ Route::middleware(['auth'])->group(function () {
         \Illuminate\Support\Facades\Mail::to('rizalfahadian7@gmail.com')->send(new \App\Mail\AssetReminderEmail($asset));
         return "Email sent!";
     });
+
+    Route::get('/dashboard/toggle/{table}', [DashboardController::class, 'toggleTableVisibility'])->name('dashboard.toggleTable');
 });

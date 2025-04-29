@@ -332,4 +332,12 @@ class DashboardController extends Controller
             return "{$daysRemaining} hari lagi";
         }
     }
+
+    public function toggleTableVisibility($table)
+    {
+        $visible = session($table, false);
+        session([$table => !$visible]);
+
+        return redirect()->back();
+    }
 }

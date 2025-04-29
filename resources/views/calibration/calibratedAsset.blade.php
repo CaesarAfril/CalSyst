@@ -109,7 +109,7 @@
         <tbody>
             @forelse ($missingCalibrationAsset as $index => $asset)
             <tr>
-                <td>{{ $loop->iteration }}</td>
+                <td>{{ ($missingCalibrationAsset->currentPage() - 1) * $missingCalibrationAsset->perPage() + $loop->iteration }}</td>
                 <td>{{ $asset->category->category }}</td>
                 <td>{{ $asset->series_number }}</td>
                 <td>{{ $asset->department->department }}</td>

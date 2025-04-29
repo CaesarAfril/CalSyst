@@ -24,7 +24,8 @@ class ReportController extends Controller
 {
     public function temperature()
     {
-        $report = temp_calibration::with(['actual_temps', 'asset'])->get();
+        // Ambil semua data dengan approval = 1
+        $report = temp_calibration::with(['actual_temps', 'asset'])->where('approval', null)->get();
 
         return view('report.temperatureData', [
             'reports' => $report
@@ -105,7 +106,7 @@ class ReportController extends Controller
             }
 
             \DB::commit();
-            return redirect()->back()->with('success', 'Data berhasil disimpan!');
+            return redirect()->route('report.temperature')->with('success', 'Data berhasil disimpan!');
         } catch (\Exception $e) {
             \DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
@@ -120,7 +121,7 @@ class ReportController extends Controller
 
     public function display()
     {
-        $report = Display_calibration::with(['actual_displays', 'asset'])->get();
+        $report = Display_calibration::with(['actual_displays', 'asset'])->where('approval', null)->get();
 
         return view('report.displayData', [
             'reports' => $report
@@ -197,7 +198,7 @@ class ReportController extends Controller
             }
 
             \DB::commit();
-            return redirect()->back()->with('success', 'Data berhasil disimpan!');
+            return redirect()->route('report.display')->with('success', 'Data berhasil disimpan!');
         } catch (\Exception $e) {
             \DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
@@ -212,7 +213,7 @@ class ReportController extends Controller
 
     public function scale()
     {
-        $report = Scale_calibration::with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])->get();
+        $report = Scale_calibration::with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])->where('approval', null)->get();
 
         return view('report.scaleData', [
             'reports' => $report
@@ -221,7 +222,6 @@ class ReportController extends Controller
 
     public function scale_addData()
     {
-        // $asset = Assets::with('department')->where('category_uuid', 'b3306ec8-697d-414c-89aa-dc5cea8f5d8f')->get();
         $asset = Assets::with(['department', 'category'])
             ->whereHas('category', function ($query) {
                 $query->where('category', 'Scale');
@@ -330,7 +330,7 @@ class ReportController extends Controller
                 }
             }
             \DB::commit();
-            return redirect()->back()->with('success', 'Data berhasil disimpan!');
+            return redirect()->route('report.scale')->with('success', 'Data berhasil disimpan!');
         } catch (\Exception $e) {
             \DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
@@ -355,5 +355,34 @@ class ReportController extends Controller
         ];
 
         return $map[$number] ?? '';
+    }
+
+    public function approveTemperature($uuid)
+    {
+        return $this->approveModel(\App\Models\temp_calibration::class, $uuid, 'report.temperature');
+    }
+
+    public function approveDisplay($uuid)
+    {
+        return $this->approveModel(\App\Models\Display_calibration::class, $uuid, 'report.display');
+    }
+
+    public function approveScale($uuid)
+    {
+        return $this->approveModel(\App\Models\Scale_calibration::class, $uuid, 'report.scale');
+    }
+
+    private function approveModel($modelClass, $uuid, $redirectRoute)
+    {
+        $record = $modelClass::where('uuid', $uuid)->first();
+
+        if ($record) {
+            $record->approval = 1;
+            $record->save();
+
+            return redirect()->route($redirectRoute)->with('status', 'Data berhasil di-approve');
+        }
+
+        return redirect()->route($redirectRoute)->with('error', 'Data tidak ditemukan');
     }
 }
