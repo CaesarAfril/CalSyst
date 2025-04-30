@@ -99,6 +99,7 @@
             <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
                 <th style="color: #fff">No.</th>
                 <th style="color: #fff">Nama Alat</th>
+                <th style="color: #fff">Merk</th>
                 <th style="color: #fff">Serial Number</th>
                 <th style="color: #fff">Departemen</th>
                 <th style="color: #fff">ED Sertifikat</th>
@@ -111,6 +112,7 @@
             <tr>
                 <td>{{ ($missingCalibrationAsset->currentPage() - 1) * $missingCalibrationAsset->perPage() + $loop->iteration }}</td>
                 <td>{{ $asset->category->category }}</td>
+                <td>{{ $asset->merk }}</td>
                 <td>{{ $asset->series_number }}</td>
                 <td>{{ $asset->department->department }}</td>
                 <td>
@@ -143,6 +145,7 @@
                 <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
                     <th style="color: #fff">No.</th>
                     <th style="color: #fff">Nama Alat</th>
+                    <th style="color: #fff">Merk</th>
                     <th style="color: #fff">Serial Number</th>
                     <th style="color: #fff">Departemen</th>
                     <th style="color: #fff">ED Sertifikat</th>
@@ -154,6 +157,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $asset->category->category }}</td>
+                    <td>{{ $asset->merk }}</td>
                     <td>{{ $asset->series_number }}</td>
                     <td>{{ $asset->department->department }}</td>
                     <td>

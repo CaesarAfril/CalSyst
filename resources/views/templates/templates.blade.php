@@ -65,6 +65,7 @@
 
     .custom-sidebar-text {
         color: #C14600;
+        font-weight: 500;
     }
 
     .custom-sidebar {
@@ -74,6 +75,20 @@
     .menu-toggle::after {
         color: #C14600 !important;
         font-weight: bold;
+    }
+
+    .fade {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .modal {
+        text-align: left;
+    }
+
+    .card-header {
+        font-size: 1.7rem;
+        margin-bottom: 3rem !important;
     }
 </style>
 

@@ -1,4 +1,12 @@
 @extends('templates.templates')
+@section('style')
+<style>
+    .fade {
+        width: 100% !important;
+        height: 100% !important;
+    }
+</style>
+@endsection
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y px-0">
     <div class="card px-5 py-5" style="border-radius: 1rem;">

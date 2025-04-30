@@ -1,4 +1,12 @@
 @extends('templates.templates')
+@section('style')
+<style>
+    .fade {
+        width: 100% !important;
+        height: 100% !important;
+    }
+</style>
+@endsection
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y px-0">
     <div class="card px-5 py-5" style="border-radius: 1rem;">
@@ -96,7 +104,7 @@
         <div class="table-responsive text-nowrap">
             <table class="table table-bordered text-center align-middle">
                 <thead>
-                    <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
+                    <tr class="text-nowrap text-center align-middle" style="background-color: rgb(66, 73, 92);">
                         <th rowspan="2" style="color: #fff">No.</th>
                         <th rowspan="2" style="color: #fff">Username</th>
                         <th rowspan="2" style="color: #fff">Nama</th>
@@ -105,8 +113,8 @@
                         <th rowspan="2" style="color: #fff">Plant</th>
                         <th rowspan="2" style="color: #fff">Action</th>
                     </tr>
-                    <tr>
-                        <th>
+                    <tr class="text-center align-middle" style="background-color: rgb(66, 73, 92);">
+                        <th class="align-middle">
                             <select id="filterDepartment" class="form-select form-select-sm">
                                 <option value="">All</option>
                                 @foreach($departments as $department)

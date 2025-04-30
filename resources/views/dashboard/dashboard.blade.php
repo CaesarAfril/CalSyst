@@ -10,7 +10,7 @@
         margin-top: 4rem;
   }
   .stat-card-custom {
-  background: #fff;
+  background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 24px 36px;
@@ -150,6 +150,7 @@
               <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
                   <th style="color: #fff">No.</th>
                   <th style="color: #fff">Nama Alat</th>
+                  <th style="color: #fff">Merk</th>
                   <th style="color: #fff">Serial Number</th>
                   <th style="color: #fff">Departemen</th>
                   <th style="color: #fff">ED Sertifikat</th>
@@ -165,6 +166,7 @@
               <tr>
                   <th>{{ $loop->iteration }}</th>
                   <td>{{ $onTrackAssets->asset->category->category }}</td>
+                  <td>{{ $onTrackAssets->asset->merk }}</td>
                   <td>{{ $onTrackAssets->asset->series_number }}</td>
                   <td>{{ $onTrackAssets->asset->department->department }}</td>
                   <td>{{ \Carbon\Carbon::parse($onTrackAssets->asset->expired_date)->format('d-m-Y') }}</td>
@@ -192,6 +194,7 @@
               <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
                   <th style="color: #fff">No.</th>
                   <th style="color: #fff">Nama Alat</th>
+                  <th style="color: #fff">Merk</th>
                   <th style="color: #fff">Serial Number</th>
                   <th style="color: #fff">Departemen</th>
                   <th style="color: #fff">ED Sertifikat</th>
@@ -228,6 +231,7 @@
           <tr>
               <td>{{ ($assets->currentPage() - 1) * $assets->perPage() + $loop->iteration }}</td>
               <td>{{ $asset->category->category }}</td>
+              <td>{{ $asset->merk }}</td>
               <td>{{ $asset->series_number }}</td>
               <td>{{ $asset->department->department }}</td>
               <td>
@@ -260,15 +264,6 @@
 <script>
   // card control
   document.addEventListener("DOMContentLoaded", function () {
-    // const toggleTable = (cardId, tableId) => {
-    //   const card = document.getElementById(cardId);
-    //   const table = document.getElementById(tableId);
-    //   if (card && table) {
-    //     card.addEventListener("click", () => {
-    //       table.style.display = (table.style.display === "none" || table.style.display === "") ? "block" : "none";
-    //     });
-    //   }
-    // };
 
     const redirectOnClick = (cardId, url) => {
       const card = document.getElementById(cardId);
@@ -279,8 +274,6 @@
       }
     };
 
-    // toggleTable("onTrackCard", "onTrackTable");
-    // toggleTable("onEDCard", "onEDTable");
     redirectOnClick("totalAssetCard", "/asset");
     redirectOnClick("totalCalibratedCard", "/calibration/calibrated-assets");
   });

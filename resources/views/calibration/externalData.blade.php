@@ -60,6 +60,7 @@
                     <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
                         <th style="color: #fff">No.</th>
                         <th style="color: #fff">Nama Alat</th>
+                        <th style="color: #fff">Merk</th>
                         <th style="color: #fff">Serial Number</th>
                         <th style="color: #fff">Departemen</th>
                         <th style="color: #fff">ED Sertifikat</th>
@@ -71,11 +72,11 @@
                     @foreach($reports as $report)
                     <tr>
                         <th>{{$loop->iteration}}</th>
-                        {{-- <td>{{$report->date}}</td> --}}
                         <td>{{ $report->asset->category->category }}</td>
+                        <td>{{ $report->asset->merk }}</td>
                         <td>{{ $report->asset->series_number }}</td>
                         <td>{{ $report->asset->department->department }}</td>
-                        <td>{{ \Carbon\Carbon::parse($report->asset->expired_date)->format('d-m-y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($report->asset->expired_date)->format('d-m-Y') }}</td>
                         <td>{{$report->progress_status ?? '-' }}
                         </td>
                         <td>
@@ -153,9 +154,7 @@
                             </button>
 
                             {{-- ppbj --}}
-                            <td>
                                 {{-- approve --}}
-                                
                                 <div class="modal fade" id="approvePpbj-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -206,7 +205,8 @@
                                             </div>
                                         </div>
                                     </div>
-                            </td>
+                            
+
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -253,7 +253,7 @@
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
                             {{-- negosiasi --}}
-                            <td>
+                            
                                 {{-- approve --}}
                                 <div class="modal fade" id="approveNegosiasi-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -306,7 +306,7 @@
                                             </div>
                                         </div>
                                     </div>
-                            </td>
+                            
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -353,7 +353,7 @@
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
                             {{-- spk --}}
-                            <td>
+                            
                                 {{-- approve --}}
                                 <div class="modal fade" id="approveSpk-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -406,7 +406,7 @@
                                             </div>
                                         </div>
                                     </div>
-                            </td>
+                            
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -454,7 +454,7 @@
                             </button>
 
                             {{-- pelaksanaan --}}
-                            <td>
+                            
                                 {{-- approve --}}
                                 <div class="modal fade" id="approvePelaksanaan-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -507,7 +507,7 @@
                                             </div>
                                         </div>
                                     </div>
-                            </td>
+                            
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -554,7 +554,7 @@
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
                             {{-- BA --}}
-                            <td>
+                            
                                 {{-- approve --}}
                                 <div class="modal fade" id="approveBa-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -607,7 +607,7 @@
                                             </div>
                                         </div>
                                     </div>
-                            </td>
+                            
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -654,7 +654,7 @@
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
                             {{-- PEMBAYARAN --}}
-                            <td>
+                            
                                 {{-- approve --}}
                                 <div class="modal fade" id="approvePembayaran-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -708,7 +708,7 @@
                                         </div>
                                     </div>
                                     
-                            </td>
+                            
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -755,7 +755,6 @@
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
                             </button>
                             {{-- SERTIFIKAT --}}     
-                            <td>
                                 {{-- approve --}}
                                 <div class="modal fade" id="approveSertifikat-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -778,7 +777,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                              
                                 </div>
 
                                 {{-- notes --}}
@@ -808,7 +806,7 @@
                                             </div>
                                         </div>
                                     </div>
-                            </td>
+                            
                             @elseif($report->latestCalibrationFile->filename != NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
@@ -842,7 +840,6 @@
                         </div>
 
                         {{-- penawaran --}}
-                        <td>
                             {{-- approve --}}
                             @if($report->latestCalibrationFile)
                             <div class="modal fade" id="approvePenawaran-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
@@ -894,7 +891,7 @@
                                         </div>
                                     </div>
                                 </div>
-                        </td>
+                        
                         {{-- modal upload penawaran --}}
                         <div class="modal fade" id="importpenawaran-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -924,7 +921,6 @@
         </tbody>
         </table>
     </div>
-
 </div>
 @endsection
 @section('script')

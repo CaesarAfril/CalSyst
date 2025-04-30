@@ -1,4 +1,14 @@
 @extends('templates.templates')
+
+@section('style')
+<style>
+    .fade {
+        width: 100% !important;
+        height: 100% !important;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y p-0" style="border-radius: 16px;">
     <div class="card px-5 py-5" style="border-radius: 1rem;">
@@ -55,7 +65,7 @@
         </div>
 
         <div class="table-responsive text-nowrap">
-            <table class="table table-bordered text-center align-middle">
+            <table class="table table-bordered text-center align-middle" style="border-radius: 8px;">
                 <thead>
                     <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
                         <th style="color: #fff">No.</th>
@@ -122,7 +132,7 @@
                                         </div>
                                     </form>
                                 </div>
-                            </div>
+                            </div>  
 
                             <!-- Delete Button -->
                             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePlantModal{{$plant->id}}">
@@ -161,7 +171,4 @@
 </div>
 @endsection
 @section('script')
-<script>
-    // Optional: You can implement JavaScript to handle dynamic form population, if necessary.
-</script>
 @endsection
