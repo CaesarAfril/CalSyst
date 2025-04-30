@@ -27,7 +27,7 @@ class CategoryController extends Controller
             'calibration' => $validated['calibration']
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Berhasil menambah data alat');
     }
 
     public function update(Request $request, $id)
@@ -41,7 +41,7 @@ class CategoryController extends Controller
             'category' => $validated['category_name']
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data Alat berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -49,6 +49,6 @@ class CategoryController extends Controller
         $category = category::findOrFail($id);
         $category->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }

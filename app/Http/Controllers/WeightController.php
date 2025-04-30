@@ -28,7 +28,7 @@ class WeightController extends Controller
             'error' => $validated['error']
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Berhasil menambah data anak timbang');
     }
 
     public function update(Request $request, $id)
@@ -44,6 +44,14 @@ class WeightController extends Controller
             'error' => $validated['edit_error'],
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data Anak timbang berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $weights = Weight::findOrFail($id);
+        $weights->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }

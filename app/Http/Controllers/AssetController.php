@@ -12,28 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class AssetController extends Controller
 {
-    // public function index()
-    // {
-    //     $assets = Assets::with([
-    //         'department',
-    //         'plant',
-    //         'category',
-    //         'latest_external_calibration',
-    //         'latest_temp_calibration',
-    //         'latest_display_calibration'
-    //     ])->paginate(10);
-
-    //     $plant = Plant::all();
-    //     $category = Category::all();
-    //     $department = Department::all();
-    //     return view('asset.asset', [
-    //         'assets' => $assets,
-    //         'categories' => $category,
-    //         'departments' => $department,
-    //         'plants' => $plant
-    //     ]);
-    // }
-
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -47,7 +25,6 @@ class AssetController extends Controller
             'latest_display_calibration'
         ]);
 
-        // Kalau ada keyword pencarian, filter data
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('merk', 'like', "%{$search}%")

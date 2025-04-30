@@ -43,6 +43,7 @@ class DashboardController extends Controller
         $progressStages = array_keys($progressTimeline);
         $now = now();
         $threeMonthsLater = $now->copy()->addMonths(3);
+        
         $onTrackAsset = $onTrackAsset->filter(function ($item) use ($now, $threeMonthsLater) {
             $expired = $item->asset->expired_date;
             if (!$expired)

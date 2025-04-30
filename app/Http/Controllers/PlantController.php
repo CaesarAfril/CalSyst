@@ -30,7 +30,7 @@ class PlantController extends Controller
             'abbreviaton' => $validated['plant_abbreviaton'],
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Berhasil menambah data Plant');
     }
 
     public function update(Request $request, $id)
@@ -46,7 +46,7 @@ class PlantController extends Controller
             'abbreviaton' => $validated['plant_abbreviaton'],
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data plant berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -54,6 +54,6 @@ class PlantController extends Controller
         $plant = Plant::findOrFail($id);
         $plant->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }

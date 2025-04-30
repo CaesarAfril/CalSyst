@@ -25,7 +25,21 @@ class MachineController extends Controller
             'machine_name' => $validated['machine_name']
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Berhasil menambah data mesin');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'edit_machine_name' => 'required|string|max:255'
+        ]);
+
+        $machine = Machine::findOrFail($id);
+        $machine->update([
+            'machine_name' => $validated['edit_machine_name']
+        ]);
+
+        return redirect()->back()->with('success', 'Data Alat berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -33,6 +47,6 @@ class MachineController extends Controller
         $machine = Machine::findOrFail('uuid', $id);
         $machine->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }
