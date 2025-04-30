@@ -21,7 +21,7 @@
                     @foreach($reports as $report)
                     <tr>
                         <th>{{$loop->iteration}}</th>
-                        <td>{{$report->date}}</td>
+                        <td>{{ \Carbon\Carbon::parse($report->date)->format('d-m-Y') }}</td>
                         <td>{{$report->asset->merk}} {{$report->asset->type}} {{$report->asset->series_number}}</td>
                         <td>{{$report->asset->department->department}}</td>
                         <td>

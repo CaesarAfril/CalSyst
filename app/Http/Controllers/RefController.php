@@ -36,57 +36,36 @@ class RefController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Files Uploaded Successfully');
+        return redirect()->back()->with('success', 'Berhasil upload referensi');
     }
-
-    // public function update(Request $request, $uuid)
-    // {
-    //     $request->validate([
-    //         'edit_document_name' => 'required|string|max:255',
-    //         'edit_document_file' => 'required|file'
-    //     ]);
-
-    //     $update = References::where('uuid', $uuid)->FirstOrFail();
-
-    //     if ($request->hasFile('edit_document_file')) {
-    //         $file = $request->file('edit_document_file');
-    //         $filename = $file->getClientOriginalName();
-    //         $folder = "document/references";
-    //         $path = $file->storeAs($folder, $filename, 'public');
-
-    //         $update->update([
-    //             'document_name' => $request->edit_document_name,
-    //             'filename' => $filename,
-    //             'path' => $path
-    //         ]);
-    //     }
-
-    //     return redirect()->back()->with('success', 'Files Uploaded Successfully');
-    // }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'edit_document_name' => 'required|string|max:255',
-            'edit_document_file' => 'required|file'
-        ]);
-
-        $update = References::findOrFail($id);
-
-        if ($request->hasFile('edit_document_file')) {
-            $file = $request->file('edit_document_file');
-            $filename = $file->getClientOriginalName();
-            $folder = "document/references";
-            $path = $file->storeAs($folder, $filename, 'public');
-
-            $update->update([
-                'document_name' => $request->edit_document_name,
-                'filename' => $filename,
-                'path' => $path
+        try {
+            $request->validate([
+                'edit_document_name' => 'required|string|max:255',
+                'edit_document_file' => 'required|file'
             ]);
-        }
 
-        return redirect()->back()->with('success', 'Files Updated Successfully');
+            $update = References::findOrFail($id);
+
+            if ($request->hasFile('edit_document_file')) {
+                $file = $request->file('edit_document_file');
+                $filename = $file->getClientOriginalName();
+                $folder = "document/references";
+                $path = $file->storeAs($folder, $filename, 'public');
+
+                $update->update([
+                    'document_name' => $request->edit_document_name,
+                    'filename' => $filename,
+                    'path' => $path
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'File berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memperbarui file: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)

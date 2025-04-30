@@ -25,7 +25,7 @@ class DeptController extends Controller
             'department' => $validated['department_name']
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Berhasil menambah data departemen');
     }
 
     public function update(Request $request, $id)
@@ -39,7 +39,7 @@ class DeptController extends Controller
             'department' => $validated['department_name']
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data departemen berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -47,6 +47,6 @@ class DeptController extends Controller
         $department = department::findOrFail($id);
         $department->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }

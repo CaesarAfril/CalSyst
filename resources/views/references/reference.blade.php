@@ -9,6 +9,20 @@
             </button>
         </h5>
 
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <!-- Add Plant Modal -->
         <div class="modal fade" id="addReferenceModal" tabindex="-1" aria-labelledby="addReferenceModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -75,7 +89,7 @@
                             <!-- Edit Plant Modal -->
                             <div class="modal fade" id="editReferenceModal{{$document->id}}" tabindex="-1" aria-labelledby="editReferenceModalLabel{{$document->id}}" aria-hidden="true">
                                 <div class="modal-dialog">
-                                    <form action="{{ route('references.update', $document->id) }}" method="POST">
+                                    <form action="{{ route('references.update', $document->id) }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
                                         <div class="modal-content">
