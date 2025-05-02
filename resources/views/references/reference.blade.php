@@ -167,7 +167,7 @@
                                 </div>
                             </div>
 
-                            <a href="{{ asset('storage/' . $document->path) }}" target="_blank" class="btn btn-info btn-sm">
+                            <a href="{{ asset('storage/' . $document->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 Cetak
                             </a>
                         </td>

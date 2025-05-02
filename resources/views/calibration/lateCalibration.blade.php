@@ -129,7 +129,7 @@
                     <span style="color: gray;">N/A</span>
                 @endif
             </td>
-            <td>{{ $asset->category->calibration }}</td> <!-- Kalibrasi -->
+            <td>{{ $asset->category->calibration }}</td>
         </tr>
         @empty
         <tr>
