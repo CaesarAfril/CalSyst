@@ -71,7 +71,7 @@
                 <tbody>
                     @foreach($reports as $report)
                     <tr>
-                        <th>{{$loop->iteration}}</th>
+                        <th>{{ ($reports->currentPage() - 1) * $reports->perPage() + $loop->iteration }}</th>
                         <td>{{ $report->asset->category->category }}</td>
                         <td>{{ $report->asset->merk }}</td>
                         <td>{{ $report->asset->series_number }}</td>
@@ -920,6 +920,9 @@
         @endforeach
         </tbody>
         </table>
+        <div class="d-flex justify-content-end mt-4">
+            {{ $reports->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 </div>
 @endsection

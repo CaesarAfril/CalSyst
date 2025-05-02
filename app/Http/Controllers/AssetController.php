@@ -57,7 +57,7 @@ class AssetController extends Controller
             'categories' => Category::all(),
             'departments' => Department::all(),
             'plants' => Plant::all(),
-            'search' => $search, // Kirim ke view agar form tetap terisi
+            'search' => $search,
         ]);
     }
 

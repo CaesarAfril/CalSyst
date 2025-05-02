@@ -78,8 +78,6 @@ class DashboardController extends Controller
                 if ($currentIndex !== false) {
                     $remainingStages = array_slice($progressTimeline, $currentIndex + 1);
                     $totalRemainingDays = array_sum($remainingStages);
-
-                    // Mundur dari expired_date untuk dapat tanggal awal proses
                     $startDate = $startDate->subDays($totalRemainingDays);
                 }
             }
@@ -147,7 +145,6 @@ class DashboardController extends Controller
             $now = now();
             $expired = $asset->expired_date;
 
-            // Ambil tanggal kalibrasi terakhir dari semua jenis kalibrasi
             $latestCalibration = collect([
                 optional($asset->latest_external_calibration)->certificate_date,
                 optional($asset->latest_temp_calibration)->date,
@@ -155,7 +152,6 @@ class DashboardController extends Controller
                 optional($asset->latest_scale_calibration)->date,
             ])->filter()->sortDesc()->first(); // ambil yang terbaru
 
-            // Cek apakah expired masih masa depan dan ada kalibrasi terakhir
             return $expired && Carbon::parse($expired)->isFuture() && $latestCalibration;
         });
         $nextYear = now()->addYear()->year;

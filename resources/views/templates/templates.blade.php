@@ -241,9 +241,6 @@
                                 <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Report</div>
                             </a>
                             <ul class="menu-sub" style="margin-left: -.1rem;">
-                                <!--***********************************
-                                ---------- Menu E-Report Validasi Internal -------
-                                ************************************-->
                                 <li class="menu-item">
                                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                                         <i class="menu-icon bx bxs-brain custom-sidebar-text"></i>
@@ -264,6 +261,82 @@
                                             <a href="{{ route('report.scale') }}" class="menu-link">
                                                 <div data-i18n="report.scale" class="custom-sidebar-text" style="font-size: 18px">Report Timbangan</div>
                                             </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="menu-item">
+                                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                        <i class="menu-icon bx bxs-check-shield custom-sidebar-text"></i>
+                                        <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Report Validasi</div>
+                                    </a>
+                                    <ul class="menu-sub">
+                                        <li class="menu-item">
+                                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                                <i class="menu-icon bx bxs-knife custom-sidebar-text"></i>
+                                                <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Slaughterhouse</div>
+                                            </a>
+                                            <ul class="menu-sub">
+                                                <li class="menu-item">
+                                                    <a href="" class="menu-link">
+                                                        <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Screwchiller</div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                                <i class="menu-icon bx bxs-brain custom-sidebar-text"></i>
+                                                <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Further</div>
+                                            </a>
+                                            <ul class="menu-sub">
+                                                <li class="menu-item">
+                                                    <a href="" class="menu-link">
+                                                        <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Fryer 1</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="" class="menu-link">
+                                                        <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Fryer 2</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="" class="menu-link">
+                                                        <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Fryer Marel</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="" class="menu-link">
+                                                        <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Hi Cook</div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                                <i class="menu-icon bx bxs-baguette custom-sidebar-text"></i>
+                                                <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Sausage</div>
+                                            </a>
+                                            <ul class="menu-sub">
+                                                <li class="menu-item">
+                                                    <a href="" class="menu-link">
+                                                        <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Smokehouse</div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                                <i class="menu-icon bx bxs-brain custom-sidebar-text"></i>
+                                                <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Breadcrumb</div>
+                                            </a>
+                                            <ul class="menu-sub">
+                                                <li class="menu-item">
+                                                    <a href="" class="menu-link">
+                                                        <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Aging</div>
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </li>
                                     </ul>
                                 </li>
@@ -324,7 +397,6 @@
                                 </li>
                             </ul>
                         </li>
-                    
                 </ul>
             </aside>
 

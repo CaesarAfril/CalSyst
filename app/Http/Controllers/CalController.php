@@ -41,15 +41,13 @@ class CalController extends Controller
 
     public function temperature_pdfPrint($uuid)
     {
-        // Fetch the specification details using UUID
         $temperature = temp_calibration::with(['actual_temps', 'asset'])->where('uuid', $uuid)->firstOrFail();
         $temperature->calibration_date = Carbon::parse($temperature->date)->format('d-m-Y');
         $temperature->ttd_date = Carbon::parse($temperature->date)->locale('id')->translatedFormat('d F Y');
-        // Load the view and pass data
+
         $pdf = Pdf::loadView('calibration.pdfTemperature', compact('temperature'))->setPaper('legal', 'portrait');
 
-        // Return the generated PDF as a response
-        return $pdf->stream('Temperature.pdf'); // Open in browser
+        return $pdf->stream('Temperature.pdf');
     }
 
     public function display()
@@ -65,15 +63,14 @@ class CalController extends Controller
 
     public function display_pdfPrint($uuid)
     {
-        // Fetch the specification details using UUID
         $display = Display_calibration::with(['actual_displays', 'asset'])->where('uuid', $uuid)->firstOrFail();
         $display->calibration_date = Carbon::parse($display->date)->format('d-m-Y');
         $display->ttd_date = Carbon::parse($display->date)->locale('id')->translatedFormat('d F Y');
-        // Load the view and pass data
+
         $pdf = Pdf::loadView('calibration.pdfDisplay', compact('display'))->setPaper('legal', 'portrait');
 
-        // Return the generated PDF as a response
-        return $pdf->stream('Display.pdf'); // Open in browser
+
+        return $pdf->stream('Display.pdf');
     }
 
     public function scale()
@@ -89,7 +86,6 @@ class CalController extends Controller
 
     public function scale_pdfPrint($uuid)
     {
-        // Fetch the specification details using UUID
         $scale = Scale_calibration::with([
             'asset',
             'weighing_performances',
@@ -99,12 +95,10 @@ class CalController extends Controller
 
         $scale->calibration_date = Carbon::parse($scale->date)->format('d-m-Y');
         $scale->ttd_date = Carbon::parse($scale->date)->locale('id')->translatedFormat('d F Y');
-        // Load the view and pass data
         $pdf = Pdf::loadView('calibration.pdfScale', compact('scale'))
             ->setPaper('legal', 'portrait');
 
-        // Return the generated PDF as a response
-        return $pdf->stream('Scale.pdf'); // Open in browser
+        return $pdf->stream('Scale.pdf');
     }
 
     public function external()
@@ -114,7 +108,7 @@ class CalController extends Controller
         })->get();
         $report = External_calibration::with(['asset', 'latestCalibrationFile'])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('calibration.externalData', [
             'assets' => $assets,
