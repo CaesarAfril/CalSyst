@@ -14,6 +14,7 @@ use App\Http\Controllers\TelatController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Validation_assetController;
 use App\Http\Controllers\WeightController;
+use App\Http\Controllers\ValidationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 use App\Mail\AssetReminderEmail;
@@ -124,4 +125,18 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/dashboard/toggle/{table}', [DashboardController::class, 'toggleTableVisibility'])->name('dashboard.toggleTable');
+
+    Route::get('/validation/slaughterhouse/screwchiller', [ValidationController::class, 'screwChiller'])->name('slaughterhouse-screwchiller');
+
+    Route::get('/validation/further/fryer-1', [ValidationController::class, 'fryer1'])->name('further-fryer-1');
+    Route::get('/validation/further/fryer-2', [ValidationController::class, 'fryer2'])->name('further-fryer-2');
+    Route::get('/validation/further/fryer-marel', [ValidationController::class, 'fryerMarel'])->name('further-fryer-marel');
+    Route::get('/validation/further/hi-cook', [ValidationController::class, 'hiCook'])->name('further-hi-cook');
+
+    Route::get('/validation/sausage/smoke-house', [ValidationController::class, 'smokeHouse'])->name('sausage-smoke-house');
+
+    Route::get('/validation/breadcrumb/aging', [ValidationController::class, 'aging'])->name('breadcrumb-aging');
+
+    Route::post('/validation_asset/send-warning', [Validation_assetController::class, 'sendEarlyWarning'])->name('validation_asset.sendWarning');
+    Route::post('/validation-asset/early-warning-2', [Validation_assetController::class, 'sendEarlyWarning2'])->name('validation_asset.sendEarlyWarning2');
 });

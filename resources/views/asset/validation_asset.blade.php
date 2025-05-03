@@ -11,8 +11,81 @@
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addassetModal">
                     +
                 </button>
+
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#sendWarningModal">
+                    Early Warning 1
+                </button>
+
+                <!-- Modal ew 1 -->
+                <div class="modal fade" id="sendWarningModal" tabindex="-1" aria-labelledby="sendWarningModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <form action="{{ route('validation_asset.sendWarning') }}" method="POST">
+                                @csrf
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="sendWarningModalLabel">Send Early Warning</h5>
+                                        <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="machine_name" class="form-label">Select Machine</label>
+                                            <select name="machine_name" class="form-select" required>
+                                                <option value="" disabled selected>-- Choose Machine --</option>
+                                                @foreach($machines as $machine)
+                                                    <option value="{{ $machine->machine_name }}">{{ $machine->machine_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Send Email</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                </div>
+
+                <!-- Trigger Button -->
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#earlyWarning2Modal">
+                    Early Warning 2
+                </button>
+
+                <!-- Modal ew 2 -->
+                <div class="modal fade" id="earlyWarning2Modal" tabindex="-1" aria-labelledby="earlyWarning2ModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{{ route('validation_asset.sendEarlyWarning2') }}" method="POST">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="earlyWarning2ModalLabel">Send Early Warning 2</h5>
+                                <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="test_alat" class="form-label">Test Alat</label>
+                                    <input type="text" class="form-control" name="test_alat" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="test_mesin" class="form-label">Test Mesin</label>
+                                    <input type="text" class="form-control" name="test_mesin" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Send Email</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                </div>
             </div>
         </h5>
+
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
         <div class="modal fade" id="importCsvModal" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
             <div class="modal-dialog">
