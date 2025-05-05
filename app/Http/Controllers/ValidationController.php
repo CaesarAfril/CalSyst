@@ -28,15 +28,51 @@ class ValidationController extends Controller
         return view('validation.slaughterhouse.screwchiller');
     }
 
+    public function screwChiller_addData()
+    {
+        return view('validation.store.store_screwchiller');
+    }
+
+    public function ABF()
+    {
+        return view('validation.slaughterhouse.ABF');
+    }
+
+    public function ABF_addData()
+    {
+        return view('validation.store.store_ABF');
+    }
+
+    public function IQF()
+    {
+        return view('validation.slaughterhouse.IQF');
+    }
+
+    public function IQF_addData()
+    {
+        return view('validation.store.store_IQF');
+    }
+
     // further
     public function fryer1()
     {
         return view('validation.further.fryer1');
     }
 
+    public function fryer1_addData()
+    {
+        return view('validation.store.store_fryer1');
+    }
+
+
     public function fryer2()
     {
         return view('validation.further.fryer2');
+    }
+
+    public function fryer2_addData()
+    {
+        return view('validation.store.store_fryer2');
     }
 
     public function fryerMarel()
@@ -44,9 +80,19 @@ class ValidationController extends Controller
         return view('validation.further.fryerMarel');
     }
 
+    public function fryerMarel_addData()
+    {
+        return view('validation.store.store_fryerMarel');
+    }
+
     public function hiCook()
     {
         return view('validation.further.hicook');
+    }
+
+    public function hiCook_addData()
+    {
+        return view('validation.store.store_hiCook');
     }
 
     // sausage
@@ -55,9 +101,19 @@ class ValidationController extends Controller
         return view('validation.sausage.smokehouse');
     }
 
+    public function smokeHouse_addData()
+    {
+        return view('validation.store.store_smokeHouse');
+    }
+
     // breadcrumb
     public function aging()
     {
         return view('validation.breadcrumb.aging');
+    }
+
+    public function aging_addData()
+    {
+        return view('validation.store.store_aging');
     }
 }

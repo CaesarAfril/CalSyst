@@ -237,7 +237,7 @@
                             </ul>
                         </li>
 
-                        <li class="menu-item mt-2 {{ request()->is('report/temperature*') || request()->is('report/display*') || request()->is('report/scale*') || request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/further/fryer-1*') || request()->is('validation/further/fryer-2*') || request()->is('validation/further/fryer-marel*') || request()->is('validation/further/hi-cook*') || request()->is('validation/sausage/smoke-house*') || request()->is('validation/breadcrumb/aging*') ? 'open' : '' }}">
+                        <li class="menu-item mt-2 {{ request()->is('report/temperature*') || request()->is('report/display*') || request()->is('report/scale*') || request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/slaughterhouse/ABF*') || request()->is('validation/slaughterhouse/IQF*') || request()->is('validation/further/fryer-1*') || request()->is('validation/further/fryer-2*') || request()->is('validation/further/fryer-marel*') || request()->is('validation/further/hi-cook*') || request()->is('validation/sausage/smoke-house*') || request()->is('validation/breadcrumb/aging*') ? 'open' : '' }}">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon bx bxs-report custom-sidebar-text"></i>
                                 <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Report</div>
@@ -267,13 +267,13 @@
                                     </ul>
                                 </li>
 
-                                <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/further/fryer-1*') || request()->is('validation/further/fryer-2*') || request()->is('validation/further/fryer-marel*') || request()->is('validation/further/hi-cook*') || request()->is('validation/sausage/smoke-house*') || request()->is('validation/breadcrumb/aging*') ? 'open' : '' }}">
+                                <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/slaughterhouse/ABF*') || request()->is('validation/slaughterhouse/IQF*') || request()->is('validation/further/fryer-1*') || request()->is('validation/further/fryer-2*') || request()->is('validation/further/fryer-marel*') || request()->is('validation/further/hi-cook*') || request()->is('validation/sausage/smoke-house*') || request()->is('validation/breadcrumb/aging*') ? 'open' : '' }}">
                                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                                         <i class="menu-icon bx bxs-check-shield custom-sidebar-text"></i>
                                         <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Report Validasi</div>
                                     </a>
                                     <ul class="menu-sub">
-                                        <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') ? 'open' : '' }}">
+                                        <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/slaughterhouse/ABF*') || request()->is('validation/slaughterhouse/IQF*')  ? 'open' : '' }}">
                                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                                 <i class="menu-icon bx bxs-home custom-sidebar-text"></i>
                                                 <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Slaughterhouse</div>
@@ -282,6 +282,16 @@
                                                 <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') ? 'active' : '' }}">
                                                     <a href="{{ route('slaughterhouse-screwchiller') }}" class="menu-link">
                                                         <div class="custom-sidebar-text" style="font-size: 18px">Screwchiller</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item {{ request()->is('validation/slaughterhouse/ABF*') ? 'active' : '' }}">
+                                                    <a href="{{ route('slaughterhouse-ABF') }}" class="menu-link">
+                                                        <div class="custom-sidebar-text" style="font-size: 18px">ABF</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item {{ request()->is('validation/slaughterhouse/IQF*') ? 'active' : '' }}">
+                                                    <a href="{{ route('slaughterhouse-IQF') }}" class="menu-link">
+                                                        <div class="custom-sidebar-text" style="font-size: 18px">IQF</div>
                                                     </a>
                                                 </li>
                                             </ul>

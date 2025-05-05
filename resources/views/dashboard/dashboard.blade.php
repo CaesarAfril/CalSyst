@@ -189,6 +189,19 @@
 @if(session('onEDTable'))
   <div class="table-responsive text-nowrap mt-5 bg-white shadow px-5 py-5" id="onEDTable" style="border-radius: 16px;">
       <h3 class="text-center mb-5">DATA ALAT MENDEKATI ED KALIBRASI</h3>
+
+      <div class="row mx-0 px-0">
+          <div class="col-md-12 d-flex justify-content-end mx-0 px-0">
+              <form id="searchForm" method="GET" action="{{ route('dashboard') }}" class=" d-flex align-items-center gap-2">
+                  <div class="input-group mb-3">
+                      <input type="search" class="form-control" placeholder="Ketik untuk mencari" name="search" value="{{ request('search') }}">
+                      <button class="btn btn-info" type="submit">Search</button>
+                      <a href="{{ route('dashboard') }}" class="btn-reset btn btn-primary">Reset</a>
+                  </div>
+              </form>
+          </div>
+      </div>
+
       <table class="table table-bordered text-center align-middle">
           <thead>
               <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">

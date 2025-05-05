@@ -43,7 +43,7 @@ class DashboardController extends Controller
         $progressStages = array_keys($progressTimeline);
         $now = now();
         $threeMonthsLater = $now->copy()->addMonths(3);
-        
+
         $onTrackAsset = $onTrackAsset->filter(function ($item) use ($now, $threeMonthsLater) {
             $expired = $item->asset->expired_date;
             if (!$expired)
@@ -123,19 +123,56 @@ class DashboardController extends Controller
         })->count();
 
         // menampilkan 3-6 bulan untuk data mendekati ED
+        // $now = now();
+        // $threeMonthsLater = $now->copy()->addMonths(3);
+        // $sixMonthsLater = $now->copy()->addMonths(6);
+        // $sortColumn = request()->get('sort', 'category.calibration');
+        // $sortDirection = request()->get('direction', 'asc');
+
+        // $expiringAssets = Assets::with('category')
+        //     ->join('category', 'category.uuid', '=', 'assets.category_uuid') // join dengan table category
+        //     ->select('assets.*') // <-- PENTING: agar yang dikembalikan tetap instance model Assets
+        //     ->whereNotNull('assets.expired_date')
+        //     ->whereBetween('assets.expired_date', [$threeMonthsLater, $sixMonthsLater])
+        //     ->orderBy('category.calibration', $sortDirection)
+        //     ->paginate(10);
+        // $expiringCount = $expiringAssets->count();
+        // $approachingEDCount = $expiringAssets->total();
+
         $now = now();
         $threeMonthsLater = $now->copy()->addMonths(3);
         $sixMonthsLater = $now->copy()->addMonths(6);
         $sortColumn = request()->get('sort', 'category.calibration');
         $sortDirection = request()->get('direction', 'asc');
+        $search = request()->get('search');
 
-        $expiringAssets = Assets::with('category')
-            ->join('category', 'category.uuid', '=', 'assets.category_uuid') // join dengan table category
-            ->select('assets.*') // <-- PENTING: agar yang dikembalikan tetap instance model Assets
+        // Query builder
+        $query = Assets::with('category')
+            ->join('category', 'category.uuid', '=', 'assets.category_uuid')
+            ->select('assets.*')
             ->whereNotNull('assets.expired_date')
-            ->whereBetween('assets.expired_date', [$threeMonthsLater, $sixMonthsLater])
-            ->orderBy('category.calibration', $sortDirection)
-            ->paginate(10);
+            ->whereBetween('assets.expired_date', [$threeMonthsLater, $sixMonthsLater]);
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('merk', 'like', "%{$search}%")
+                    ->orWhere('type', 'like', "%{$search}%")
+                    ->orWhere('series_number', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('expired_date', 'like', "%{$search}%");
+            })
+                ->orWhereHas('category', function ($q) use ($search) {
+                    $q->where('category', 'like', "%{$search}%");
+                })
+                ->orWhereHas('department', function ($q) use ($search) {
+                    $q->where('department', 'like', "%{$search}%");
+                })
+                ->orWhereHas('plant', function ($q) use ($search) {
+                    $q->where('plant', 'like', "%{$search}%");
+                });
+        }
+
+        $expiringAssets = $query->orderBy($sortColumn, $sortDirection)->paginate(10);
         $expiringCount = $expiringAssets->count();
         $approachingEDCount = $expiringAssets->total();
 
