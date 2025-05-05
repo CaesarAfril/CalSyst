@@ -127,6 +127,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/toggle/{table}', [DashboardController::class, 'toggleTableVisibility'])->name('dashboard.toggleTable');
 
     Route::get('/validation/slaughterhouse/screwchiller', [ValidationController::class, 'screwChiller'])->name('slaughterhouse-screwchiller');
+    Route::get('/validation/slaughterhouse/ABF', [ValidationController::class, 'ABF'])->name('slaughterhouse-ABF');
+    Route::get('/validation/slaughterhouse/IQF', [ValidationController::class, 'IQF'])->name('slaughterhouse-IQF');
 
     Route::get('/validation/further/fryer-1', [ValidationController::class, 'fryer1'])->name('further-fryer-1');
     Route::get('/validation/further/fryer-2', [ValidationController::class, 'fryer2'])->name('further-fryer-2');
@@ -139,4 +141,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/validation_asset/send-warning', [Validation_assetController::class, 'sendEarlyWarning'])->name('validation_asset.sendWarning');
     Route::post('/validation-asset/early-warning-2', [Validation_assetController::class, 'sendEarlyWarning2'])->name('validation_asset.sendEarlyWarning2');
+
+    Route::get('report/validation/addDataScrewchiller', [ValidationController::class, 'screwChiller_addData'])->name('report.validation.addDataScrewchiller');
+    Route::get('report/validation/addDataABF', [ValidationController::class, 'ABF_addData'])->name('report.validation.addDataABF');
+    Route::get('report/validation/addDataIQF', [ValidationController::class, 'IQF_addData'])->name('report.validation.addDataIQF');
+    Route::get('report/validation/addDataFryer1', [ValidationController::class, 'fryer1_addData'])->name('report.validation.addDataFryer1');
+    Route::get('report/validation/addDataFryer2', [ValidationController::class, 'fryer2_addData'])->name('report.validation.addDataFryer2');
+    Route::get('report/validation/addDataFryerMarel', [ValidationController::class, 'fryerMarel_addData'])->name('report.validation.addDataFryerMarel');
+    Route::get('report/validation/addDatahiCook', [ValidationController::class, 'hiCook_addData'])->name('report.validation.addDatahiCook');
+    Route::get('report/validation/addDataSmokeHouse', [ValidationController::class, 'smokeHouse_addData'])->name('report.validation.addDataSmokeHouse');
+    Route::get('report/validation/addDataAging', [ValidationController::class, 'aging_addData'])->name('report.validation.addDataAging');
 });

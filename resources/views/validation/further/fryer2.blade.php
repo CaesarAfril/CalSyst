@@ -8,6 +8,9 @@
     <div class="card px-5 py-5" style="border-radius: 1rem;">
         <h5 class="card-header d-flex justify-content-between align-items-center p-0 mb-4">
             Fryer 2
+            <a href="{{ route('report.validation.addDataFryer2') }}" class="btn btn-primary">
+                +
+            </a>
         </h5>
     </div>
 </div>
