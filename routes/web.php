@@ -151,4 +151,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('report/validation/addDatahiCook', [ValidationController::class, 'hiCook_addData'])->name('report.validation.addDatahiCook');
     Route::get('report/validation/addDataSmokeHouse', [ValidationController::class, 'smokeHouse_addData'])->name('report.validation.addDataSmokeHouse');
     Route::get('report/validation/addDataAging', [ValidationController::class, 'aging_addData'])->name('report.validation.addDataAging');
+
+    Route::post('/validation/abf/store', [ValidationController::class, 'storeABF'])->name('validation.storeABF');
+    Route::delete('/validation/abf/{id}', [ValidationController::class, 'deleteABF'])->name('validation.abf.delete');
+    Route::get('/validation/abf/print/{id}', [ValidationController::class, 'printABF'])->name('report.abf.print');
+
 });

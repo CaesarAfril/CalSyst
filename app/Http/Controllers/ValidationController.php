@@ -19,6 +19,11 @@ use App\Models\Weight;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\AbfValidation;
+use PDF;
+use App\Imports\PersebaranSuhuImport;
+use Illuminate\Support\Facades\Storage;
+\Carbon\Carbon::setLocale('id');
 
 class ValidationController extends Controller
 {
@@ -35,12 +40,98 @@ class ValidationController extends Controller
 
     public function ABF()
     {
-        return view('validation.slaughterhouse.ABF');
+        $dataABF = AbfValidation::latest()->get();
+        return view('validation.slaughterhouse.ABF', compact('dataABF'));
     }
 
     public function ABF_addData()
     {
         return view('validation.store.store_ABF');
+    }
+
+    public function storeABF(Request $request)
+    {
+        $validated = $request->validate([
+            'start_pengujian' => 'required|date',
+            'end_pengujian' => 'required|date',
+            'pengujian' => 'required|integer',
+            'nama_produk' => 'nullable|string',
+            'ingredient' => 'nullable|string',
+            'kemasan' => 'nullable|string',
+            'nama_mesin' => 'nullable|string',
+            'dimensi' => 'nullable|string',
+            'kapasitas' => 'nullable|string',
+            'susunan' => 'nullable|string',
+            'isi_rak' => 'nullable|string',
+            'penumpukan' => 'nullable|string',
+            'target_suhu' => 'nullable|string',
+            'set_thermostat' => 'nullable|string',
+            'nama_mesin_2' => 'nullable|string',
+            'merek_mesin_2' => 'nullable|string',
+            'tipe_mesin_2' => 'nullable|string',
+            'freon_mesin_2' => 'nullable|string',
+            'kapasitas_mesin_2' => 'nullable|string',
+            'lokasi' => 'nullable|string',
+            'alamat' => 'nullable|string',
+            'persebaran_suhu' => 'nullable|mimes:xls,xlsx',
+            'kesimpulan_suhu' => 'nullable|string',
+        ]);
+
+        // Default nilai jika tidak ada file
+        $suhuAwal = null;
+        $suhuAkhir = null;
+        $jamAwal = null;
+        $jamAkhir = null;
+        $filePath = null;
+
+        if ($request->hasFile('persebaran_suhu')) {
+            $file = $request->file('persebaran_suhu');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('uploads/persebaran_suhu', $filename, 'public');
+
+            $import = new PersebaranSuhuImport;
+            Excel::import($import, $file);
+
+            $suhuAwal = $import->suhuAwal;
+            $suhuAkhir = $import->suhuAkhir;
+            $jamAwal = $import->jamAwal;
+            $jamAkhir = $import->jamAkhir;
+        }
+
+        AbfValidation::create(array_merge($validated, [
+            'persebaran_suhu' => $filePath,
+            'suhu_awal' => $suhuAwal ? json_encode($suhuAwal) : null,
+            'suhu_akhir' => $suhuAkhir ? json_encode($suhuAkhir) : null,
+            'jam_awal' => $jamAwal,
+            'jam_akhir' => $jamAkhir,
+        ]));
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan.');
+    }
+
+    public function deleteABF($id)
+    {
+        $data = AbfValidation::findOrFail($id);
+        $data->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
+    }
+
+    public function printABF($id)
+    {
+        $dataABF = AbfValidation::findOrFail($id);
+
+        // Hitung durasi dari start ke end
+        $durasi = Carbon::parse($dataABF->start_pengujian)->diff(
+            Carbon::parse($dataABF->end_pengujian)
+        )->format('%h jam %i menit');
+
+        $pdf = PDF::loadView('validation.print.print_abf', [
+            'dataABF' => $dataABF,
+            'durasi' => $durasi
+        ]);
+
+        return $pdf->stream('laporan-abf-' . $dataABF->nama_produk . '.pdf');
     }
 
     public function IQF()
