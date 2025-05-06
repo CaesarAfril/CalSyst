@@ -25,7 +25,7 @@
                             <label for="date" class="form-label">Tanggal</label>
                         </div>
                         <div class="col-sm-10">
-                            <input type="date" name="tanggal" id="tanggal" class="form-control mb-2" required>
+                            <input type="date" name="tanggal" id="tanggal" class="form-control mb-2" required value="{{ old('tanggal') }}">
                         </div>
                     </div>
                     <div class="row">
@@ -36,7 +36,7 @@
                             <select name="asset" id="asset" class="form-control mb-2" required>
                                 <option value="" hidden>Pilih Asset</option>
                                 @foreach($assets as $asset)
-                                <option value="{{$asset->uuid}}" data-resolution="{{$asset->resolution}}">
+                                <option value="{{$asset->uuid}}" data-resolution="{{$asset->resolution}}" {{ old('asset') == $asset->uuid ? 'selected' : '' }}>
                                     {{$asset->merk}} {{$asset->type}} {{$asset->series_number}} ({{$asset->department->department}})
                                 </option>
                                 @endforeach
@@ -49,11 +49,11 @@
                     <div class="row mb-4">
                         <div class="col-sm-6">
                             <label for="initial_temp" class="form-label">Awal</label>
-                            <input type="number" name="initial_temp" id="initial_temp" step="0.1" class="form-control">
+                            <input type="number" name="initial_temp" id="initial_temp" step="0.1" class="form-control" value="{{ old('initial_temp') }}">
                         </div>
                         <div class="col-sm-6">
                             <label for="final_temp" class="form-label">Akhir</label>
-                            <input type="number" name="final_temp" id="final_temp" step="0.1" class="form-control">
+                            <input type="number" name="final_temp" id="final_temp" step="0.1" class="form-control" value="{{ old('final_temp') }}">
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -62,11 +62,11 @@
                     <div class="row mb-4">
                         <div class="col-sm-6">
                             <label for="initial_rh" class="form-label">Awal</label>
-                            <input type="number" name="initial_rh" id="initial_rh" step="0.1" class="form-control">
+                            <input type="number" name="initial_rh" id="initial_rh" step="0.1" class="form-control" value="{{ old('initial_rh') }}">
                         </div>
                         <div class="col-sm-6">
                             <label for="final_rh" class="form-label">Akhir</label>
-                            <input type="number" name="final_rh" id="final_rh" step="0.1" class="form-control">
+                            <input type="number" name="final_rh" id="final_rh" step="0.1" class="form-control" value="{{ old('final_rh') }}">
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -75,19 +75,19 @@
                     <div class="row mb-4">
                         <div class="col-sm-3">
                             <label for="max_weight" class="form-label">Berat Maksimal</label>
-                            <input type="number" name="max_weight" id="max_weight" class="form-control">
+                            <input type="number" name="max_weight" id="max_weight" class="form-control" value="{{ old('max_weight') }}">
                         </div>
                         <div class="col-sm-3">
                             <label for="max_scale" class="form-label">Skala Maksimal</label>
-                            <input type="number" name="max_scale" id="max_scale" class="form-control">
+                            <input type="number" name="max_scale" id="max_scale" class="form-control" value="{{ old('max_scale') }}">
                         </div>
                         <div class="col-sm-3">
                             <label for="scale_resolution" class="form-label">Resolusi Timbangan (e)</label>
-                            <input type="number" name="scale_resolution" id="scale_resolution" step="0.00001" class="form-control">
+                            <input type="number" name="scale_resolution" id="scale_resolution" step="0.00001" class="form-control" value="{{ old('scale_resolution') }}">
                         </div>
                         <div class="col-sm-3">
                             <label for="scale_class" class="form-label">Kelas Timbangan</label>
-                            <input type="number" name="scale_class" id="scale_class" class="form-control">
+                            <input type="number" name="scale_class" id="scale_class" class="form-control" value="{{ old('scale_class') }}">
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -96,89 +96,89 @@
                     <div class="row mb-4">
                         <div class="col-sm-3">
                             <label for="weight_resolution" class="form-label">Resolusi (d)</label>
-                            <input type="number" name="weight_resolution" id="weight_resolution" step="0.1" class="form-control" value="0.5">
+                            <input type="number" name="weight_resolution" id="weight_resolution" step="0.1" class="form-control" value="0.5" value="{{ old('weight_resolution') }}">
                         </div>
                         <div class="col-sm-3">
                             <label for="weight_max" class="form-label">Beban Maksimum</label>
-                            <input type="number" name="weight_max" id="weight_max" step="0.0001" value="0.0064" class="form-control">
+                            <input type="number" name="weight_max" id="weight_max" step="0.0001" value="0.0064" class="form-control" value="{{ old('weight_max') }}">
                         </div>
                         <div class="col-sm-3">
                             <label for="weight_min" class="form-label">Beban Minimum</label>
-                            <input type="number" name="weight_min" id="weight_min" step="0.000001" value="0.000024" class="form-control">
+                            <input type="number" name="weight_min" id="weight_min" step="0.000001" value="0.000024" class="form-control" value="{{ old('weight_min') }}">
                         </div>
                         <div class="col-sm-3">
                             <label for="k" class="form-label">K</label>
-                            <input type="number" name="k" id="k" value="2" class="form-control">
+                            <input type="number" name="k" id="k" value="2" class="form-control" value="{{ old('k') }}">
                         </div>
                     </div>
                     <h3 class="mb-4">Uji 1 Weighing Performance</h3>
                     <div class="row">
                         <div class="col-sm-2">
                             <label class="form-label">Total</label>
-                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly>
-                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly>
-                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly>
-                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly>
-                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly>
-                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly>
-                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly>
-                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly>
-                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly>
+                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly value="{{ old('total[]') }}">
+                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly value="{{ old('total[]') }}">
+                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly value="{{ old('total[]') }}">
+                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly value="{{ old('total[]') }}">
+                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly value="{{ old('total[]') }}">
+                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly value="{{ old('total[]') }}">
+                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly value="{{ old('total[]') }}">
+                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly value="{{ old('total[]') }}">
+                            <input type="number" name="total[]" id="total[]" class="form-control mb-2" readonly value="{{ old('total[]') }}">
                         </div>
                         <div class="col-sm-2">
                             <label class="form-label">Muatan 1</label>
-                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2">
-                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2">
-                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2">
-                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2">
-                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2">
-                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2">
-                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2">
-                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2">
-                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2">
+                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2" value="{{ old('weight_1[]') }}">
+                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2" value="{{ old('weight_1[]') }}">
+                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2" value="{{ old('weight_1[]') }}">
+                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2" value="{{ old('weight_1[]') }}">
+                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2" value="{{ old('weight_1[]') }}">
+                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2" value="{{ old('weight_1[]') }}">
+                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2" value="{{ old('weight_1[]') }}">
+                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2" value="{{ old('weight_1[]') }}">
+                            <input type="number" name="weight_1[]" id="weight_1[]" class="form-control mb-2" value="{{ old('weight_1[]') }}">
                         </div>
                         <div class="col-sm-2">
                             <label class="form-label">Muatan 2</label>
-                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2">
-                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2">
-                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2">
-                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2">
-                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2">
-                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2">
-                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2">
-                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2">
-                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2">
+                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2" value="{{ old('weight_2[]') }}">
+                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2" value="{{ old('weight_2[]') }}">
+                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2" value="{{ old('weight_2[]') }}">
+                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2" value="{{ old('weight_2[]') }}">
+                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2" value="{{ old('weight_2[]') }}">
+                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2" value="{{ old('weight_2[]') }}">
+                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2" value="{{ old('weight_2[]') }}">
+                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2" value="{{ old('weight_2[]') }}">
+                            <input type="number" name="weight_2[]" id="weight_2[]" class="form-control mb-2" value="{{ old('weight_2[]') }}">
                         </div>
                         <div class="col-sm-3">
                             <label class="form-label">Penunjukan</label>
-                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2">
+                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2" value="{{ old('show[]') }}">
+                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2" value="{{ old('show[]') }}">
+                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2" value="{{ old('show[]') }}">
+                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2" value="{{ old('show[]') }}">
+                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2" value="{{ old('show[]') }}">
+                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2" value="{{ old('show[]') }}">
+                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2" value="{{ old('show[]') }}">
+                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2" value="{{ old('show[]') }}">
+                            <input type="number" name="show[]" id="show[]" step="0.00001" class="form-control mb-2" value="{{ old('show[]') }}">
                         </div>
                         <div class="col-sm-3">
                             <label class="form-label">Koreksi</label>
-                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly>
+                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('correction[]') }}">
+                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('correction[]') }}">
+                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('correction[]') }}">
+                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('correction[]') }}">
+                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('correction[]') }}">
+                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('correction[]') }}">
+                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('correction[]') }}">
+                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('correction[]') }}">
+                            <input type="number" name="correction[]" id="correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('correction[]') }}">
                         </div>
                     </div>
                     <h3 class="mb-4">Uji 2 Repeatability</h3>
                     <div class="row mb-3">
                         <div class="col-sm-2">
                             <label for="avg_dev_repeatability" class="form-label">Overall Muatan AVG STDEV</label>
-                            <input type="number" name="avg_dev_repeatability" id="avg_dev_repeatability" class="form-control" step="0.1" readonly>
+                            <input type="number" name="avg_dev_repeatability" id="avg_dev_repeatability" class="form-control" step="0.1" readonly value="{{ old('avg_dev_repeatability') }}">
                         </div>
                     </div>
                     <div class="border rounded p-3 mb-4">
@@ -187,22 +187,22 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="weight_5" class="form-label">Muatan 5%</label>
-                                <input type="number" name="weight_5" id="weight_5" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="weight_5" id="weight_5" step="0.00001" class="form-control mb-2" readonly value="{{ old('weight_5') }}">
                             </div>
                             <div class="col-sm-6">
                                 <label for="average_5" class="form-label">Average</label>
-                                <input type="number" name="average[]" id="average_5" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="average[]" id="average_5" step="0.00001" class="form-control mb-2" readonly value="{{ old('average[]') }}">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="sd_5" class="form-label">Standar Deviasi</label>
-                                <input type="number" name="sd[]" id="sd_5" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="sd[]" id="sd_5" step="0.00001" class="form-control mb-2" readonly value="{{ old('sd[]') }}">
                             </div>
                             <div class="col-sm-6">
                                 <label for="Urepeat_5" class="form-label">U Repeat</label>
-                                <input type="number" name="Urepeat[]" id="Urepeat_5" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="Urepeat[]" id="Urepeat_5" step="0.00001" class="form-control mb-2" readonly value="{{ old('Urepeat[]') }}">
                             </div>
                         </div>
 
@@ -210,21 +210,21 @@
                             <div class="col-sm-6">
                                 <label class="form-label">Penunjukan</label>
                                 <div class="repeatability-show-group">
-                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2">
+                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_5[]') }}">
+                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_5[]') }}">
+                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_5[]') }}">
+                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_5[]') }}">
+                                    <input type="number" name="repeatability_show_5[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_5[]') }}">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <label class="form-label">Koreksi</label>
                                 <div class="repeatability-correction-group">
-                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly>
+                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_5[]') }}">
+                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_5[]') }}">
+                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_5[]') }}">
+                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_5[]') }}">
+                                    <input type="number" name="repeatability_correction_5[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_5[]') }}">
                                 </div>
                             </div>
                         </div>
@@ -236,22 +236,22 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="weight_50" class="form-label">Muatan 50%</label>
-                                <input type="number" name="weight_50" id="weight_50" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="weight_50" id="weight_50" step="0.00001" class="form-control mb-2" readonly value="{{ old('weight_50') }}">
                             </div>
                             <div class="col-sm-6">
                                 <label for="average_50" class="form-label">Average</label>
-                                <input type="number" name="average[]" id="average_50" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="average[]" id="average_50" step="0.00001" class="form-control mb-2" readonly value="{{ old('average[]') }}">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="sd_50" class="form-label">Standar Deviasi</label>
-                                <input type="number" name="sd[]" id="sd_50" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="sd[]" id="sd_50" step="0.00001" class="form-control mb-2" readonly value="{{ old('sd[]') }}">
                             </div>
                             <div class="col-sm-6">
                                 <label for="Urepeat_50" class="form-label">U Repeat</label>
-                                <input type="number" name="Urepeat[]" id="Urepeat_50" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="Urepeat[]" id="Urepeat_50" step="0.00001" class="form-control mb-2" readonly value="{{ old('Urepeat[]') }}">
                             </div>
                         </div>
 
@@ -259,21 +259,21 @@
                             <div class="col-sm-6">
                                 <label class="form-label">Penunjukan</label>
                                 <div class="repeatability-show-group">
-                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2">
+                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_50[]') }}">
+                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_50[]') }}">
+                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_50[]') }}">
+                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_50[]') }}">
+                                    <input type="number" name="repeatability_show_50[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_50[]') }}">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <label class="form-label">Koreksi</label>
                                 <div class="repeatability-correction-group">
-                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly>
+                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_50[]') }}">
+                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_50[]') }}">
+                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_50[]') }}">
+                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_50[]') }}">
+                                    <input type="number" name="repeatability_correction_50[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_50[]') }}">
                                 </div>
                             </div>
                         </div>
@@ -284,22 +284,22 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="weight_100" class="form-label">Muatan 100%</label>
-                                <input type="number" name="weight_100" id="weight_100" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="weight_100" id="weight_100" step="0.00001" class="form-control mb-2" readonly value="{{ old('weight_100') }}">
                             </div>
                             <div class="col-sm-6">
                                 <label for="average_100" class="form-label">Average</label>
-                                <input type="number" name="average[]" id="average_100" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="average[]" id="average_100" step="0.00001" class="form-control mb-2" readonly value="{{ old('average[]') }}">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="sd_100" class="form-label">Standar Deviasi</label>
-                                <input type="number" name="sd[]" id="sd_100" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="sd[]" id="sd_100" step="0.00001" class="form-control mb-2" readonly value="{{ old('sd[]') }}">
                             </div>
                             <div class="col-sm-6">
                                 <label for="Urepeat_100" class="form-label">U Repeat</label>
-                                <input type="number" name="Urepeat[]" id="Urepeat_100" step="0.00001" class="form-control mb-2" readonly>
+                                <input type="number" name="Urepeat[]" id="Urepeat_100" step="0.00001" class="form-control mb-2" readonly value="{{ old('Urepeat[]') }}">
                             </div>
                         </div>
 
@@ -307,21 +307,21 @@
                             <div class="col-sm-6">
                                 <label class="form-label">Penunjukan</label>
                                 <div class="repeatability-show-group">
-                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2">
-                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2">
+                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_100[]') }}">
+                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_100[]') }}">
+                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_100[]') }}">
+                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_100[]') }}">
+                                    <input type="number" name="repeatability_show_100[]" step="0.00001" class="form-control mb-2" value="{{ old('repeatability_show_100[]') }}">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <label class="form-label">Koreksi</label>
                                 <div class="repeatability-correction-group">
-                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly>
-                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly>
+                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_100[]') }}">
+                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_100[]') }}">
+                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_100[]') }}">
+                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_100[]') }}">
+                                    <input type="number" name="repeatability_correction_100[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('repeatability_correction_100[]') }}">
                                 </div>
                             </div>
                         </div>
@@ -330,17 +330,17 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label for="weight_ecc" class="form-label">Muatan</label>
-                            <input type="number" name="weight_ecc" id="weight_ecc" step="0.00001" class="form-control mb-2" readonly>
+                            <input type="number" name="weight_ecc" id="weight_ecc" step="0.00001" class="form-control mb-2" readonly value="{{ old('weight_ecc') }}">
                         </div>
                         <div class="col-sm-6">
                             <label for="average_ecc" class="form-label">Average</label>
-                            <input type="number" name="average_ecc" id="average_ecc" step="0.00001" class="form-control mb-2" readonly>
+                            <input type="number" name="average_ecc" id="average_ecc" step="0.00001" class="form-control mb-2" readonly value="{{ old('average_ecc') }}">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <label for="uecc" class="form-label">U Ecc</label>
-                            <input type="number" name="uecc" id="uecc" step="0.00001" class="form-control mb-2" readonly>
+                            <input type="number" name="uecc" id="uecc" step="0.00001" class="form-control mb-2" readonly value="{{ old('uecc') }}">
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -354,27 +354,27 @@
                         </div>
                         <div class="col-sm-3">
                             <label class="form-label">Penunjukan</label>
-                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2">
-                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2">
+                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2" value="{{ old('eccentricity_show[]') }}">
+                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2" value="{{ old('eccentricity_show[]') }}">
+                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2" value="{{ old('eccentricity_show[]') }}">
+                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2" value="{{ old('eccentricity_show[]') }}">
+                            <input type="number" name="eccentricity_show[]" step="0.00001" class="form-control mb-2" value="{{ old('eccentricity_show[]') }}">
                         </div>
                         <div class="col-sm-2">
                             <label class="form-label">Koreksi</label>
-                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly>
-                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly>
+                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('eccentricity_correction[]') }}">
+                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('eccentricity_correction[]') }}">
+                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('eccentricity_correction[]') }}">
+                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('eccentricity_correction[]') }}">
+                            <input type="number" name="eccentricity_correction[]" step="0.00001" class="form-control mb-2" readonly value="{{ old('eccentricity_correction[]') }}">
                         </div>
                         <div class="col-sm-2">
                             <label class="form-label">Koreksi Mutlak</label>
-                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly>
-                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly>
-                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly>
-                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly>
-                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly>
+                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly value="{{ old('eccentricity_abs_correction[]') }}">
+                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly value="{{ old('eccentricity_abs_correction[]') }}">
+                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly value="{{ old('eccentricity_abs_correction[]') }}">
+                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly value="{{ old('eccentricity_abs_correction[]') }}">
+                            <input type="number" name="eccentricity_abs_correction[]" class="form-control mb-2" readonly value="{{ old('eccentricity_abs_correction[]') }}">
                         </div>
                         <div class="col-sm-4">
                             <img src="{{ url('/image/mapping.png') }}" alt="mapping">
@@ -384,63 +384,63 @@
                     <div class="row mb-2">
                         <div class="col-sm-6">
                             <label class="form-label">U. Drift Anak Timbang</label>
-                            <input type="number" name="UDrift_weight" id="UDrift_weight" class="form-control" step="0.00000000001" readonly>
+                            <input type="number" name="UDrift_weight" id="UDrift_weight" class="form-control" step="0.00000000001" readonly value="{{ old('UDrift_weight') }}">
                         </div>
                         <div class="col-sm-6">
                             <label class="form-label">U. Daya Baca</label>
-                            <input type="number" name="Ureadability" id="Ureadability" class="form-control" step="0.000000000001" readonly>
+                            <input type="number" name="Ureadability" id="Ureadability" class="form-control" step="0.000000000001" readonly value="{{ old('Ureadability') }}">
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-sm-3">
                             <label class="form-label">U. Anak Timbang Standar</label>
-                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly>
+                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly value="{{ old('Uweightstd[]') }}">
+                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly value="{{ old('Uweightstd[]') }}">
+                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly value="{{ old('Uweightstd[]') }}">
+                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly value="{{ old('Uweightstd[]') }}">
+                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly value="{{ old('Uweightstd[]') }}">
+                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly value="{{ old('Uweightstd[]') }}">
+                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly value="{{ old('Uweightstd[]') }}">
+                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly value="{{ old('Uweightstd[]') }}">
+                            <input type="number" name="Uweightstd[]" id="Uweightstd[]" step="0.000001" class="form-control mb-2" readonly value="{{ old('Uweightstd[]') }}">
                         </div>
                         <div class="col-sm-3">
                             <label class="form-label">U. Bouyancy Udara</label>
-                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly>
+                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly value="{{ old('Ubouyancy[]') }}">
+                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly value="{{ old('Ubouyancy[]') }}">
+                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly value="{{ old('Ubouyancy[]') }}">
+                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly value="{{ old('Ubouyancy[]') }}">
+                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly value="{{ old('Ubouyancy[]') }}">
+                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly value="{{ old('Ubouyancy[]') }}">
+                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly value="{{ old('Ubouyancy[]') }}">
+                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly value="{{ old('Ubouyancy[]') }}">
+                            <input type="number" name="Ubouyancy[]" id="Ubouyancy[]" step="0.00000000000001" class="form-control mb-2" readonly value="{{ old('Ubouyancy[]') }}">
                         </div>
                         <div class="col-sm-3">
                             <label class="form-label">UC</label>
-                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly>
+                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('Uc[]') }}">
+                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('Uc[]') }}">
+                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('Uc[]') }}">
+                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('Uc[]') }}">
+                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('Uc[]') }}">
+                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('Uc[]') }}">
+                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('Uc[]') }}">
+                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('Uc[]') }}">
+                            <input type="number" name="Uc[]" id="Uc[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('Uc[]') }}">
                             <label for="avg_U95" class="form-label">U95</label>
                         </div>
                         <div class="col-sm-3">
                             <label class="form-label">U95</label>
-                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly>
-                            <input type="number" name="avg_U95" id="avg_U95" step="0.01" class="form-control mb-2" readonly>
+                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('U95[]') }}">
+                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('U95[]') }}">
+                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('U95[]') }}">
+                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('U95[]') }}">
+                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('U95[]') }}">
+                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('U95[]') }}">
+                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('U95[]') }}">
+                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('U95[]') }}">
+                            <input type="number" name="U95[]" id="U95[]" step="0.000000000001" class="form-control mb-2" readonly value="{{ old('U95[]') }}">
+                            <input type="number" name="avg_U95" id="avg_U95" step="0.01" class="form-control mb-2" readonly value="{{ old('avg_U95') }}">
                         </div>
                     </div>
                     <div class="d-flex justify-content-between mt-2">

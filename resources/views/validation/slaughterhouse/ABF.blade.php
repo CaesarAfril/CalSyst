@@ -12,6 +12,51 @@
                 +
             </a>
         </h5>
+
+        <div class="table-responsive text-nowrap">
+            <table class="table table-bordered text-center align-middle">
+                <thead>
+                    <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
+                        <th style="color: #fff">No.</th>
+                        <th style="color: #fff">Nama Produk</th>
+                        <th style="color: #fff">Nama Mesin</th>
+                        <th style="color: #fff">Merek</th>
+                        <th style="color: #fff">Tipe</th>
+                        <th style="color: #fff">Freon</th>
+                        <th style="color: #fff">Kapasitas</th>
+                        <th style="color: #fff">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($dataABF as $item)
+                        <tr>
+                            <th>{{$loop->iteration}}</th>
+                            <td>{{ $item->nama_produk }}</td>
+                            <td>{{ $item->nama_mesin_2 }}</td>
+                            <td>{{ $item->merek_mesin_2 }}</td>
+                            <td>{{ $item->tipe_mesin_2 }}</td>
+                            <td>{{ $item->freon_mesin_2 }}</td>
+                            <td>{{ $item->kapasitas_mesin_2 }}</td>
+                            <td class="d-flex justify-content-center">
+                                <a href="{{ route('report.abf.print', $item->id) }}" class="btn btn-primary btn-sm me-2" target="_blank">
+                                    Cetak PDF
+                                </a>
+                                <form action="{{ route('validation.abf.delete', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm me-2" type="submit">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center">Belum ada data</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
     </div>
 </div>
 @endsection
