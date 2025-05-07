@@ -31,10 +31,12 @@ class AbfValidation extends Model
         'lokasi',
         'alamat',
         'persebaran_suhu',
-        'kesimpulan_suhu',
         'suhu_awal',
         'suhu_akhir',
         'jam_awal',
         'jam_akhir',
+        'penetrasi_suhu',
+        'suhu_awal_penetrasi',
+        'suhu_akhir_penetrasi',
     ];
 }

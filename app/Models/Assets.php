@@ -31,6 +31,10 @@ class Assets extends Model
         'expired_date'
     ];
 
+    protected $casts = [
+        'expired_date' => 'date',
+    ];
+
     protected static function boot()
     {
         parent::boot();

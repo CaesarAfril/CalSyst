@@ -34,6 +34,11 @@ class Display_calibration extends Model
         'approval'
     ];
 
+    protected $casts = [
+        'expired_date' => 'date',
+        'date' => 'date',
+    ];
+
     protected static function boot()
     {
         parent::boot();

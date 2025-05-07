@@ -169,7 +169,7 @@
                   <td>{{ $onTrackAssets->asset->merk }}</td>
                   <td>{{ $onTrackAssets->asset->series_number }}</td>
                   <td>{{ $onTrackAssets->asset->department->department }}</td>
-                  <td>{{ \Carbon\Carbon::parse($onTrackAssets->asset->expired_date)->format('d-m-Y') }}</td>
+                  <td>{{ $onTrackAssets->asset->expired_date->format('d-m-Y') }}</td>
                   <td>{{ $onTrackAssets->asset->category->calibration }}</td>
                   <td> {{ $onTrackAssets->asset->latest_external_calibration->progress_status ?? '-' }}</td>
                   <td>{!! $onTrackAssets->status_message !!}</td>
@@ -249,7 +249,7 @@
               <td>{{ $asset->department->department }}</td>
               <td>
                 @if($asset->expired_date)
-                    <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-Y') }}</span>
+                    <span style="color: red;">{{ $asset->expired_date->format('d-m-Y') }}</span>
                 @else
                     <span style="color: gray;">N/A</span>
                 @endif
