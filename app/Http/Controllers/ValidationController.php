@@ -22,6 +22,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\AbfValidation;
 use PDF;
 use App\Imports\PersebaranSuhuImport;
+use App\Imports\PenetrasiSuhuImport;
 use Illuminate\Support\Facades\Storage;
 \Carbon\Carbon::setLocale('id');
 
@@ -74,10 +75,10 @@ class ValidationController extends Controller
             'lokasi' => 'nullable|string',
             'alamat' => 'nullable|string',
             'persebaran_suhu' => 'nullable|mimes:xls,xlsx',
-            'kesimpulan_suhu' => 'nullable|string',
+            'penetrasi_suhu' => 'nullable|mimes:xls,xlsx',
         ]);
 
-        // Default nilai jika tidak ada file
+        // persebaran
         $suhuAwal = null;
         $suhuAkhir = null;
         $jamAwal = null;
@@ -89,13 +90,30 @@ class ValidationController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('uploads/persebaran_suhu', $filename, 'public');
 
-            $import = new PersebaranSuhuImport;
-            Excel::import($import, $file);
+            $importPersebaran = new PersebaranSuhuImport;
+            Excel::import($importPersebaran, $file);
 
-            $suhuAwal = $import->suhuAwal;
-            $suhuAkhir = $import->suhuAkhir;
-            $jamAwal = $import->jamAwal;
-            $jamAkhir = $import->jamAkhir;
+            $suhuAwal = $importPersebaran->suhuAwal;
+            $suhuAkhir = $importPersebaran->suhuAkhir;
+            $jamAwal = $importPersebaran->jamAwal;
+            $jamAkhir = $importPersebaran->jamAkhir;
+        }
+
+        // penetrasi
+        $suhuAwalPenetrasi = null;
+        $suhuAkhirPenetrasi = null;
+        $filePathPenetrasi = null;
+
+        if ($request->hasFile('penetrasi_suhu')) {
+            $filePenetrasi = $request->file('penetrasi_suhu');
+            $filenamePenetrasi = time() . '_' . $filePenetrasi->getClientOriginalName();
+            $filePathPenetrasi = $filePenetrasi->storeAs('uploads/penetrasi_suhu', $filenamePenetrasi, 'public');
+
+            $importPenetrasi = new PenetrasiSuhuImport;
+            Excel::import($importPenetrasi, $filePenetrasi);
+
+            $suhuAwalPenetrasi = $importPenetrasi->suhuAwalPenetrasi;
+            $suhuAkhirPenetrasi = $importPenetrasi->suhuAkhirPenetrasi;
         }
 
         AbfValidation::create(array_merge($validated, [
@@ -104,6 +122,9 @@ class ValidationController extends Controller
             'suhu_akhir' => $suhuAkhir ? json_encode($suhuAkhir) : null,
             'jam_awal' => $jamAwal,
             'jam_akhir' => $jamAkhir,
+            'penetrasi_suhu' => $filePathPenetrasi,
+            'suhu_awal_penetrasi' => $suhuAwalPenetrasi ? json_encode($suhuAwalPenetrasi) : null,
+            'suhu_akhir_penetrasi' => $suhuAkhirPenetrasi ? json_encode($suhuAkhirPenetrasi) : null,
         ]));
 
         return redirect()->back()->with('success', 'Data berhasil disimpan.');
@@ -121,15 +142,10 @@ class ValidationController extends Controller
     {
         $dataABF = AbfValidation::findOrFail($id);
 
-        // Hitung durasi dari start ke end
-        $durasi = Carbon::parse($dataABF->start_pengujian)->diff(
-            Carbon::parse($dataABF->end_pengujian)
-        )->format('%h jam %i menit');
-
+        // Kirim ke view
         $pdf = PDF::loadView('validation.print.print_abf', [
             'dataABF' => $dataABF,
-            'durasi' => $durasi
-        ]);
+        ])->setOptions(['isRemoteEnabled' => true]);
 
         return $pdf->stream('laporan-abf-' . $dataABF->nama_produk . '.pdf');
     }

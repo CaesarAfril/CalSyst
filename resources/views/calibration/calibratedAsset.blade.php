@@ -117,7 +117,7 @@
                 <td>{{ $asset->department->department }}</td>
                 <td>
                     @if($asset->expired_date)
-                    <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-Y') }}</span>
+                    <span style="color: red;">{{ $asset->expired_date->format('d-m-Y') }}</span>
                     @else
                     <span style="color: gray;">N/A</span>
                     @endif
@@ -162,7 +162,7 @@
                     <td>{{ $asset->department->department }}</td>
                     <td>
                         @if($asset->expired_date)
-                            <span style="color: red;">{{ \Carbon\Carbon::parse($asset->expired_date)->format('d-m-Y') }}</span>
+                            <span style="color: red;">{{ $asset->expired_date->format('d-m-Y') }}</span>
                         @else
                             <span style="color: gray;">N/A</span>
                         @endif

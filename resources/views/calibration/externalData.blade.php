@@ -76,7 +76,7 @@
                         <td>{{ $report->asset->merk }}</td>
                         <td>{{ $report->asset->series_number }}</td>
                         <td>{{ $report->asset->department->department }}</td>
-                        <td>{{ \Carbon\Carbon::parse($report->asset->expired_date)->format('d-m-Y') }}</td>
+                        <td>{{ $report->asset->expired_date->format('d-m-Y') }}</td>
                         <td>{{$report->progress_status ?? '-' }}
                         </td>
                         <td>
