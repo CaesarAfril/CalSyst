@@ -152,6 +152,7 @@
                     {{-- persebaran suhu --}}
                     <div class="col-sm-6 mb-3">
                         <label for="all_suhu" class="form-label">Data sebaran suhu dan suhu pusat produk</label>
+                        {{-- <input class="form-control" type="file" name="all_suhu" id="all_suhu" accept=".xls,.xlsx" required> --}}
                         <input class="form-control" type="file" name="all_suhu" id="all_suhu" accept=".xls,.xlsx" required>
                     </div>
                 </div>

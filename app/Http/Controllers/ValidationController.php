@@ -1,30 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Exports\DisplayCalibrationExport;
-use App\Exports\TempCalibrationExport;
-use App\Models\Actual_display_calibration;
-use App\Models\Actual_eccentricity_scale;
-use App\Models\Actual_repeatability_scale;
-use App\Models\actual_temp_calibration;
-use App\Models\Assets;
-use App\Models\Display_calibration;
-use App\Models\Eccentricity_scale_calibration;
-use App\Models\Repeatability_scale_calibration;
-use App\Models\Scale_calibration;
-use App\Models\temp_calibration;
-use App\Models\Weighing_performance;
-use App\Models\Weight;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\AbfValidation;
+use App\Models\SuhuAbfAll;
 use PDF;
 use App\Imports\PersebaranSuhuImport;
 use App\Imports\PenetrasiSuhuImport;
 use Illuminate\Support\Facades\Storage;
 \Carbon\Carbon::setLocale('id');
+use Illuminate\Support\Facades\DB;
 
 class ValidationController extends Controller
 {
@@ -76,6 +63,7 @@ class ValidationController extends Controller
             'alamat' => 'nullable|string',
             'persebaran_suhu' => 'nullable|mimes:xls,xlsx',
             'penetrasi_suhu' => 'nullable|mimes:xls,xlsx',
+            'all_suhu' => 'required|mimes:xls,xlsx'
         ]);
 
         // persebaran
@@ -116,7 +104,7 @@ class ValidationController extends Controller
             $suhuAkhirPenetrasi = $importPenetrasi->suhuAkhirPenetrasi;
         }
 
-        AbfValidation::create(array_merge($validated, [
+        $abf = AbfValidation::create(array_merge($validated, [
             'persebaran_suhu' => $filePath,
             'suhu_awal' => $suhuAwal ? json_encode($suhuAwal) : null,
             'suhu_akhir' => $suhuAkhir ? json_encode($suhuAkhir) : null,
@@ -127,9 +115,51 @@ class ValidationController extends Controller
             'suhu_akhir_penetrasi' => $suhuAkhirPenetrasi ? json_encode($suhuAkhirPenetrasi) : null,
         ]));
 
-        return redirect()->back()->with('success', 'Data berhasil disimpan.');
-    }
+        $path = $request->file('all_suhu')->getRealPath();
+        $data = Excel::toArray([], $path)[0];
 
+        // Cari start row (judul 'Time' biasanya di baris ke-x)
+        $startRow = 1;
+        while ($startRow < count($data) && strtolower($data[$startRow][0]) !== 'time') {
+            $startRow++;
+        }
+
+        DB::beginTransaction();
+        try {
+            for ($i = $startRow + 1; $i < count($data); $i++) {
+                $row = $data[$i];
+                if (count($row) < 15)
+                    continue;
+
+                SuhuAbfAll::create([
+                    'abf_validation_id' => $abf->id,
+                    'time' => isset($row[0]) ? date('H:i:s', strtotime($row[0])) : null,
+                    'ch1' => (float) str_replace(',', '.', $row[1]),
+                    'ch2' => (float) str_replace(',', '.', $row[2]),
+                    'ch3' => (float) str_replace(',', '.', $row[3]),
+                    'ch4' => (float) str_replace(',', '.', $row[4]),
+                    'ch5' => (float) str_replace(',', '.', $row[5]),
+                    'ch6' => (float) str_replace(',', '.', $row[6]),
+                    'ch7' => (float) str_replace(',', '.', $row[7]),
+                    'ch8' => (float) str_replace(',', '.', $row[8]),
+                    'ch9' => (float) str_replace(',', '.', $row[9]),
+                    'ch10' => (float) str_replace(',', '.', $row[10]),
+                    'titik1' => (float) str_replace(',', '.', $row[11]),
+                    'titik2' => (float) str_replace(',', '.', $row[12]),
+                    'titik3' => (float) str_replace(',', '.', $row[13]),
+                    'titik4' => (float) str_replace(',', '.', $row[14]),
+                ]);
+            }
+
+            DB::commit();
+            return back()->with('success', 'Data suhu berhasil diunggah');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
+
+        // return redirect()->back()->with('success', 'Data berhasil disimpan.');
+    }
     public function deleteABF($id)
     {
         $data = AbfValidation::findOrFail($id);
@@ -138,13 +168,275 @@ class ValidationController extends Controller
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 
+    // public function printABF($id)
+    // {
+    //     $dataABF = AbfValidation::findOrFail($id);
+    //     $suhuData = SuhuAbfAll::where('abf_validation_id', $id)
+    //         ->orderBy('time')
+    //         ->get();
+
+    //     $suhuAwal = $suhuData->first();
+    //     $suhuAkhir = $suhuData->last();
+
+    //     $dummyDate = '1970-01-01';
+    //     $labels = $suhuData->map(function ($item) use ($dummyDate) {
+    //         return \Carbon\Carbon::createFromFormat('H:i:s', $item->time)
+    //             ->setDateFrom(\Carbon\Carbon::parse($dummyDate))
+    //             ->toIso8601String();
+    //     })->toArray();
+
+    //     $startTime = $labels[0];
+    //     $endTime = end($labels);
+
+    //     $chartConfig = [
+    //         'type' => 'line',
+    //         'data' => [
+    //             'labels' => $labels,
+    //             'datasets' => [
+    //                 [
+    //                     'label' => 'Tilt 1 (ch1)',
+    //                     'data' => $suhuData->pluck('ch1')->toArray(),
+    //                     'borderColor' => 'rgb(255, 99, 132)',
+    //                     'fill' => false
+    //                 ],
+    //                 [
+    //                     'label' => 'Tilt 2 (ch2)',
+    //                     'data' => $suhuData->pluck('ch2')->toArray(),
+    //                     'borderColor' => 'rgb(54, 162, 235)',
+    //                     'fill' => false
+    //                 ],
+    //                 [
+    //                     'label' => 'Tilt 3 (ch3)',
+    //                     'data' => $suhuData->pluck('ch3')->toArray(),
+    //                     'borderColor' => 'rgb(255, 206, 86)',
+    //                     'fill' => false
+    //                 ],
+    //                 [
+    //                     'label' => 'Tilt 4 (ch4)',
+    //                     'data' => $suhuData->pluck('ch4')->toArray(),
+    //                     'borderColor' => 'rgb(75, 192, 192)',
+    //                     'fill' => false
+    //                 ],
+    //                 [
+    //                     'label' => 'Tilt 5 (ch5)',
+    //                     'data' => $suhuData->pluck('ch5')->toArray(),
+    //                     'borderColor' => 'rgb(153, 102, 255)',
+    //                     'fill' => false
+    //                 ],
+    //                 [
+    //                     'label' => 'Tilt 6 (ch6)',
+    //                     'data' => $suhuData->pluck('ch6')->toArray(),
+    //                     'borderColor' => 'rgb(255, 159, 64)',
+    //                     'fill' => false
+    //                 ],
+    //                 [
+    //                     'label' => 'Tilt 7 (ch7)',
+    //                     'data' => $suhuData->pluck('ch7')->toArray(),
+    //                     'borderColor' => 'rgb(138, 194, 74)',
+    //                     'fill' => false
+    //                 ],
+    //                 [
+    //                     'label' => 'Tilt 8 (ch8)',
+    //                     'data' => $suhuData->pluck('ch8')->toArray(),
+    //                     'borderColor' => 'rgb(234, 95, 137)',
+    //                     'fill' => false
+    //                 ],
+    //                 [
+    //                     'label' => 'T1.9 CENTER (ch9)',
+    //                     'data' => $suhuData->pluck('ch9')->toArray(),
+    //                     'borderColor' => 'rgb(11, 79, 108)',
+    //                     'fill' => false,
+    //                     'borderWidth' => 2
+    //                 ]
+    //             ]
+    //         ],
+    //         'options' => [
+    //             'responsive' => true,
+    //             'plugins' => [
+    //                 'title' => [
+    //                     'display' => true,
+    //                     'text' => 'Grafik Sebaran Suhu Terhadap Waktu'
+    //                 ],
+    //                 'legend' => [
+    //                     'position' => 'bottom'
+    //                 ]
+    //             ],
+    //             'scales' => [
+    //                 'y' => [
+    //                     'min' => -30,
+    //                     'max' => 0,
+    //                     'title' => [
+    //                         'display' => true,
+    //                         'text' => 'Suhu (°C)'
+    //                     ],
+    //                     'ticks' => [
+    //                         'stepSize' => 5
+    //                     ]
+    //                 ],
+    //                 'x' => [
+    //                     'type' => 'time',
+    //                     'time' => [
+    //                         'parser' => "YYYY-MM-DDTHH:mm:ssZ",
+    //                         'unit' => 'minute',
+    //                         'displayFormats' => [
+    //                             'minute' => 'HH:mm'
+    //                         ],
+    //                         'tooltipFormat' => 'HH:mm'
+    //                     ],
+    //                     'min' => $startTime,
+    //                     'max' => $endTime,
+    //                     'title' => [
+    //                         'display' => true,
+    //                         'text' => 'Waktu'
+    //                     ]
+    //                 ]
+    //             ]
+    //         ]
+    //     ];
+
+    //     $chartUrl = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartConfig));
+
+    //     dd($chartUrl);
+
+    //     $pdf = PDF::loadView('validation.print.print_abf', [
+    //         'dataABF' => $dataABF,
+    //         'suhuAwal' => $suhuAwal,
+    //         'suhuAkhir' => $suhuAkhir,
+    //         'suhuData' => $suhuAkhir,
+    //         'chartUrl' => $chartUrl
+    //     ])->setOptions(['isRemoteEnabled' => true]);
+
+    //     return $pdf->stream('laporan-abf-' . $dataABF->nama_produk . '.pdf');
+    // }
+
     public function printABF($id)
     {
         $dataABF = AbfValidation::findOrFail($id);
+        $suhuData = SuhuAbfAll::where('abf_validation_id', $id)
+            ->orderBy('time')
+            ->get();
 
-        // Kirim ke view
+        $suhuAwal = $suhuData->first();
+        $suhuAkhir = $suhuData->last();
+
+        $startTime = \Carbon\Carbon::parse($suhuData->first()->time)->format('Y-m-d H:i:s');
+        $endTime = \Carbon\Carbon::parse($suhuData->last()->time)->format('Y-m-d H:i:s');
+
+        $chartConfig = [
+            'type' => 'line',
+            'data' => [
+                'labels' => $suhuData->map(function ($item) {
+                    return \Carbon\Carbon::parse($item->time)->format('H:i');
+                })->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Tilt 1 (ch1)',
+                        'data' => $suhuData->pluck('ch1')->toArray(),
+                        'borderColor' => 'rgb(255, 99, 132)',
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Tilt 2 (ch2)',
+                        'data' => $suhuData->pluck('ch2')->toArray(),
+                        'borderColor' => 'rgb(54, 162, 235)',
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Tilt 3 (ch3)',
+                        'data' => $suhuData->pluck('ch3')->toArray(),
+                        'borderColor' => 'rgb(255, 206, 86)',
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Tilt 4 (ch4)',
+                        'data' => $suhuData->pluck('ch4')->toArray(),
+                        'borderColor' => 'rgb(75, 192, 192)',
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Tilt 5 (ch5)',
+                        'data' => $suhuData->pluck('ch5')->toArray(),
+                        'borderColor' => 'rgb(153, 102, 255)',
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Tilt 6 (ch6)',
+                        'data' => $suhuData->pluck('ch6')->toArray(),
+                        'borderColor' => 'rgb(255, 159, 64)',
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Tilt 7 (ch7)',
+                        'data' => $suhuData->pluck('ch7')->toArray(),
+                        'borderColor' => 'rgb(138, 194, 74)',
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Tilt 8 (ch8)',
+                        'data' => $suhuData->pluck('ch8')->toArray(),
+                        'borderColor' => 'rgb(234, 95, 137)',
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'T1.9 CENTER (ch9)',
+                        'data' => $suhuData->pluck('ch9')->toArray(),
+                        'borderColor' => 'rgb(11, 79, 108)',
+                        'fill' => false,
+                        'borderWidth' => 2
+                    ]
+                ]
+            ],
+            'options' => [
+                'responsive' => true,
+                'plugins' => [
+                    'title' => [
+                        'display' => true,
+                        'text' => 'Grafik Sebaran Suhu Terhadap Waktu'
+                    ],
+                    'legend' => [
+                        'position' => 'bottom'
+                    ]
+                ],
+                'scales' => [
+                    'y' => [
+                        'min' => -30,
+                        'max' => 0,
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Suhu (°C)'
+                        ],
+                        'ticks' => [
+                            'stepSize' => 5
+                        ]
+                    ],
+                    'x' => [
+                        'type' => 'time',
+                        'time' => [
+                            'unit' => 'minute',
+                            'displayFormats' => [
+                                'minute' => 'HH:mm'
+                            ]
+                        ],
+                        'min' => $startTime,
+                        'max' => $endTime,
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Waktu'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        // Generate chart URL
+        $chartUrl = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartConfig));
+
         $pdf = PDF::loadView('validation.print.print_abf', [
             'dataABF' => $dataABF,
+            'suhuAwal' => $suhuAwal,
+            'suhuAkhir' => $suhuAkhir,
+            'suhuData' => $suhuAkhir,
+            'chartUrl' => $chartUrl
         ])->setOptions(['isRemoteEnabled' => true]);
 
         return $pdf->stream('laporan-abf-' . $dataABF->nama_produk . '.pdf');

@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('abf_validation', function (Blueprint $table) {
-            // $table->string('persebaran_suhu')->nullable();
+            $table->string('persebaran_suhu')->nullable();
             $table->json('suhu_awal')->nullable();
             $table->json('suhu_akhir')->nullable();
             $table->time('jam_awal')->nullable();

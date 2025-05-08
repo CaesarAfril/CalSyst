@@ -39,4 +39,9 @@ class AbfValidation extends Model
         'suhu_awal_penetrasi',
         'suhu_akhir_penetrasi',
     ];
+
+    public function suhuAbfAll()
+    {
+        return $this->hasMany(SuhuAbfAll::class);
+    }
 }
