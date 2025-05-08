@@ -161,6 +161,7 @@
             <li>2. Melakukan validasi kesesuaian penetrasi suhu pada produk Griller Yamiku pada saat proses blast freezing</li>
         </ul>
     </div>
+
     {{-- tujuan --}}
     <div class="row mb-3">
         <h3>B. TUJUAN</h3>
@@ -169,6 +170,7 @@
             <li>2. Mengetahui lama waktu yang dibutuhkan griller untuk mencapai suhu -18 °C</li>
         </ul>
     </div>
+
     {{-- peralatan --}}
     <div class="row mb-3">
         <h3>C. PERALATAN & LAYOUT</h3>
@@ -224,6 +226,7 @@
             </tr>
         </table>        
     </div>
+
     {{-- metode uji --}}
     <div class="row mb-3">
         <h3>D. METODE UJI</h3>
@@ -236,6 +239,7 @@
             <li>5. Selesai</li>
         </ul>
     </div>
+    
     {{-- penetrasi suhu produk --}}
     <div class="row mb-3">
         <h5>Penetrasi Suhu Produk</h5>
@@ -252,174 +256,291 @@
         <h3 style="margin-bottom: 1rem;">E. HASIL UJI PERSEBARAN SUHU</h3>
         <p>Uji persebaran suhu <span>{{ $dataABF->nama_mesin }}</span> dimulai pada tanggal <span>{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->translatedFormat('d F Y') }}</span> pukul {{ \Carbon\Carbon::parse($dataABF->start_pengujian)->format('H:i:s') }} dan berakhir pada <span>{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->translatedFormat('d F Y') }}</span> pukul {{ \Carbon\Carbon::parse($dataABF->end_pengujian)->format('H:i:s') }}. Selama periode tersebut, informasi terkait persebaran suhu adalah sebagai berikut:</p>
 
-        @php
-            $suhuAwal = json_decode($dataABF->suhu_awal, true);
-            $suhuAkhir = json_decode($dataABF->suhu_akhir, true);
-            
-            // Mapping titik names accounting for missing Titik 6
-            $titikNames = [
-                1 => "Titik 1",
-                2 => "Titik 2",
-                3 => "Titik 3",
-                4 => "Titik 4",
-                5 => "Titik 5",
-                6 => "Titik 7",
-                7 => "Titik 8",
-                8 => "Titik 9 (Center)"
-            ];
+        {{-- @php
+            // $suhuAwal = json_decode($dataABF->suhu_awal, true);
+            // $suhuAkhir = json_decode($dataABF->suhu_akhir, true);
+            // $suhuAkhirTercepat = null;
 
-            // Initialize variables for fastest drop
-            $maxDrop = 0;
-            $titikTercepat = null;
-            $suhuAwalTercepat = null;
-            $suhuAkhirTercepat = null;
-
-            // Initialize variables for slowest drop
-            $minDrop = PHP_FLOAT_MAX;
-            $titikTerlambat = null;
-            $suhuAwalTerlambat = null;
-            $suhuAkhirTerlambat = null;
+            $penurunanTerbesar = null;
+            $titikTerbesar = null;
 
             foreach ($suhuAwal as $index => $awal) {
-                if (!isset($suhuAkhir[$index])) continue;
+                $akhir = $suhuAkhir[$index] ?? null;
+                if (!is_null($awal) && !is_null($akhir)) {
+                    $penurunan = $awal - $akhir;
 
-                $akhir = $suhuAkhir[$index];
-                $drop = $awal - $akhir; // Positive value means temperature decreased
+                    if (is_null($penurunanTerbesar) || $penurunan > $penurunanTerbesar) {
+                        $penurunanTerbesar = $penurunan;
 
-                // Check for fastest drop (largest difference)
-                if ($drop > $maxDrop) {
-                    $maxDrop = $drop;
-                    $titikTercepat = $titikNames[$index] ?? "Titik ".($index+1);
-                    $suhuAwalTercepat = $awal;
-                    $suhuAkhirTercepat = $akhir;
-                }
-
-                // Check for slowest drop (smallest difference)
-                if ($drop < $minDrop) {
-                    $minDrop = $drop;
-                    $titikTerlambat = $titikNames[$index] ?? "Titik ".($index+1);
-                    $suhuAwalTerlambat = $awal;
-                    $suhuAkhirTerlambat = $akhir;
+                        // Penyesuaian nomor titik
+                        if ($index <= 5) {
+                            $titikTerbesar = $index; // titik 1–5
+                        } else {
+                            $titikTerbesar = $index + 1; // lompatin ch6 yg tidak ada
+                        }
+                    }
                 }
             }
 
-            // Convert to absolute values for display
-            $penurunanTercepat = abs($maxDrop);
-            $penurunanTerlambat = abs($minDrop);
+            $hasil = "Durasi penurunan suhu tercepat terjadi pada titik {$titikTerbesar}, yakni dapat menurunkan suhu sebesar " .
+                    number_format($penurunanTerbesar, 2) . " &deg;C (dari " .
+                    number_format($suhuAwal[$titikTerbesar <= 5 ? $titikTerbesar : $titikTerbesar - 1], 2) .
+                    " &deg;C ke " .
+                    number_format($suhuAkhir[$titikTerbesar <= 5 ? $titikTerbesar : $titikTerbesar - 1], 2) . " &deg;C)";
+                    
+            // penurunan terlama
+            $penurunanTerlambat = null;
+            $titikTerlambat = null;
 
-            // Find lowest and highest temperatures
-            $minTemp = min($suhuAkhir);
-            $maxTemp = max($suhuAkhir);
-            
-            // Find their positions
-            $minIndex = array_search($minTemp, $suhuAkhir);
-            $maxIndex = array_search($maxTemp, $suhuAkhir);
-            
-            // Calculate difference
-            $selisih = $minTemp - $maxTemp;
-            // Format the result
-            $hasilSelisih = "selisih suhu antar titik terendah-tertinggi sebesar " 
-                  . number_format($selisih, 2, ',', '.') . " &deg;C "
-                  . "((" . number_format($minTemp, 2, ',', '.') . " &deg;C pada " . $titikNames[$minIndex] . ") - "
-                  . "(" . number_format($maxTemp, 2, ',', '.') . " &deg;C pada " . $titikNames[$maxIndex] . "))";
+            foreach ($suhuAwal as $index => $awal) {
+                $akhir = $suhuAkhir[$index] ?? null;
+                if (!is_null($awal) && !is_null($akhir)) {
+                    $penurunan = $awal - $akhir;
+
+                    if ($penurunan >= 0 && (is_null($penurunanTerlambat) || $penurunan < $penurunanTerlambat)) {
+                        $penurunanTerlambat = $penurunan;
+
+                        // Penyesuaian nomor titik
+                        if ($index <= 5) {
+                            $titikTerlambat = $index;
+                        } else {
+                            $titikTerlambat = $index + 1;
+                        }
+                    }
+                }
+            }
+
+            $awalSuhu = $suhuAwal[$titikTerlambat <= 5 ? $titikTerlambat : $titikTerlambat - 1];
+            $akhirSuhu = $suhuAkhir[$titikTerlambat <= 5 ? $titikTerlambat : $titikTerlambat - 1];
+
+            $hasilTerlambat = "Durasi penurunan suhu terlambat terjadi pada titik {$titikTerlambat}, yakni dapat menurunkan suhu sebesar " .
+                            number_format($penurunanTerlambat, 2) . " &deg;C (dari " .
+                            number_format($awalSuhu, 2) . " &deg;C ke " .
+                            number_format($akhirSuhu, 2) . " &deg;C)";
+                            $minSuhu = null;
+
+            // selisih suhu antar titik terendah-tertinggi sebesar
+            $maxSuhu = null;
+            $titikMin = null;
+            $titikMax = null;
+
+            foreach ($suhuAkhir as $index => $value) {
+                if (!is_null($value)) {
+                    $floatValue = floatval($value);
+
+                    if (is_null($minSuhu) || $floatValue < $minSuhu) {
+                        $minSuhu = $floatValue;
+                        $titikMin = $index <= 5 ? $index : $index + 1;
+                    }
+
+                    if (is_null($maxSuhu) || $floatValue > $maxSuhu) {
+                        $maxSuhu = $floatValue;
+                        $titikMax = $index <= 5 ? $index : $index + 1;
+                    }
+                }
+            }
+
+            $selisihSuhu = $minSuhu - $maxSuhu;
+
+            $hasilSelisih = "Pada suhu akhir, selisih suhu antar titik terendah-tertinggi sebesar " .
+                            number_format($selisihSuhu, 2) . " &deg;C " .
+                            "((" . number_format($minSuhu, 2) . " &deg;C pada titik {$titikMin}) - (" .
+                            number_format($maxSuhu, 2) . " &deg;C pada titik {$titikMax})).";
+        @endphp --}}
+
+        @php
+            $penurunanMax = null;
+            $titikMax = null;
+            $suhuAwalMax = null;
+            $suhuAkhirMax = null;
+
+            for ($i = 1; $i <= 10; $i++) {
+                $chKey = 'ch' . $i;
+
+                if (isset($suhuAwal->$chKey) && isset($suhuAkhir->$chKey)) {
+                    $awal = floatval($suhuAwal->$chKey);
+                    $akhir = floatval($suhuAkhir->$chKey);
+                    $penurunan = $awal - $akhir;
+
+                    if (is_null($penurunanMax) || $penurunan > $penurunanMax) {
+                        $penurunanMax = $penurunan;
+                        $titikMax = $i;
+                        $suhuAwalMax = $awal;
+                        $suhuAkhirMax = $akhir;
+                    }
+                }
+            }
+
+            $penurunanMaxFormatted = number_format($penurunanMax, 2, ',', '.');
+            $suhuAwalFormatted = number_format($suhuAwalMax, 2, ',', '.');
+            $suhuAkhirFormatted = number_format($suhuAkhirMax, 2, ',', '.');
+
+            $hasil = "Durasi penurunan suhu tercepat terjadi pada titik {$titikMax}, yakni dapat menurunkan suhu sebesar {$penurunanMaxFormatted} &deg;C (dari {$suhuAwalFormatted} &deg;C ke {$suhuAkhirFormatted} &deg;C)";
+
+            // penurunan suhu terlama
+            $penurunanMin = null;
+            $titikMin = null;
+            $suhuAwalMin = null;
+            $suhuAkhirMin = null;
+
+            for ($i = 1; $i <= 10; $i++) {
+                // skip ch6 karena tidak digunakan
+                if ($i === 6) continue;
+
+                $chKey = 'ch' . $i;
+
+                if (isset($suhuAwal->$chKey) && isset($suhuAkhir->$chKey)) {
+                    $awal = floatval($suhuAwal->$chKey);
+                    $akhir = floatval($suhuAkhir->$chKey);
+                    $penurunan = $awal - $akhir;
+
+                    // hanya hitung jika penurunan positif (suhu turun)
+                    if ($penurunan > 0 && (is_null($penurunanMin) || $penurunan < $penurunanMin)) {
+                        $penurunanMin = $penurunan;
+                        $titikMin = $i;
+                        $suhuAwalMin = $awal;
+                        $suhuAkhirMin = $akhir;
+                    }
+                }
+            }
+
+            $penurunanMinFormatted = number_format($penurunanMin, 2, ',', '.');
+            $suhuAwalMinFormatted = number_format($suhuAwalMin, 2, ',', '.');
+            $suhuAkhirMinFormatted = number_format($suhuAkhirMin, 2, ',', '.');
+
+            $hasilTerlambat = "Durasi penurunan suhu terlambat terjadi pada titik {$titikMin}, yakni dapat menurunkan suhu sebesar {$penurunanMinFormatted} &deg;C (dari {$suhuAwalMinFormatted} &deg;C ke {$suhuAkhirMinFormatted} &deg;C)";
+
+            // selisih akhir
+            $suhuAkhirData = [];
+
+            for ($i = 1; $i <= 10; $i++) {
+                if ($i === 6) continue; // lewati ch6
+                $chKey = 'ch' . $i;
+
+                if (isset($suhuAkhir->$chKey)) {
+                    $suhu = floatval($suhuAkhir->$chKey);
+                    $suhuAkhirData[$i] = $suhu;
+                }
+            }
+
+            $minTitik = array_key_first($suhuAkhirData);
+            $maxTitik = array_key_first($suhuAkhirData);
+            $minSuhu = $suhuAkhirData[$minTitik];
+            $maxSuhu = $suhuAkhirData[$maxTitik];
+
+            foreach ($suhuAkhirData as $titik => $suhu) {
+                if ($suhu < $minSuhu) {
+                    $minSuhu = $suhu;
+                    $minTitik = $titik;
+                }
+
+                if ($suhu > $maxSuhu) {
+                    $maxSuhu = $suhu;
+                    $maxTitik = $titik;
+                }
+            }
+
+            $selisih = $minSuhu - $maxSuhu;
+            $selisihFormatted = number_format($selisih, 2, ',', '.');
+            $minSuhuFormatted = number_format($minSuhu, 2, ',', '.');
+            $maxSuhuFormatted = number_format($maxSuhu, 2, ',', '.');
+
+            $hasilSelisih = "Pada suhu akhir, selisih suhu antar titik terendah-tertinggi sebesar {$selisihFormatted} &deg;C (({$minSuhuFormatted} &deg;C pada titik {$minTitik}) - ({$maxSuhuFormatted} &deg;C pada titik {$maxTitik})).";
         @endphp
 
         <table class="table-bordered" style="width: 80%; margin: auto;">
-            <tr>
-                <td rowspan="2" class="title-row">SUHU AWAL</td>
-                <th>Titik 1</th>
-                <th>Titik 2</th>
-                <th>Titik 3</th>
-                <th>Titik 4</th>
-                <th>Titik 5</th>
-                <th>Titik 7</th>
-                <th>Titik 8</th>
-                <th>Titik 9 (Center)</th>
-            </tr>
-            <tr>
-                <td>{{ number_format($suhuAwal[1], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwal[2], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwal[3], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwal[4], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwal[5], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwal[6], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwal[7], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwal[8], 2, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td>Durasi sejak start ABF (menit)</td>
-                <td colspan="9">0</td>
-            </tr>
-            <tr>
-                <td>yakni pada jam</td>
-                <td colspan="9">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->format('H:i:s') }}</td>
-            </tr>
-            <tr>
-                <td rowspan="2" class="title-row">SUHU AKHIR</td>
-                <th>Titik 1</th>
-                <th>Titik 2</th>
-                <th>Titik 3</th>
-                <th>Titik 4</th>
-                <th>Titik 5</th>
-                <th>Titik 7</th>
-                <th>Titik 8</th>
-                <th>Titik 9 (Center)</th>
-            </tr>
-            <tr>
-                <td>{{ number_format($suhuAkhir[1], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhir[2], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhir[3], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhir[4], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhir[5], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhir[6], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhir[7], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhir[8], 2, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td>Durasi sejak start ABF</td>
-                <td colspan="9">
+            <thead>
+                <tr>
+                <th class="tg-0lax"></th>
+                <th class="tg-0lax">Titik 1</th>
+                <th class="tg-0lax">Titik 2</th>
+                <th class="tg-0lax">titik 3</th>
+                <th class="tg-0lax">titik 4</th>
+                <th class="tg-0lax">titik 5</th>
+                <th class="tg-0lax">titik 7</th>
+                <th class="tg-0lax">titik 8</th>
+                <th class="tg-0lax">titik 9 (center)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="tg-0lax">SUHU AWAL</td>
+                    <td class="tg-0lax">{{ $suhuAwal->ch1 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAwal->ch2 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAwal->ch3 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAwal->ch4 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAwal->ch5 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAwal->ch7 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAwal->ch8 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAwal->ch9 ?? '-' }}</td>
+                </tr>
+                <tr>
+                <td class="tg-0lax">Durasi sejak start ABF (menit)</td>
+                <td class="tg-0lax" colspan="8">0</td>
+                </tr>
+                <tr>
+                <td class="tg-0lax">yakni pada jam </td>
+                <td class="tg-0lax" colspan="8">{{ $suhuAwal->time ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="tg-0lax">SUHU AKHIR</td>
+                    <td class="tg-0lax">{{ $suhuAkhir->ch1 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAkhir->ch2 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAkhir->ch3 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAkhir->ch4 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAkhir->ch5 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAkhir->ch7 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAkhir->ch8 ?? '-' }}</td>
+                    <td class="tg-0lax">{{ $suhuAkhir->ch9 ?? '-' }}</td>
+                </tr>
+                <tr>
+                <td class="tg-0lax">Durasi sejak start ABF</td>
+                <td class="tg-0lax" colspan="8">
                     @php
-                        // Pastikan data tersedia
-                        if (isset($dataABF->start_pengujian) && isset($dataABF->end_pengujian)) {
-                            $start = new DateTime($dataABF->start_pengujian);
-                            $end = new DateTime($dataABF->end_pengujian);
-        
-                            // Jika waktu selesai lebih kecil dari waktu mulai (melewati tengah malam)
-                            if ($end < $start) {
-                                $end->modify('+1 day');
+                        use Carbon\Carbon;
+
+                        $jamAwal = isset($suhuAwal->time) ? Carbon::parse($suhuAwal->time) : null;
+                        $jamAkhir = isset($suhuAkhir->time) ? Carbon::parse($suhuAkhir->time) : null;
+
+                        $durasi = '-';
+                        if ($jamAwal && $jamAkhir) {
+                            if ($jamAkhir->lt($jamAwal)) {
+                                $jamAkhir->addDay();
                             }
-        
-                            $selisih = $start->diff($end);
-                            echo "" . $selisih->h . " jam " . $selisih->i . " menit " . $selisih->s . " detik";
-                        } else {
-                            echo "Data waktu tidak tersedia";
+
+                            $totalMenit = $jamAkhir->diffInMinutes($jamAwal);
+                            $jam = floor($totalMenit / 60);
+                            $menit = $totalMenit % 60;
+                            $durasi = $jam . ' jam ' . $menit . ' menit';
                         }
                     @endphp
+                    
+                    {{ $durasi }}
                 </td>
-            </tr>
-            <tr>
-                <td>yakni pada jam</td>
-                <td colspan="9">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->format('H:i:s') }}</td>
-            </tr>
+                </tr>
+                <tr>
+                <td class="tg-0lax">yakni pada jam </td>
+                <td class="tg-0lax" colspan="8">{{ $suhuAkhir->time ?? '-' }}</td>
+                </tr>
+            </tbody>
         </table>
         <p style="text-align: center;"> <strong>Table 1.</strong> Hasil Pengukuran Persebaran Suhu Pada Ruang {{ $dataABF ->nama_mesin }}</p>
+
+        {{-- <pre>{{ var_dump($suhuAwal) }}</pre> --}}
 
         <div>
             <p>Berdasarkan tabel di atas, dapat diperoleh informasi berupa:</p>
             <ul>
-                <li>
-                    1. Durasi penurunan suhu <strong>tercepat</strong> terjadi pada {{ $titikTercepat }}, yakni dapat menurunkan suhu sebesar {{ number_format($penurunanTercepat, 2, ',', '.') }}&deg;C (dari {{ number_format($suhuAwalTercepat, 2, ',', '.') }}&deg;C ke {{ number_format($suhuAkhirTercepat, 2, ',', '.') }}&deg;C)
-                </li>
-                <li>
-                    2. Durasi penurunan suhu <strong>terlambat</strong> terjadi pada {{ $titikTerlambat }}, yakni dapat menurunkan suhu sebesar {{ number_format($penurunanTerlambat, 2, ',', '.') }}&deg;C (dari {{ number_format($suhuAwalTerlambat, 2, ',', '.') }}&deg;C menjadi {{ number_format($suhuAkhirTerlambat, 2, ',', '.') }}&deg;C)
-                </li>
-                <li>3. Pada suhu akhir, {!! $hasilSelisih !!}</li>
-                <li>
-                    4. kesimpulan
-                </li>
+                <li>1. {!! $hasil !!}</li>
+                <li>2. {!! $hasilTerlambat !!}</li>
+                <li>3. {!! $hasilSelisih !!}</li>
             </ul>
         </div>
     </div>
+
+    {{-- test grafik --}}
+        <img src="{{ $chartUrl }}" style="width: 100%;">
+
     {{-- Grafik 1. Persebaran suhu --}}
     <div class="row mb-3">
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut:</p>
@@ -438,6 +559,7 @@
                 kali ini sebanyak 3 kali, dengan interval 5,2 jam sekali. Data terkait durasi spike dituangkan dalam tabel berikut ini:
         </p>
     </div>
+
     {{-- tabel 2 durasi keseluruhan spike --}}
     <div class="row mb-3">
         <table class="table-bordered mb-3"style="width: 80%; margin: auto;">
@@ -482,6 +604,7 @@
             sampai ke dasar terjadi selama 15-30 menit dengan penurunan suhu 2-17 °C. Total durasi terjadinya spike pertama adalah selama 45 sampai 50 menit. Data terkait peristiwa spike
             pertama dituangkan dalam tabel 3 berikut ini: </p>
     </div>
+
     {{-- tabel 3 durasi spike 1 --}}
     <div class="row mb-3">
         <table class="table-bordered mb-3" style="width: 100%; margin: auto;">
@@ -612,6 +735,7 @@
             sebesar 3-9 C. Total durasi terjadinya spike kedua adalah selama 25 sampai 70 menit. Data terkait peristiwa spike kedua dituangkan dalam tabel 4 berikut ini:
         </p>
     </div>
+
     {{-- tabel 4 durasi spike 2 --}}
     <div class="row mb-3">
         <table class="table-bordered mb-3" style="width: 100%; margin: auto;">
@@ -743,6 +867,7 @@
             tabel 5 berikut ini: 
         </p>
     </div>
+
     {{-- tabel 5 durasi spike 3 --}}
     <div class="row mb-3">
         <table class="table-bordered mb-3" style="width: 100%; margin: auto;">
@@ -1023,7 +1148,7 @@
         </table>
         <p style="text-align: center;"> <strong>Table 6.</strong>  Hasil Ketercapaian Suhu Produk Pada Ruang {{ $dataABF->nama_mesin }}</p>
 
-        <div>
+        {{-- <div>
             <p>Berdasarkan tabel di atas, dapat diperoleh informasi berupa:</p>
             <ul>
                 <li>
@@ -1034,7 +1159,7 @@
                 </li>
                 <li>3. {!! $deskripsiSelisihAwal !!} <br> {!! $deskripsiSelisihAkhir !!} </li>
             </ul>
-        </div>
+        </div> --}}
     </div>
 
     {{-- grafik penetrasi suhu --}}
