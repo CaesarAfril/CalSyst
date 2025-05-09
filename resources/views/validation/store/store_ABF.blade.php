@@ -131,28 +131,10 @@
                     </div>
                 </div>
 
-                {{-- excel --}}
+                {{-- import all suhu excel --}}
                 <div class="row mb-3">
-                    {{-- persebaran suhu --}}
-                    <div class="col-sm-6 mb-3">
-                        <label for="persebaran_suhu" class="form-label">Uji Persebaran Suhu</label>
-                        <input class="form-control" type="file" name="persebaran_suhu" id="persebaran_suhu" accept=".xls,.xlsx" required>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    {{-- penetrasi suhu --}}
-                    <div class="col-sm-6 mb-3">
-                        <label for="penetrasi_suhu" class="form-label">Uji Penetrasi Suhu</label>
-                        <input class="form-control" type="file" name="penetrasi_suhu" id="penetrasi_suhu" accept=".xls,.xlsx" required>
-                    </div>
-                </div>
-
-                {{-- import all excel --}}
-                <div class="row mb-3">
-                    {{-- persebaran suhu --}}
                     <div class="col-sm-6 mb-3">
                         <label for="all_suhu" class="form-label">Data sebaran suhu dan suhu pusat produk</label>
-                        {{-- <input class="form-control" type="file" name="all_suhu" id="all_suhu" accept=".xls,.xlsx" required> --}}
                         <input class="form-control" type="file" name="all_suhu" id="all_suhu" accept=".xls,.xlsx" required>
                     </div>
                 </div>

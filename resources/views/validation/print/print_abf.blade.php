@@ -256,98 +256,6 @@
         <h3 style="margin-bottom: 1rem;">E. HASIL UJI PERSEBARAN SUHU</h3>
         <p>Uji persebaran suhu <span>{{ $dataABF->nama_mesin }}</span> dimulai pada tanggal <span>{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->translatedFormat('d F Y') }}</span> pukul {{ \Carbon\Carbon::parse($dataABF->start_pengujian)->format('H:i:s') }} dan berakhir pada <span>{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->translatedFormat('d F Y') }}</span> pukul {{ \Carbon\Carbon::parse($dataABF->end_pengujian)->format('H:i:s') }}. Selama periode tersebut, informasi terkait persebaran suhu adalah sebagai berikut:</p>
 
-        {{-- @php
-            // $suhuAwal = json_decode($dataABF->suhu_awal, true);
-            // $suhuAkhir = json_decode($dataABF->suhu_akhir, true);
-            // $suhuAkhirTercepat = null;
-
-            $penurunanTerbesar = null;
-            $titikTerbesar = null;
-
-            foreach ($suhuAwal as $index => $awal) {
-                $akhir = $suhuAkhir[$index] ?? null;
-                if (!is_null($awal) && !is_null($akhir)) {
-                    $penurunan = $awal - $akhir;
-
-                    if (is_null($penurunanTerbesar) || $penurunan > $penurunanTerbesar) {
-                        $penurunanTerbesar = $penurunan;
-
-                        // Penyesuaian nomor titik
-                        if ($index <= 5) {
-                            $titikTerbesar = $index; // titik 1–5
-                        } else {
-                            $titikTerbesar = $index + 1; // lompatin ch6 yg tidak ada
-                        }
-                    }
-                }
-            }
-
-            $hasil = "Durasi penurunan suhu tercepat terjadi pada titik {$titikTerbesar}, yakni dapat menurunkan suhu sebesar " .
-                    number_format($penurunanTerbesar, 2) . " &deg;C (dari " .
-                    number_format($suhuAwal[$titikTerbesar <= 5 ? $titikTerbesar : $titikTerbesar - 1], 2) .
-                    " &deg;C ke " .
-                    number_format($suhuAkhir[$titikTerbesar <= 5 ? $titikTerbesar : $titikTerbesar - 1], 2) . " &deg;C)";
-                    
-            // penurunan terlama
-            $penurunanTerlambat = null;
-            $titikTerlambat = null;
-
-            foreach ($suhuAwal as $index => $awal) {
-                $akhir = $suhuAkhir[$index] ?? null;
-                if (!is_null($awal) && !is_null($akhir)) {
-                    $penurunan = $awal - $akhir;
-
-                    if ($penurunan >= 0 && (is_null($penurunanTerlambat) || $penurunan < $penurunanTerlambat)) {
-                        $penurunanTerlambat = $penurunan;
-
-                        // Penyesuaian nomor titik
-                        if ($index <= 5) {
-                            $titikTerlambat = $index;
-                        } else {
-                            $titikTerlambat = $index + 1;
-                        }
-                    }
-                }
-            }
-
-            $awalSuhu = $suhuAwal[$titikTerlambat <= 5 ? $titikTerlambat : $titikTerlambat - 1];
-            $akhirSuhu = $suhuAkhir[$titikTerlambat <= 5 ? $titikTerlambat : $titikTerlambat - 1];
-
-            $hasilTerlambat = "Durasi penurunan suhu terlambat terjadi pada titik {$titikTerlambat}, yakni dapat menurunkan suhu sebesar " .
-                            number_format($penurunanTerlambat, 2) . " &deg;C (dari " .
-                            number_format($awalSuhu, 2) . " &deg;C ke " .
-                            number_format($akhirSuhu, 2) . " &deg;C)";
-                            $minSuhu = null;
-
-            // selisih suhu antar titik terendah-tertinggi sebesar
-            $maxSuhu = null;
-            $titikMin = null;
-            $titikMax = null;
-
-            foreach ($suhuAkhir as $index => $value) {
-                if (!is_null($value)) {
-                    $floatValue = floatval($value);
-
-                    if (is_null($minSuhu) || $floatValue < $minSuhu) {
-                        $minSuhu = $floatValue;
-                        $titikMin = $index <= 5 ? $index : $index + 1;
-                    }
-
-                    if (is_null($maxSuhu) || $floatValue > $maxSuhu) {
-                        $maxSuhu = $floatValue;
-                        $titikMax = $index <= 5 ? $index : $index + 1;
-                    }
-                }
-            }
-
-            $selisihSuhu = $minSuhu - $maxSuhu;
-
-            $hasilSelisih = "Pada suhu akhir, selisih suhu antar titik terendah-tertinggi sebesar " .
-                            number_format($selisihSuhu, 2) . " &deg;C " .
-                            "((" . number_format($minSuhu, 2) . " &deg;C pada titik {$titikMin}) - (" .
-                            number_format($maxSuhu, 2) . " &deg;C pada titik {$titikMax})).";
-        @endphp --}}
-
         @php
             $penurunanMax = null;
             $titikMax = null;
@@ -526,8 +434,6 @@
         </table>
         <p style="text-align: center;"> <strong>Table 1.</strong> Hasil Pengukuran Persebaran Suhu Pada Ruang {{ $dataABF ->nama_mesin }}</p>
 
-        {{-- <pre>{{ var_dump($suhuAwal) }}</pre> --}}
-
         <div>
             <p>Berdasarkan tabel di atas, dapat diperoleh informasi berupa:</p>
             <ul>
@@ -537,15 +443,12 @@
             </ul>
         </div>
     </div>
-
-    {{-- test grafik --}}
-        <img src="{{ $chartUrl }}" style="width: 100%;">
-
+        
     {{-- Grafik 1. Persebaran suhu --}}
     <div class="row mb-3">
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut:</p>
-        {{-- <img src="{{ $chartUrl }}" style="width:100%; max-width:600px; margin: auto;"> --}}
-        <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Ruhu Ruang {{ $dataABF->nama_mesin }} </p>
+        <img src="{{ $chartUrl }}" style="width: 100%; margin: auto;">
+        <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu Ruang {{ $dataABF->nama_mesin }} </p>
 
         <p>Grafik sebaran suhu di atas menunjukkan bahwa pergerakan suhu dari awal ABF dimulai pada jam 16.12 berangsur turun secara linear. Pada saat ABF dinyalakan, suhu pada setiap
             titiknya berbeda-beda (terpaut perbedaan sebesar 10,8 °C, mulai dari titik tertinggi di titik 9 sebesar 9,90 °C dan terendah di titik 1 sebesar -0,90 °C). ABF dimatikan keesokan harinya
@@ -1000,172 +903,137 @@
         </p>
 
         @php
-            $suhuAwalPenetrasi = json_decode($dataABF->suhu_awal_penetrasi, true);
-            $suhuAkhirPenetrasi = json_decode($dataABF->suhu_akhir_penetrasi, true);
-            
-            // Mapping titik names accounting for missing Titik 6
-            $titikNamesPenetrasi = [
-                1 => "Titik 1",
-                2 => "Titik 2",
-                3 => "Titik 3",
-                4 => "Titik 4",
-            ];
+            $dataPenetrasi = collect([
+                'titik1' => ['awal' => $suhuAwal->titik1, 'akhir' => $suhuAkhir->titik1],
+                'titik2' => ['awal' => $suhuAwal->titik2, 'akhir' => $suhuAkhir->titik2],
+                'titik3' => ['awal' => $suhuAwal->titik3, 'akhir' => $suhuAkhir->titik3],
+                'titik4' => ['awal' => $suhuAwal->titik4, 'akhir' => $suhuAkhir->titik4],
+            ]);
 
-            // Initialize variables for fastest drop
-            $maxDropPenetrasi = 0;
-            $titikTercepatPenetrasi = null;
-            $suhuAwalTercepatPenetrasi = null;
-            $suhuAkhirTercepatPenetrasi = null;
+            // Hitung durasi dalam menit
+            $start = Carbon::parse($suhuAwal->time);
+            $end = Carbon::parse($suhuAkhir->time);
+            $durasiMenitPenetrasi = $start->diffInMinutes($end);
 
-            // Initialize variables for slowest drop
-            $minDropPenetrasi = PHP_FLOAT_MAX;
-            $titikTerlambatPenetrasi = null;
-            $suhuAwalTerlambatPenetrasi = null;
-            $suhuAkhirTerlambatPenetrasi = null;
-
-            foreach ($suhuAwalPenetrasi as $index => $awalPenetrasi) {
-                if (!isset($suhuAkhirPenetrasi[$index])) continue;
-
-                $akhirPenetrasi = $suhuAkhirPenetrasi[$index];
-                $dropPenetrasi = $awalPenetrasi - $akhirPenetrasi; // Positive value means temperature decreased
-
-                // Check for fastest drop (largest difference)
-                if ($dropPenetrasi > $maxDropPenetrasi) {
-                    $maxDropPenetrasi = $dropPenetrasi;
-                    $titikTercepatPenetrasi = $titikNamesPenetrasi[$index] ?? "Titik ".($index+1);
-                    $suhuAwalTercepatPenetrasi = $awalPenetrasi;
-                    $suhuAkhirTercepatPenetrasi = $akhirPenetrasi;
+            // Hitung penurunan dan kecepatan
+            $hasilPenetrasi = $dataPenetrasi->map(function ($nilai) use ($durasiMenitPenetrasi) {
+                if (is_numeric($nilai['awal']) && is_numeric($nilai['akhir'])) {
+                    $selisih = $nilai['awal'] - $nilai['akhir'];
+                    return [
+                        'awal' => $nilai['awal'],
+                        'akhir' => $nilai['akhir'],
+                        'selisih' => $selisih,
+                        'kecepatan' => $selisih / $durasiMenitPenetrasi,
+                    ];
                 }
+                return null;
+            })->filter();
 
-                // Check for slowest drop (smallest difference)
-                if ($dropPenetrasi < $minDropPenetrasi) {
-                    $minDropPenetrasi = $dropPenetrasi;
-                    $titikTerlambatPenetrasi = $titikNamesPenetrasi[$index] ?? "Titik ".($index+1);
-                    $suhuAwalTerlambatPenetrasi = $awalPenetrasi;
-                    $suhuAkhirTerlambatPenetrasi = $akhirPenetrasi;
-                }
-            }
+            // Titik tercepat dan terlama
+            $sorted = $hasilPenetrasi->sortByDesc('kecepatan');
+            $titikTercepatPenetrasi = $sorted->keys()->first();
+            $tercepatPenetrasi = $sorted->first();
 
-            // Convert to absolute values for display
-            $penurunanTercepatPenetrasi = abs($maxDropPenetrasi);
-            $penurunanTerlambatPenetrasi = abs($minDropPenetrasi);
+            $titikTerlamaPenetrasi = $sorted->keys()->last();
+            $terlamaPenetrasi = $sorted->last();
 
-            $filteredAwal = array_values(array_filter($suhuAwalPenetrasi, function($val) {
-                return !is_null($val);
-            }));
-            $filteredAkhir = array_values(array_filter($suhuAkhirPenetrasi, function($val) {
-                return !is_null($val);
-            }));
+            // Ambil semua nilai suhu awal dan akhir untuk hitung min-maks
+            $suhuAwalCollection = $dataPenetrasi->pluck('awal')->filter(fn($v) => is_numeric($v));
+            $suhuAkhirCollection = $dataPenetrasi->pluck('akhir')->filter(fn($v) => is_numeric($v));
 
-            // Ambil suhu awal tertinggi & terendah
-            $minAwal = min($filteredAwal);
-            $maxAwal = max($filteredAwal);  
-            $minIndex = array_search($minAwal, $suhuAwalPenetrasi);
-            $maxIndex = array_search($maxAwal, $suhuAwalPenetrasi);
-            $selisihAwal = $maxAwal - $minAwal;
-            // dd($minAwal, $maxAwal, $selisihAwal, );
+            // Min-maks suhu awal
+            $minAwal = $suhuAwalCollection->min();
+            $maxAwal = $suhuAwalCollection->max();
+            $selisihMinMaxAwal = $maxAwal - $minAwal;
+            $titikMinAwal = $suhuAwalCollection->search($minAwal) + 1;
+            $titikMaxAwal = $suhuAwalCollection->search($maxAwal) + 1;
 
-            // Cari suhu minimum dan maksimum
-            $minAkhir = min($filteredAkhir);
-            $maxAkhir = max($filteredAkhir);
-            $minIndex = array_search($minAkhir, $suhuAkhirPenetrasi);
-            $maxIndex = array_search($maxAkhir, $suhuAkhirPenetrasi);
-            $selisihAkhir = $maxAkhir - $minAkhir;
-
-            // Buat output naratif
-            $deskripsiSelisihAwal = "Secara keseluruhan, dengan melihat selisih suhu awal dari keempat griller terdapat selisih min-maks sebesar "
-                . number_format($selisihAwal, 1, ',', '.') . " &deg;C "
-                . "(" . number_format($maxAwal, 1, ',', '.') . " untuk sampel " . $maxIndex
-                . " dan " . number_format($minAwal, 1, ',', '.') . " untuk sampel " . $minIndex . ")";
-
-            $deskripsiSelisihAkhir = "Hasil akhir suhu pusat griller pada proses blast freezing griller pada ABF 3 ini memiliki selisih min-maks sebesar " 
-                . number_format(abs($selisihAkhir), 1, ',', '.') . " &deg;C "
-                . "(" . number_format($minAkhir, 1, ',', '.') . " untuk sampel " . $minIndex
-                . " dan " . number_format($maxAkhir, 1, ',', '.') . " untuk sampel " . $maxIndex . ")";
+            // Min-maks suhu akhir
+            $minAkhir = $suhuAkhirCollection->min();
+            $maxAkhir = $suhuAkhirCollection->max();
+            $selisihMinMaxAkhir = $maxAkhir - $minAkhir;
+            $titikMinAkhir = $suhuAkhirCollection->search($minAkhir) + 1;
+            $titikMaxAkhir = $suhuAkhirCollection->search($maxAkhir) + 1;
         @endphp
 
-        <table class="table-bordered" style="width: 80%; margin: auto;">
-            <tr>
-                <td rowspan="2" class="title-row">SUHU AWAL</td>
-                <th>Titik 1</th>
-                <th>Titik 2</th>
-                <th>Titik 3</th>
-                <th>Titik 4</th>
-            </tr>
-            <tr>
-                <td>{{ number_format($suhuAwalPenetrasi[1], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwalPenetrasi[2], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwalPenetrasi[3], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAwalPenetrasi[4], 2, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td>Durasi sejak start ABF (menit)</td>
-                <td colspan="9">0</td>
-            </tr>
-            <tr>
-                <td>yakni pada jam</td>
-                <td colspan="9">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->format('H:i:s') }}</td>
-            </tr>
-            <tr>
-                <td rowspan="2" class="title-row">SUHU AKHIR</td>
-                <th>Titik 1</th>
-                <th>Titik 2</th>
-                <th>Titik 3</th>
-                <th>Titik 4</th>
-            </tr>
-            <tr>
-                <td>{{ number_format($suhuAkhirPenetrasi[1], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhirPenetrasi[2], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhirPenetrasi[3], 2, ',', '.') }}</td>
-                <td>{{ number_format($suhuAkhirPenetrasi[4], 2, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td>Durasi sejak start ABF</td>
-                <td colspan="9">
-                    @php
-                        // Pastikan data tersedia
-                        if (isset($dataABF->start_pengujian) && isset($dataABF->end_pengujian)) {
-                            $start = new DateTime($dataABF->start_pengujian);
-                            $end = new DateTime($dataABF->end_pengujian);
-        
-                            // Jika waktu selesai lebih kecil dari waktu mulai (melewati tengah malam)
-                            if ($end < $start) {
-                                $end->modify('+1 day');
-                            }
-        
-                            $selisih = $start->diff($end);
-                            echo "" . $selisih->h . " jam " . $selisih->i . " menit " . $selisih->s . " detik";
-                        } else {
-                            echo "Data waktu tidak tersedia";
-                        }
-                    @endphp
-                </td>
-            </tr>
-            <tr>
-                <td>yakni pada jam</td>
-                <td colspan="9">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->format('H:i:s') }}</td>
-            </tr>
+        <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
+            <thead>
+                <tr>
+                <th class="tg-0pky"></th>
+                <th class="tg-0pky">Titik 1</th>
+                <th class="tg-0pky">Titik 2</th>
+                <th class="tg-0pky">titik 3</th>
+                <th class="tg-0pky">titik 4</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td class="tg-0pky">SUHU AWAL</td>
+                <td class="tg-0pky">{{ $suhuAwal->titik1 ?? '-' }}</td>
+                <td class="tg-0pky">{{ $suhuAwal->titik2 ?? '-' }}</td>
+                <td class="tg-0pky">{{ $suhuAwal->titik3 ?? '-' }}</td>
+                <td class="tg-0pky">{{ $suhuAwal->titik4 ?? '-' }}</td>
+                </tr>
+                <tr>
+                <td class="tg-0pky">Durasi sejak start ABF (menit)</td>
+                <td class="tg-0pky" colspan="4">0</td>
+                </tr>
+                <tr>
+                <td class="tg-0pky">yakni pada jam </td>
+                <td class="tg-0pky" colspan="4">{{ $suhuAwal->time ?? '-' }}</td>
+                </tr>
+                <tr>
+                <td class="tg-0pky">SUHU AKHIR</td>
+                <td class="tg-0pky">{{ $suhuAkhir->titik1 ?? '-' }}</td>
+                <td class="tg-0pky">{{ $suhuAkhir->titik2 ?? '-' }}</td>
+                <td class="tg-0pky">{{ $suhuAkhir->titik3 ?? '-' }}</td>
+                <td class="tg-0pky">{{ $suhuAkhir->titik4 ?? '-' }}</td>
+                </tr>
+                <tr>
+                <td class="tg-0pky">Durasi sejak start ABF</td>
+                <td class="tg-0pky" colspan="4">{{ $durasi }}</td>
+                </tr>
+                <tr>
+                <td class="tg-0pky">yakni pada jam </td>
+                <td class="tg-0pky" colspan="4">{{ $suhuAkhir->time ?? '-' }}</td>
+                </tr>
+            </tbody>
         </table>
-        <p style="text-align: center;"> <strong>Table 6.</strong>  Hasil Ketercapaian Suhu Produk Pada Ruang {{ $dataABF->nama_mesin }}</p>
 
-        {{-- <div>
+        <div>
             <p>Berdasarkan tabel di atas, dapat diperoleh informasi berupa:</p>
             <ul>
+
                 <li>
-                    1. Durasi penurunan suhu <strong>tercepat</strong> terjadi pada {{ $titikTercepatPenetrasi }}, yakni dapat menurunkan suhu sebesar {{ number_format($penurunanTercepatPenetrasi, 2, ',', '.') }}&deg;C (dari {{ number_format($suhuAwalTercepatPenetrasi, 2, ',', '.') }}&deg;C ke {{ number_format($suhuAkhirTercepat, 2, ',', '.') }}&deg;C)
+                    1. Durasi penurunan suhu tercepat terjadi pada {{ ucfirst(str_replace('titik', 'titik ', $titikTerlamaPenetrasi)) }},
+                    yakni dalam {{ $durasi }} dapat menurunkan suhu sebesar
+                    {{ number_format($terlamaPenetrasi['selisih'], 2) }} &deg;C
+                    (dari {{ number_format($terlamaPenetrasi['awal'], 2) }} &deg;C menuju {{ number_format($terlamaPenetrasi['akhir'], 2) }} &deg;C).
                 </li>
                 <li>
-                    2. Durasi penurunan suhu <strong>terlama</strong> terjadi pada {{ $titikTerlambatPenetrasi }}, yakni dapat menurunkan suhu sebesar {{ number_format($penurunanTerlambatPenetrasi, 2, ',', '.') }}&deg;C (dari {{ number_format($suhuAwalTerlambatPenetrasi, 2, ',', '.') }}&deg;C menjadi {{ number_format($suhuAkhirTerlambatPenetrasi, 2, ',', '.') }}&deg;C)
+                    2. Durasi penurunan suhu terlama terjadi pada {{ ucfirst(str_replace('titik', 'titik ', $titikTercepatPenetrasi)) }},
+                    karena dalam {{ $durasi }} dapat menurunkan suhu sebesar
+                    {{ number_format($tercepatPenetrasi['selisih'], 2) }} &deg;C
+                    (dari {{ number_format($tercepatPenetrasi['awal'], 2) }} &deg;C menuju {{ number_format($tercepatPenetrasi['akhir'], 2) }} &deg;C).
                 </li>
-                <li>3. {!! $deskripsiSelisihAwal !!} <br> {!! $deskripsiSelisihAkhir !!} </li>
+                <li>
+                    3. Secara keseluruhan, selisih suhu awal antar titik menunjukkan perbedaan min-maks sebesar
+                    {{ number_format($selisihMinMaxAwal, 1) }} &deg;C
+                    ({{ number_format($maxAwal, 1) }} &deg;C pada sampel {{ $titikMaxAwal }},
+                    dan {{ number_format($minAwal, 1) }} &deg;C pada sampel {{ $titikMinAwal }}),
+                    sedangkan suhu akhir menunjukkan selisih min-maks sebesar
+                    {{ number_format($selisihMinMaxAkhir, 1) }} &deg;C
+                    ({{ number_format($minAkhir, 1) }} &deg;C pada sampel {{ $titikMinAkhir }},
+                    dan {{ number_format($maxAkhir, 1) }} &deg;C pada sampel {{ $titikMaxAkhir }}).
+                </li>
             </ul>
-        </div> --}}
+        </div>
     </div>
 
     {{-- grafik penetrasi suhu --}}
     <div class="row mb-3">
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut: </p>
-        {{-- <img src="{{ $chartUrl }}" style="width:100%; max-width:600px; margin: auto;"> --}}
+        <img src="{{ $chartUrlPenetrasi }}" style="width: 100%; margin: auto;">
         <p style="text-align: center;"> <strong>Grafik 2.</strong> Penetrasi Produk (Griller) Pada ABF 6</p>
 
         <p>Grafik tersebut menampilkan kurva dengan 2 pola, yakni melandai selama 6,5 jam kemudian turun (titik 1 dan 2) dan kurva yang langsung bergerak turun namun terjadi
@@ -1182,6 +1050,84 @@
 
     {{-- tabel stagnansi --}}
     <div class="row mb-3 justify-content-center">
+        @php
+            function generateStagnationTable($suhuData) {
+                $titikColumns = ['titik1', 'titik2', 'titik3', 'titik4'];
+                $results = [];
+
+                $suhuArray = $suhuData->map(function ($item) {
+                    $item->carbon_time = Carbon::parse($item->time);
+                    return $item;
+                })->values();
+
+                foreach ($titikColumns as $column) {
+                    $found = false;
+
+                    for ($i = 0; $i < count($suhuArray) - 12; $i++) {
+                        $startData = $suhuArray[$i];
+                        $startTime = $startData->carbon_time;
+                        $startTemp = $startData->$column;
+
+                        $currentIndex = $i;
+                        $currentTemp = $startTemp;
+                        $endTime = $startTime;
+                        $endTemp = $currentTemp;
+                        $totalDrop = 0;
+                        $durationMinutes = 0;
+
+                        // Loop per jam (12 data = 1 jam jika 5 menit sekali)
+                        while (true) {
+                            if (!isset($suhuArray[$currentIndex + 12])) break;
+
+                            $nextData = $suhuArray[$currentIndex + 12];
+                            $nextTemp = $nextData->$column;
+                            $drop = $nextTemp - $currentTemp;
+
+                            if (abs($drop) < 1) {
+                                // masih stagnan
+                                $endTime = $nextData->carbon_time;
+                                $endTemp = $nextTemp;
+                                $totalDrop += $drop;
+                                $durationMinutes += 60;
+                                $currentTemp = $nextTemp;
+                                $currentIndex += 12;
+                            } else {
+                                break;
+                            }
+                        }
+
+                        if ($durationMinutes > 0) {
+                            $results[$column] = [
+                                'start_time' => $startTime->format('H:i:s'),
+                                'start_temp' => number_format($startTemp, 1),
+                                'end_time' => $endTime->format('H:i:s'),
+                                'end_temp' => number_format($endTemp, 1),
+                                'duration' => floor($durationMinutes / 60) . "j " . str_pad($durationMinutes % 60, 2, '0', STR_PAD_LEFT) . "'",
+                                'temp_drop' => number_format($endTemp - $startTemp, 1),
+                            ];
+                            $found = true;
+                            break; // hanya ambil stagnasi pertama
+                        }
+                    }
+
+                    if (!$found) {
+                        $results[$column] = [
+                            'start_time' => '00:00:00',
+                            'start_temp' => '0',
+                            'end_time' => '00:00:00',
+                            'end_temp' => '0',
+                            'duration' => '0j 00\'',
+                            'temp_drop' => '0'
+                        ];
+                    }
+                }
+
+                return $results;
+            }
+
+            $stagnationData = generateStagnationTable($suhuData);
+        @endphp
+
         <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
             <thead>
                 <tr>
@@ -1194,49 +1140,50 @@
             </thead>
           <tbody>
             <tr>
-              <td class="tg-0pky">terjadi mulai dari jam</td>
-              <td class="tg-0pky">19:07:42</td>
-              <td class="tg-0pky">19:07:42</td>
-              <td class="tg-0pky">00:00:00</td>
-              <td class="tg-0pky">00:00:00</td>
+              <td class="tg-0pky" style="font-weight: bold">terjadi mulai dari jam</td>
+              <td class="tg-0pky">{{ $stagnationData['titik1']['start_time'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik2']['start_time'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik3']['start_time'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik4']['start_time'] }}</td>
             </tr>
             <tr>
-              <td class="tg-0pky">pada suhu (C)</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
+              <td class="tg-0pky" style="font-weight: bold">pada suhu (C)</td>
+              <td class="tg-0pky">{{ $stagnationData['titik1']['start_temp'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik2']['start_temp'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik3']['start_temp'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik4']['start_temp'] }}</td>
             </tr>
             <tr>
-              <td class="tg-0pky">hingga jam </td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
+              <td class="tg-0pky" style="font-weight: bold">hingga jam </td>
+              <td class="tg-0pky">{{ $stagnationData['titik1']['end_time'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik2']['end_time'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik3']['end_time'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik4']['end_time'] }}</td>
             </tr>
             <tr>
-              <td class="tg-0pky">pada suhu (C)</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
+              <td class="tg-0pky" style="font-weight: bold">pada suhu (C)</td>
+              <td class="tg-0pky">{{ $stagnationData['titik1']['end_temp'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik2']['end_temp'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik3']['end_temp'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik4']['end_temp'] }}</td>
             </tr>
             <tr>
-              <td class="tg-0pky">total durasi stagnan</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
+              <td class="tg-0pky" style="font-weight: bold">total durasi stagnan</td>
+              <td class="tg-0pky">{{ $stagnationData['titik1']['duration'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik2']['duration'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik3']['duration'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik4']['duration'] }}</td>
             </tr>
             <tr>
-              <td class="tg-0pky">total penurunan suhu saat stagnan (C)</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
-              <td class="tg-0pky">0</td>
+              <td class="tg-0pky" style="font-weight: bold">total penurunan suhu saat stagnan (C)</td>
+              <td class="tg-0pky">{{ $stagnationData['titik1']['temp_drop'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik2']['temp_drop'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik3']['temp_drop'] }}</td>
+              <td class="tg-0pky">{{ $stagnationData['titik4']['temp_drop'] }}</td>
             </tr>
           </tbody>
         </table>
+
         <p style="text-align: center;"> <strong>Table 7.</strong> Durasi Stagnansi Suhu Inti Produk
         </p>
         <p>
@@ -1253,6 +1200,111 @@
 
     {{-- tabel ketercapaian suhu --}}
     <div class="row mb-3">
+        @php
+            function generateTemperatureAchievementTable($suhuData) {
+                $titikColumns = ['titik1', 'titik2', 'titik3', 'titik4'];
+                $results = [
+                    '0c' => ['durations' => [], 'times' => []],
+                    '-18c' => ['durations' => [], 'times' => []],
+                    'narratives' => [
+                        '0c' => '',
+                        '-18c' => '',
+                        'penurunan_terlama' => '',
+                    ]
+                ];
+
+                $startTime = Carbon::parse($suhuData->first()->time);
+                $startTimeStr = $startTime->format('H:i');
+                $dropDurations = []; // waktu penurunan dari 0°C ke -18°C per titik
+
+                foreach ($titikColumns as $column) {
+                    $first0c = null;
+                    $firstBelow18c = null;
+
+                    foreach ($suhuData as $data) {
+                        $currentTime = Carbon::parse($data->time);
+
+                        // 0°C
+                        if ($data->$column <= 0 && !$first0c) {
+                            $first0c = $currentTime;
+
+                            if ($first0c->lt($startTime)) {
+                                $first0c->addDay();
+                            }
+
+                            $duration = $startTime->diffInMinutes($first0c) / 60;
+                            $results['0c']['durations'][$column] = number_format($duration, 1);
+                            $results['0c']['times'][$column] = $currentTime->format('H:i:s');
+                        }
+
+                        // -18°C
+                        if ($data->$column <= -18 && !$firstBelow18c) {
+                            $firstBelow18c = $currentTime;
+
+                            if ($firstBelow18c->lt($startTime)) {
+                                $firstBelow18c->addDay();
+                            }
+
+                            $duration = $startTime->diffInMinutes($firstBelow18c) / 60;
+                            $results['-18c']['durations'][$column] = number_format($duration, 1);
+                            $results['-18c']['times'][$column] = $currentTime->format('H:i:s');
+                        }
+
+                        if ($first0c && $firstBelow18c) break;
+                    }
+
+                    if (!$first0c) {
+                        $results['0c']['durations'][$column] = 'N/A';
+                        $results['0c']['times'][$column] = 'N/A';
+                    }
+
+                    if (!$firstBelow18c) {
+                        $results['-18c']['durations'][$column] = 'N/A';
+                        $results['-18c']['times'][$column] = 'N/A';
+                    }
+
+                    // Hitung durasi penurunan dari 0°C ke -18°C jika keduanya valid
+                    if ($first0c && $firstBelow18c) {
+                        $dropDurations[$column] = $first0c->diffInMinutes($firstBelow18c) / 60; // jam
+                    }
+                }
+
+                // Narasi 0°C
+                $times0c = collect($results['0c']['times'])->filter(fn($t) => $t !== 'N/A');
+                if ($times0c->isNotEmpty()) {
+                    $earliest0c = $times0c->sort()->first();
+                    $latest0c = $times0c->sortDesc()->first();
+
+                    $earliestTitik = $times0c->filter(fn($t) => $t === $earliest0c)->keys()->map(fn($t) => ucfirst($t))->join(' dan ');
+                    $latestTitik = $times0c->filter(fn($t) => $t === $latest0c)->keys()->map(fn($t) => ucfirst($t))->join(' dan ');
+
+                    $results['narratives']['0c'] = "Tabel 8 tersebut menjelaskan bahwa sejak mesin ABF dinyalakan pada jam {$startTimeStr}, griller mencapai suhu 0,0 &deg;C mulai dari jam {$earliest0c} ({$earliestTitik}) hingga {$latest0c} ({$latestTitik}).";
+                }
+
+                // Narasi -18°C
+                $times18c = collect($results['-18c']['times'])->filter(fn($t) => $t !== 'N/A');
+                if ($times18c->isNotEmpty()) {
+                    $earliest18c = $times18c->sort()->first();
+                    $latest18c = $times18c->sortDesc()->first();
+
+                    $earliestTitik18 = $times18c->filter(fn($t) => $t === $earliest18c)->keys()->map(fn($t) => ucfirst($t))->join(' dan ');
+                    $latestTitik18 = $times18c->filter(fn($t) => $t === $latest18c)->keys()->map(fn($t) => ucfirst($t))->join(' dan ');
+
+                    $results['narratives']['-18c'] = "Griller mencapai suhu -18,0 &deg;C mulai dari jam {$earliest18c} ({$earliestTitik18}) hingga {$latest18c} ({$latestTitik18}).";
+                }
+
+                // Narasi penurunan terlama
+                if (!empty($dropDurations)) {
+                    $maxDropTitik = collect($dropDurations)->sortDesc()->keys()->first();
+                    $results['narratives']['penurunan_terlama'] = "Artinya, sejak pencapaian suhu nol hingga pencapaian target pada suhu -18&nbsp;&deg;C, " . ucfirst($maxDropTitik) . " memiliki penurunan yang terlama dibandingkan dengan titik yang lain.";
+                }
+
+                return $results;
+            }
+
+            $achievementData = generateTemperatureAchievementTable($suhuData);
+        @endphp
+
         <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
             <thead>
                 <tr>
@@ -1265,52 +1317,47 @@
             </thead>
             <tbody>
                 <tr>
-                <td class="tg-0pky"></td>
-                <td class="tg-rleq" colspan="4">Mencapai 0,0 C dari start</td>
+                <td class="tg-0pky" style="background-color: rgb(181, 218, 255);"></td>
+                <td class="tg-rleq" colspan="4" style="background-color: rgb(181, 218, 255); font-weight: bold;">Mencapai 0,0 &deg;C dari start</td>
                 </tr>
                 <tr>
-                <td class="tg-0pky">durasi</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
+                <td class="tg-0pky" style="font-weight: bold;">durasi</td>
+                <td class="tg-0pky">{{ $achievementData['0c']['durations']['titik1'] }} Jam</td>
+                <td class="tg-0pky">{{ $achievementData['0c']['durations']['titik2'] }} Jam</td>
+                <td class="tg-0pky">{{ $achievementData['0c']['durations']['titik3'] }} Jam</td>
+                <td class="tg-0pky">{{ $achievementData['0c']['durations']['titik4'] }} Jam</td>
                 </tr>
                 <tr>
-                <td class="tg-0pky">pada jam</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
+                <td class="tg-0pky" style="font-weight: bold;">pada jam</td>
+                <td class="tg-0pky">{{ $achievementData['0c']['times']['titik1'] }}</td>
+                <td class="tg-0pky">{{ $achievementData['0c']['times']['titik2'] }}</td>
+                <td class="tg-0pky">{{ $achievementData['0c']['times']['titik3'] }}</td>
+                <td class="tg-0pky">{{ $achievementData['0c']['times']['titik4'] }}</td>
                 </tr>
                 <tr>
-                <td class="tg-0pky"></td>
-                <td class="tg-0pky" colspan="4">Mencapai -18,0 degC dari Start </td>
+                <td class="tg-0pky" style="background-color: rgb(181, 218, 255);"></td>
+                <td class="tg-0pky" colspan="4" style="background-color: rgb(181, 218, 255);font-weight: bold;">Mencapai -18,0 &deg;C dari Start </td>
                 </tr>
                 <tr>
-                <td class="tg-0pky">durasi</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
+                <td class="tg-0pky" style="font-weight: bold;">durasi</td>
+                <td class="tg-0pky">{{ $achievementData['-18c']['durations']['titik1'] }} Jam</td>
+                <td class="tg-0pky">{{ $achievementData['-18c']['durations']['titik2'] }} Jam</td>
+                <td class="tg-0pky">{{ $achievementData['-18c']['durations']['titik3'] }} Jam</td>
+                <td class="tg-0pky">{{ $achievementData['-18c']['durations']['titik4'] }} Jam</td>
                 </tr>
                 <tr>
-                <td class="tg-0pky">pada jam</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">0</td>
+                <td class="tg-0pky" style="font-weight: bold;">pada jam</td>
+                <td class="tg-0pky">{{ $achievementData['-18c']['times']['titik1'] }}</td>
+                <td class="tg-0pky">{{ $achievementData['-18c']['times']['titik2'] }}</td>
+                <td class="tg-0pky">{{ $achievementData['-18c']['times']['titik3'] }}</td>
+                <td class="tg-0pky">{{ $achievementData['-18c']['times']['titik4'] }}</td>
                 </tr>
             </tbody>
         </table>
-        <p style="text-align: center;"> <strong>Table 8.</strong> Durasi Stagnansi Suhu Inti Produk
+        <p style="text-align: center;"> <strong>Table 8.</strong> Ketercapaian Suhu Produk
         </p>
-        <p>Tabel 8 tersebut menjelaskan bahwa sejak mesin ABF dinyalakan pada jam 16:12, griller mencapai suhu 0,0 C mulai dari jam 18:17 (titik 3 dan 4) hingga 19:12 (titik 1).
-            Selanjutnya, dari suhu 0,0 C hingga mencapai -18,0 C terjadi mulai dari jam 05:17 (titik 4) hingga 08:57 pagi (titik 1). Artinya, sejak pencapaian suhu nol hingga
-            pencapaian target pada suhu -18 C, titik 1 memiliki penurunan yang terlama dibandingkan dengan titik yang lain. Begitu pula dengan titik 2, 3 dan 4 yang dengan durasi
-            waktu pencapaian suhu masing-masing dari nol hingga -18 C bersifat linier, tidak ada perubahan durasi yang signifikan yang menghasilkan pencapaian suhu salah satu
-            titik lebih cepat dari titik yang lain. Hal ini berarti dapat diketahui bahwa dengan kecepatan blower yang konstan dan ruang yang terus menerus tertutup, maka sifat
-            penurunan suhu antar titiknya linier, dan apabila pengguna ingin produknya mencapai suhu -18 C saat proses blasting, maka perlu dilakukan pengaturan terkait
-            pemilihan rak produk dan penataannya (dengan catatan kondisi ruang tidak ada kebocoran dan ukuran ayam yang seragam). </p>
+        <p>{!! $achievementData['narratives']['0c'] !!} {!! $achievementData['narratives']['-18c'] !!} {!! $achievementData['narratives']['penurunan_terlama'] !!}</p>
+           
     </div>
 
     {{-- kesimpulan --}}
