@@ -7,7 +7,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\AbfValidation;
 use App\Models\SuhuAbfAll;
 use PDF;
-use App\Imports\PersebaranSuhuImport;
 use App\Imports\PenetrasiSuhuImport;
 use Illuminate\Support\Facades\Storage;
 \Carbon\Carbon::setLocale('id');
@@ -61,59 +60,11 @@ class ValidationController extends Controller
             'kapasitas_mesin_2' => 'nullable|string',
             'lokasi' => 'nullable|string',
             'alamat' => 'nullable|string',
-            'persebaran_suhu' => 'nullable|mimes:xls,xlsx',
-            'penetrasi_suhu' => 'nullable|mimes:xls,xlsx',
+            // 'penetrasi_suhu' => 'nullable|mimes:xls,xlsx',
             'all_suhu' => 'required|mimes:xls,xlsx'
         ]);
 
-        // persebaran
-        $suhuAwal = null;
-        $suhuAkhir = null;
-        $jamAwal = null;
-        $jamAkhir = null;
-        $filePath = null;
-
-        if ($request->hasFile('persebaran_suhu')) {
-            $file = $request->file('persebaran_suhu');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('uploads/persebaran_suhu', $filename, 'public');
-
-            $importPersebaran = new PersebaranSuhuImport;
-            Excel::import($importPersebaran, $file);
-
-            $suhuAwal = $importPersebaran->suhuAwal;
-            $suhuAkhir = $importPersebaran->suhuAkhir;
-            $jamAwal = $importPersebaran->jamAwal;
-            $jamAkhir = $importPersebaran->jamAkhir;
-        }
-
-        // penetrasi
-        $suhuAwalPenetrasi = null;
-        $suhuAkhirPenetrasi = null;
-        $filePathPenetrasi = null;
-
-        if ($request->hasFile('penetrasi_suhu')) {
-            $filePenetrasi = $request->file('penetrasi_suhu');
-            $filenamePenetrasi = time() . '_' . $filePenetrasi->getClientOriginalName();
-            $filePathPenetrasi = $filePenetrasi->storeAs('uploads/penetrasi_suhu', $filenamePenetrasi, 'public');
-
-            $importPenetrasi = new PenetrasiSuhuImport;
-            Excel::import($importPenetrasi, $filePenetrasi);
-
-            $suhuAwalPenetrasi = $importPenetrasi->suhuAwalPenetrasi;
-            $suhuAkhirPenetrasi = $importPenetrasi->suhuAkhirPenetrasi;
-        }
-
-        $abf = AbfValidation::create(array_merge($validated, [
-            'persebaran_suhu' => $filePath,
-            'suhu_awal' => $suhuAwal ? json_encode($suhuAwal) : null,
-            'suhu_akhir' => $suhuAkhir ? json_encode($suhuAkhir) : null,
-            'jam_awal' => $jamAwal,
-            'jam_akhir' => $jamAkhir,
-            'penetrasi_suhu' => $filePathPenetrasi,
-            'suhu_awal_penetrasi' => $suhuAwalPenetrasi ? json_encode($suhuAwalPenetrasi) : null,
-            'suhu_akhir_penetrasi' => $suhuAkhirPenetrasi ? json_encode($suhuAkhirPenetrasi) : null,
-        ]));
+        $abf = AbfValidation::create(array_merge($validated, []));
 
         $path = $request->file('all_suhu')->getRealPath();
         $data = Excel::toArray([], $path)[0];
@@ -152,13 +103,11 @@ class ValidationController extends Controller
             }
 
             DB::commit();
-            return back()->with('success', 'Data suhu berhasil diunggah');
+            return redirect('/validation/slaughterhouse/ABF')->with('success', 'Data suhu berhasil diunggah');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => $e->getMessage()]);
         }
-
-        // return redirect()->back()->with('success', 'Data berhasil disimpan.');
     }
     public function deleteABF($id)
     {
@@ -168,159 +117,14 @@ class ValidationController extends Controller
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 
-    // public function printABF($id)
-    // {
-    //     $dataABF = AbfValidation::findOrFail($id);
-    //     $suhuData = SuhuAbfAll::where('abf_validation_id', $id)
-    //         ->orderBy('time')
-    //         ->get();
-
-    //     $suhuAwal = $suhuData->first();
-    //     $suhuAkhir = $suhuData->last();
-
-    //     $dummyDate = '1970-01-01';
-    //     $labels = $suhuData->map(function ($item) use ($dummyDate) {
-    //         return \Carbon\Carbon::createFromFormat('H:i:s', $item->time)
-    //             ->setDateFrom(\Carbon\Carbon::parse($dummyDate))
-    //             ->toIso8601String();
-    //     })->toArray();
-
-    //     $startTime = $labels[0];
-    //     $endTime = end($labels);
-
-    //     $chartConfig = [
-    //         'type' => 'line',
-    //         'data' => [
-    //             'labels' => $labels,
-    //             'datasets' => [
-    //                 [
-    //                     'label' => 'Tilt 1 (ch1)',
-    //                     'data' => $suhuData->pluck('ch1')->toArray(),
-    //                     'borderColor' => 'rgb(255, 99, 132)',
-    //                     'fill' => false
-    //                 ],
-    //                 [
-    //                     'label' => 'Tilt 2 (ch2)',
-    //                     'data' => $suhuData->pluck('ch2')->toArray(),
-    //                     'borderColor' => 'rgb(54, 162, 235)',
-    //                     'fill' => false
-    //                 ],
-    //                 [
-    //                     'label' => 'Tilt 3 (ch3)',
-    //                     'data' => $suhuData->pluck('ch3')->toArray(),
-    //                     'borderColor' => 'rgb(255, 206, 86)',
-    //                     'fill' => false
-    //                 ],
-    //                 [
-    //                     'label' => 'Tilt 4 (ch4)',
-    //                     'data' => $suhuData->pluck('ch4')->toArray(),
-    //                     'borderColor' => 'rgb(75, 192, 192)',
-    //                     'fill' => false
-    //                 ],
-    //                 [
-    //                     'label' => 'Tilt 5 (ch5)',
-    //                     'data' => $suhuData->pluck('ch5')->toArray(),
-    //                     'borderColor' => 'rgb(153, 102, 255)',
-    //                     'fill' => false
-    //                 ],
-    //                 [
-    //                     'label' => 'Tilt 6 (ch6)',
-    //                     'data' => $suhuData->pluck('ch6')->toArray(),
-    //                     'borderColor' => 'rgb(255, 159, 64)',
-    //                     'fill' => false
-    //                 ],
-    //                 [
-    //                     'label' => 'Tilt 7 (ch7)',
-    //                     'data' => $suhuData->pluck('ch7')->toArray(),
-    //                     'borderColor' => 'rgb(138, 194, 74)',
-    //                     'fill' => false
-    //                 ],
-    //                 [
-    //                     'label' => 'Tilt 8 (ch8)',
-    //                     'data' => $suhuData->pluck('ch8')->toArray(),
-    //                     'borderColor' => 'rgb(234, 95, 137)',
-    //                     'fill' => false
-    //                 ],
-    //                 [
-    //                     'label' => 'T1.9 CENTER (ch9)',
-    //                     'data' => $suhuData->pluck('ch9')->toArray(),
-    //                     'borderColor' => 'rgb(11, 79, 108)',
-    //                     'fill' => false,
-    //                     'borderWidth' => 2
-    //                 ]
-    //             ]
-    //         ],
-    //         'options' => [
-    //             'responsive' => true,
-    //             'plugins' => [
-    //                 'title' => [
-    //                     'display' => true,
-    //                     'text' => 'Grafik Sebaran Suhu Terhadap Waktu'
-    //                 ],
-    //                 'legend' => [
-    //                     'position' => 'bottom'
-    //                 ]
-    //             ],
-    //             'scales' => [
-    //                 'y' => [
-    //                     'min' => -30,
-    //                     'max' => 0,
-    //                     'title' => [
-    //                         'display' => true,
-    //                         'text' => 'Suhu (°C)'
-    //                     ],
-    //                     'ticks' => [
-    //                         'stepSize' => 5
-    //                     ]
-    //                 ],
-    //                 'x' => [
-    //                     'type' => 'time',
-    //                     'time' => [
-    //                         'parser' => "YYYY-MM-DDTHH:mm:ssZ",
-    //                         'unit' => 'minute',
-    //                         'displayFormats' => [
-    //                             'minute' => 'HH:mm'
-    //                         ],
-    //                         'tooltipFormat' => 'HH:mm'
-    //                     ],
-    //                     'min' => $startTime,
-    //                     'max' => $endTime,
-    //                     'title' => [
-    //                         'display' => true,
-    //                         'text' => 'Waktu'
-    //                     ]
-    //                 ]
-    //             ]
-    //         ]
-    //     ];
-
-    //     $chartUrl = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartConfig));
-
-    //     dd($chartUrl);
-
-    //     $pdf = PDF::loadView('validation.print.print_abf', [
-    //         'dataABF' => $dataABF,
-    //         'suhuAwal' => $suhuAwal,
-    //         'suhuAkhir' => $suhuAkhir,
-    //         'suhuData' => $suhuAkhir,
-    //         'chartUrl' => $chartUrl
-    //     ])->setOptions(['isRemoteEnabled' => true]);
-
-    //     return $pdf->stream('laporan-abf-' . $dataABF->nama_produk . '.pdf');
-    // }
-
     public function printABF($id)
     {
         $dataABF = AbfValidation::findOrFail($id);
         $suhuData = SuhuAbfAll::where('abf_validation_id', $id)
-            ->orderBy('time')
             ->get();
 
         $suhuAwal = $suhuData->first();
         $suhuAkhir = $suhuData->last();
-
-        $startTime = \Carbon\Carbon::parse($suhuData->first()->time)->format('Y-m-d H:i:s');
-        $endTime = \Carbon\Carbon::parse($suhuData->last()->time)->format('Y-m-d H:i:s');
 
         $chartConfig = [
             'type' => 'line',
@@ -330,55 +134,49 @@ class ValidationController extends Controller
                 })->toArray(),
                 'datasets' => [
                     [
-                        'label' => 'Tilt 1 (ch1)',
+                        'label' => 'Titik 1',
                         'data' => $suhuData->pluck('ch1')->toArray(),
                         'borderColor' => 'rgb(255, 99, 132)',
                         'fill' => false
                     ],
                     [
-                        'label' => 'Tilt 2 (ch2)',
+                        'label' => 'Titik 2',
                         'data' => $suhuData->pluck('ch2')->toArray(),
                         'borderColor' => 'rgb(54, 162, 235)',
                         'fill' => false
                     ],
                     [
-                        'label' => 'Tilt 3 (ch3)',
+                        'label' => 'Titik 3',
                         'data' => $suhuData->pluck('ch3')->toArray(),
                         'borderColor' => 'rgb(255, 206, 86)',
                         'fill' => false
                     ],
                     [
-                        'label' => 'Tilt 4 (ch4)',
+                        'label' => 'Titik 4',
                         'data' => $suhuData->pluck('ch4')->toArray(),
                         'borderColor' => 'rgb(75, 192, 192)',
                         'fill' => false
                     ],
                     [
-                        'label' => 'Tilt 5 (ch5)',
+                        'label' => 'Titik 5',
                         'data' => $suhuData->pluck('ch5')->toArray(),
                         'borderColor' => 'rgb(153, 102, 255)',
                         'fill' => false
                     ],
                     [
-                        'label' => 'Tilt 6 (ch6)',
-                        'data' => $suhuData->pluck('ch6')->toArray(),
-                        'borderColor' => 'rgb(255, 159, 64)',
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Tilt 7 (ch7)',
+                        'label' => 'Titik 7',
                         'data' => $suhuData->pluck('ch7')->toArray(),
                         'borderColor' => 'rgb(138, 194, 74)',
                         'fill' => false
                     ],
                     [
-                        'label' => 'Tilt 8 (ch8)',
+                        'label' => 'Titik 8',
                         'data' => $suhuData->pluck('ch8')->toArray(),
                         'borderColor' => 'rgb(234, 95, 137)',
                         'fill' => false
                     ],
                     [
-                        'label' => 'T1.9 CENTER (ch9)',
+                        'label' => 'Titik.9 CENTER',
                         'data' => $suhuData->pluck('ch9')->toArray(),
                         'borderColor' => 'rgb(11, 79, 108)',
                         'fill' => false,
@@ -387,6 +185,11 @@ class ValidationController extends Controller
                 ]
             ],
             'options' => [
+                'elements' => [
+                    'point' => [
+                        'radius' => 0
+                    ]
+                ],
                 'responsive' => true,
                 'plugins' => [
                     'title' => [
@@ -410,15 +213,77 @@ class ValidationController extends Controller
                         ]
                     ],
                     'x' => [
-                        'type' => 'time',
-                        'time' => [
-                            'unit' => 'minute',
-                            'displayFormats' => [
-                                'minute' => 'HH:mm'
-                            ]
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Waktu'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $chartConfigPenetrasi = [
+            'type' => 'line',
+            'data' => [
+                'labels' => $suhuData->map(function ($item) {
+                    return \Carbon\Carbon::parse($item->time)->format('H:i');
+                })->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Titik 1',
+                        'data' => $suhuData->pluck('titik1')->toArray(),
+                        'borderColor' => 'rgb(255, 99, 132)',
+                        'fill' => false,
+                    ],
+                    [
+                        'label' => 'Titik 2',
+                        'data' => $suhuData->pluck('titik2')->toArray(),
+                        'borderColor' => 'rgb(54, 162, 235)',
+                        'fill' => false,
+                    ],
+                    [
+                        'label' => 'Titik 3',
+                        'data' => $suhuData->pluck('titik3')->toArray(),
+                        'borderColor' => 'rgb(255, 206, 86)',
+                        'fill' => false,
+                    ],
+                    [
+                        'label' => 'Titik 4',
+                        'data' => $suhuData->pluck('titik4')->toArray(),
+                        'borderColor' => 'rgb(75, 192, 192)',
+                        'fill' => false,
+                    ]
+                ]
+            ],
+            'options' => [
+                'elements' => [
+                    'point' => [
+                        'radius' => 0
+                    ]
+                ],
+                'responsive' => true,
+                'plugins' => [
+                    'title' => [
+                        'display' => true,
+                        'text' => 'Grafik Penetrasi Suhu 4 Posisi Pengukuran, Menggunakan Thermologger Ebro'
+                    ],
+                    'legend' => [
+                        'position' => 'bottom'
+                    ]
+                ],
+                'scales' => [
+                    'y' => [
+                        'min' => -25,
+                        'max' => 0,
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Suhu (°C)'
                         ],
-                        'min' => $startTime,
-                        'max' => $endTime,
+                        'ticks' => [
+                            'stepSize' => 5
+                        ]
+                    ],
+                    'x' => [
                         'title' => [
                             'display' => true,
                             'text' => 'Waktu'
@@ -431,12 +296,15 @@ class ValidationController extends Controller
         // Generate chart URL
         $chartUrl = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartConfig));
 
+        $chartUrlPenetrasi = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartConfigPenetrasi));
+
         $pdf = PDF::loadView('validation.print.print_abf', [
             'dataABF' => $dataABF,
             'suhuAwal' => $suhuAwal,
             'suhuAkhir' => $suhuAkhir,
-            'suhuData' => $suhuAkhir,
-            'chartUrl' => $chartUrl
+            'suhuData' => $suhuData,
+            'chartUrl' => $chartUrl,
+            'chartUrlPenetrasi' => $chartUrlPenetrasi,
         ])->setOptions(['isRemoteEnabled' => true]);
 
         return $pdf->stream('laporan-abf-' . $dataABF->nama_produk . '.pdf');
