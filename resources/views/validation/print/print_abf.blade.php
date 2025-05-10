@@ -5,7 +5,7 @@
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .table-bordered {
@@ -17,7 +17,7 @@
         .table-bordered th,
         .table-bordered td {
             border: 1px solid black;
-            padding: 4px;
+            padding: 2px;
             text-align: center;
         }
 
@@ -77,25 +77,25 @@
     <h3 style="text-transform: uppercase; margin-top: 2rem;">penetrasi suhu dingin</h3>
     <table class="table-bordered mb-3" style="width: 40%;">
         <tr>
-            <td style="padding: 4px;">Waktu Mulai Pengujian</td>
-            <td style="padding: 4px;">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->translatedFormat('d F Y') }}</td>
-            <td style="padding: 4px;">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->format('H:i') }}</td>
+            <td style="padding: 2px;">Waktu Mulai Pengujian</td>
+            <td style="padding: 2px;">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->translatedFormat('d F Y') }}</td>
+            <td style="padding: 2px;">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->format('H:i') }}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Waktu Akhir Pengujian</td>
-            <td style="padding: 4px;">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->translatedFormat('d F Y') }}</td>
-            <td style="padding: 4px;">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->format('H:i') }}</td>
+            <td style="padding: 2px;">Waktu Akhir Pengujian</td>
+            <td style="padding: 2px;">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->translatedFormat('d F Y') }}</td>
+            <td style="padding: 2px;">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->format('H:i') }}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Pengujian ke</td>
-            <td colspan="2" style="padding: 4px;">{{ $dataABF ->pengujian }}</td>
+            <td style="padding: 2px;">Pengujian ke</td>
+            <td colspan="2" style="padding: 2px;">{{ $dataABF ->pengujian }}</td>
         </tr>
     </table>
 
     <table class="table-bordered mb-3" style="width: 50%;">
         <tr>
-            <td style="padding: 4px;">Nama Produk</td>
-            <td style="padding: 4px;">{{ $dataABF ->nama_produk }}</td>
+            <td style="padding: 2px;">Nama Produk</td>
+            <td style="padding: 2px;">{{ $dataABF ->nama_produk }}</td>
         </tr>
     </table>
 
@@ -132,20 +132,20 @@
     <p>{{ $dataABF ->nama_mesin_2 }}</p>
     <table class="table-bordered mb-3" style="width: 40%;">
         <tr>
-            <td style="padding: 4px;">Merek</td>
-            <td colspan="2" style="padding: 4px;">{{ $dataABF ->merek_mesin_2 }}</td>
+            <td style="padding: 2px;">Merek</td>
+            <td colspan="2" style="padding: 2px;">{{ $dataABF ->merek_mesin_2 }}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Tipe</td>
-            <td colspan="2" style="padding: 4px;">{{ $dataABF ->tipe_mesin_2 }}</td>
+            <td style="padding: 2px;">Tipe</td>
+            <td colspan="2" style="padding: 2px;">{{ $dataABF ->tipe_mesin_2 }}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Freon</td>
-            <td colspan="2" style="padding: 4px;">{{ $dataABF ->freon_mesin_2 }}</td>
+            <td style="padding: 2px;">Freon</td>
+            <td colspan="2" style="padding: 2px;">{{ $dataABF ->freon_mesin_2 }}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Kapasitas</td>
-            <td colspan="2" style="padding: 4px;">{{ $dataABF ->kapasitas_mesin_2 }}</td>
+            <td style="padding: 2px;">Kapasitas</td>
+            <td colspan="2" style="padding: 2px;">{{ $dataABF ->kapasitas_mesin_2 }}</td>
         </tr>
     </table>
 
@@ -432,7 +432,7 @@
                 </tr>
             </tbody>
         </table>
-        <p style="text-align: center;"> <strong>Table 1.</strong> Hasil Pengukuran Persebaran Suhu Pada Ruang {{ $dataABF ->nama_mesin }}</p>
+        <p style="text-align: center;"> <strong>Tabel 1.</strong> Hasil Pengukuran Persebaran Suhu Pada Ruang {{ $dataABF ->nama_mesin }}</p>
 
         <div>
             <p>Berdasarkan tabel di atas, dapat diperoleh informasi berupa:</p>
@@ -449,451 +449,328 @@
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut:</p>
         <img src="{{ $chartUrl }}" style="width: 100%; margin: auto;">
         <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu Ruang {{ $dataABF->nama_mesin }} </p>
-
-        <p>Grafik sebaran suhu di atas menunjukkan bahwa pergerakan suhu dari awal ABF dimulai pada jam 16.12 berangsur turun secara linear. Pada saat ABF dinyalakan, suhu pada setiap
-            titiknya berbeda-beda (terpaut perbedaan sebesar 10,8 °C, mulai dari titik tertinggi di titik 9 sebesar 9,90 °C dan terendah di titik 1 sebesar -0,90 °C). ABF dimatikan keesokan harinya
-            pada jam 09.22, dan Thermocouple tipe K mendeteksi di suhu di setiap titiknya berbeda namun dengan range yang lebih sempit, yakni selisih suhu minimum ke maksimumnya sebesar -
-            4,20 °C ((-27,90 °C pada titik 1) - (-23,70 °C pada titik 2)). Hal ini menunjukkan bahwa di suhu awal suhu dapat berbeda karena beberapa faktor, salah satunya adalah adanya aktivitas
-            keluar masuk karyawan untuk menata rak satu demi satu hingga terisi penuh. Suhu akhir terdeteksi lebih merata (selisih antar titik tidak terpaut jauh) karena ruang ABF tertutup rapat
-            sehingga satu-satunya aliran udara berasal dari hembusan 3 unit blower.</p>
-        <p>Namun dalam prosesnya terdapat peristiwa lonjakan suhu sesaat (spike) sebanyak 3 kali selama proses blast freezing. Spike ini disebabkan oleh defrost, di mana pengaturan defrost
-                ini acuannya adalah waktu (diatur setiap sekian jam sekali mesin akan mati). Spike pertama terjadi pada 2,9 jam sejak ABF dinyalakan, dan terjadi selama 47 menit. Spike kedua terjadi
-                5,3 jam setelah spike pertama, selama 58 menit. Spike terakhir (ketiga) terjadi pada 6,3 jam setelah spike kedua berlangsung, selama 1,1 jam.Total terjadinya spike pada running ABF
-                kali ini sebanyak 3 kali, dengan interval 5,2 jam sekali. Data terkait durasi spike dituangkan dalam tabel berikut ini:
-        </p>
     </div>
+
+    {{-- spike func --}}
+    @php
+        function getSpikeDetails($data) {
+            $channels = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch7', 'ch8', 'ch9']; // exclude ch6, ch10
+            $averaged = [];
+
+            // 1. Hitung rata-rata setiap baris
+            foreach ($data as $row) {
+                $sum = 0;
+                foreach ($channels as $ch) {
+                    $sum += $row->$ch;
+                }
+                $averaged[] = $sum / count($channels);
+            }
+
+            // 2. Deteksi spike
+            $threshold = 1;
+            $cooldown = 2; // 2 langkah = 10 menit (karena interval 5 menit)
+            $spikes = [];
+            $lastSpikeEnd = -100;
+            $i = 1;
+
+            while ($i < count($averaged)) {
+                $diff = $averaged[$i] - $averaged[$i - 1];
+                if ($diff > $threshold && ($i - $lastSpikeEnd) > $cooldown) {
+                    $start = $i;
+                    $duration = 1;
+                    while (
+                        ($i + 1 < count($averaged)) &&
+                        ($averaged[$i + 1] - $averaged[$i] > 0.2)
+                    ) {
+                        $duration++;
+                        $i++;
+                    }
+                    $end = $i;
+                    $spikes[] = ['start' => $start, 'duration' => $duration, 'end' => $end];
+                    $lastSpikeEnd = $end;
+                }
+                $i++;
+            }
+
+            return $spikes;
+        }
+
+        function formatDuration($minutes) {
+            if ($minutes < 60) {
+                return $minutes . ' menit';
+            } else {
+                return round($minutes / 60, 1) . ' jam';
+            }
+        }
+
+        function formatSpikeNarrative($spikes) {
+            $texts = [];
+            for ($i = 0; $i < count($spikes); $i++) {
+                $startHour = round(($spikes[$i]['start'] * 5) / 60, 1); // index * 5 menit => jam
+                $durationMinutes = $spikes[$i]['duration'] * 5; // langkah * 5 menit
+                $durationFormatted = formatDuration($durationMinutes);
+
+                if ($i == 0) {
+                    $texts[] = "Spike pertama terjadi pada $startHour jam sejak ABF dinyalakan, dan terjadi selama $durationFormatted";
+                } else {
+                    $prevEndMinute = $spikes[$i - 1]['end'] * 5;
+                    $currStartMinute = $spikes[$i]['start'] * 5;
+                    $sincePrevEnd = round(($currStartMinute - $prevEndMinute) / 60, 1);
+                    $ordinalText = match($i + 1) {
+                        2 => "kedua",
+                        3 => "ketiga",
+                        4 => "keempat",
+                        5 => "kelima",
+                        6 => "keenam",
+                        7 => "ketujuh",
+                        8 => "kedelapan",
+                        default => "ke-" . ($i + 1),
+                    };
+                    $label = ($i == count($spikes) - 1) ? "Spike terakhir ($ordinalText)" : "Spike $ordinalText";
+                    $texts[] = "$label terjadi pada $sincePrevEnd jam setelah spike " . ($i == 1 ? "pertama" : "kedua") . ", selama $durationFormatted";
+                }
+            }
+
+            return implode('. ', $texts) . ".";
+        }
+
+        function formatSpikeSummary($spikes) {
+            $total = count($spikes);
+
+            if ($total <= 1) {
+                return "Total terjadinya spike pada running ABF kali ini sebanyak $total kali.";
+            }
+
+            $totalIntervalMinutes = 0;
+            for ($i = 1; $i < $total; $i++) {
+                $prevEnd = $spikes[$i - 1]['end'] * 5; // menit
+                $currStart = $spikes[$i]['start'] * 5; // menit
+                $interval = $currStart - $prevEnd;
+                $totalIntervalMinutes += $interval;
+            }
+
+            $averageIntervalJam = round(($totalIntervalMinutes / ($total - 1)) / 60, 1);
+
+            return "Total terjadinya spike pada running ABF kali ini sebanyak $total kali, dengan interval $averageIntervalJam jam sekali.";
+        }
+
+        function formatMenitJam($menit) {
+            $jam = round($menit / 60, 1);
+            return "$menit menit, atau $jam jam";
+        }
+
+        function generateSpikeTableRows($spikes) {
+            $rows = [];
+
+            if (count($spikes) === 0) return '';
+
+            // Durasi dari ON ABF ke Spike 1
+            $firstStart = $spikes[0]['start'] * 5;
+            $rows[] = "<tr><td style='padding: 4px;'>Durasi dari ON ABF ke Spike 1</td><td colspan='2' style='padding: 4px;'>" . formatMenitJam($firstStart) . "</td></tr>";
+
+            // Spike 1
+            $durasi1 = $spikes[0]['duration'] * 5;
+            $rows[] = "<tr><td style='padding: 4px;'>Durasi Spike 1</td><td colspan='2' style='padding: 4px;'>{$durasi1} menit</td></tr>";
+
+            for ($i = 1; $i < count($spikes); $i++) {
+                $prevEnd = $spikes[$i - 1]['end'] * 5;
+                $thisStart = $spikes[$i]['start'] * 5;
+                $selisih = $thisStart - $prevEnd;
+                $rows[] = "<tr><td style='padding: 4px;'>Durasi dari Spike $i ke Spike " . ($i + 1) . "</td><td colspan='2' style='padding: 4px;'>" . formatMenitJam($selisih) . "</td></tr>";
+
+                $durasi = $spikes[$i]['duration'] * 5;
+                $durasiFormat = ($durasi < 60) ? "$durasi menit" : formatMenitJam($durasi);
+                $rows[] = "<tr><td style='padding: 4px;'>Durasi Spike " . ($i + 1) . "</td><td colspan='2' style='padding: 4px;'>$durasiFormat</td></tr>";
+            }
+
+            // Interval rata-rata
+            if (count($spikes) > 1) {
+                $totalInterval = 0;
+                for ($i = 1; $i < count($spikes); $i++) {
+                    $prevEnd = $spikes[$i - 1]['end'] * 5;
+                    $currStart = $spikes[$i]['start'] * 5;
+                    $totalInterval += ($currStart - $prevEnd);
+                }
+                $rataJam = round(($totalInterval / (count($spikes) - 1)) / 60, 1);
+                $rows[] = "<tr><td style='padding: 4px;'>Interval terjadinya Spike</td><td colspan='2' style='padding: 4px;'>{$rataJam} jam sekali</td></tr>";
+            }
+
+            return implode("\n", $rows);
+        }
+
+        $spikeDetails = getSpikeDetails($suhuData);
+    @endphp
 
     {{-- tabel 2 durasi keseluruhan spike --}}
     <div class="row mb-3">
-        <table class="table-bordered mb-3"style="width: 80%; margin: auto;">
+
+        <p>
+            Terdapat peristiwa lonjakan suhu sesaat (spike) sebanyak {{ count($spikeDetails) }} kali selama proses blast freezing.
+            {{ formatSpikeNarrative($spikeDetails) }} {{ formatSpikeSummary($spikeDetails) }}
+        </p>
+
+        <p>Data terkait durasi spike dituangkan dalam tabel berikut ini:</p>
+
+        <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
             <tr>
                 <td style="padding: 4px;"></td>
                 <td colspan="2" style="padding: 4px;">Durasi</td>
             </tr>
-            <tr>
-                <td style="padding: 4px;">Durasi dari ON ABF ke Spike 1</td>
-                <td colspan="2" style="padding: 4px;">176 menit, atau 2,9 jam</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px;">Durasi Spike 1</td>
-                <td colspan="2" style="padding: 4px;">47 menit</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px;">Durasi dari Spike 1 ke Spike 2</td>
-                <td colspan="2" style="padding: 4px;">320 menit atau 5,3 jam</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px;">Durasi Spike 2</td>
-                <td colspan="2" style="padding: 4px;">58 menit</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px;">Durasi dari Spike 2 ke Spike 3</td>
-                <td colspan="2" style="padding: 4px;">309 menit atau 6,3 jam</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px;">Durasi Spike 3</td>
-                <td colspan="2" style="padding: 4px;">65 menit atau 1,1 jam</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px;">Interval terjadinya Spike</td>
-                <td colspan="2" style="padding: 4px;">5,2 jam sekali</td>
-            </tr>
-            
+            {!! generateSpikeTableRows($spikeDetails) !!}
         </table>
-        <p style="text-align: center;"> <strong>Table 2.</strong> Durasi Keseluruhan Terjadinya Spike Pertama, Kedua, dan Ketiga</p>
+        <p style="text-align: center;"> <strong>Tabel 2.</strong> Durasi Keseluruhan Terjadinya Spike</p>
 
-        <p class="mb-3">Spike pertama dimulai pada titik 1-2, 4, 5, 7-8 dan 9 pada jam 19:07, atau 2,9 jam setelah ABF dimulai yang disusul oleh titik yang lain pada rentang waktu 5 menit. Kenaikan suhu awal
-            hingga puncak terjadi selama 5-10 menit, dengan suhu awal sampai suhu di puncak spike mengalami kenaikan sebesar 2-17°C, selama 5-10 menit. Penurunan suhu dari puncak spike
-            sampai ke dasar terjadi selama 15-30 menit dengan penurunan suhu 2-17 °C. Total durasi terjadinya spike pertama adalah selama 45 sampai 50 menit. Data terkait peristiwa spike
-            pertama dituangkan dalam tabel 3 berikut ini: </p>
     </div>
 
-    {{-- tabel 3 durasi spike 1 --}}
+    {{-- tabel 3 durasi ketiga spike  --}}
     <div class="row mb-3">
-        <table class="table-bordered mb-3" style="width: 100%; margin: auto;">
-            <thead>
-            <tr>
-              <th class="tg-0lax"></th>
-              <th class="tg-0lax">Titik 1</th>
-              <th class="tg-0lax">Titik 2</th>
-              <th class="tg-0lax">titik 3</th>
-              <th class="tg-0lax">titik 4</th>
-              <th class="tg-0lax">titik 5</th>
-              <th class="tg-0lax">titik 7</th>
-              <th class="tg-0lax">titik 8</th>
-              <th class="tg-0lax">titik 9 (center)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td class="tg-0lax">Dimulai pada jam</td>
-              <td class="tg-0lax">19:07:42</td>
-              <td class="tg-0lax">19:07:42</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Suhu awal</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Durasi Start to Peak (menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Suhu Puncak</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Durasi Puncak (menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Suhu Akhir</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Durasi Peak to End (menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Total Durasi Spike (Menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Berakhir pada jam</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Spike yang ke</td>
-              <td class="tg-0lax" colspan="8">1</td>
-            </tr>
-            </tbody>
-        </table>
-        <p style="text-align: center;"> <strong>Table 3.</strong> Durasi Terjadinya Spike Pertama</p>
+        @php
+            $channels = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch7', 'ch8', 'ch9'];
 
-        <p>
-            Spike kedua dimulai pada 5,3 jam sejak spike pertama, yakni pada jam 01:12-01:22. Kenaikan suhu awal hingga puncak terjadi selama 15-25 menit dengan kenaikan suhu awal ke
-            puncak sebesar 3-9 C, dengan durasi spike di puncaknya selama 5 menit. Penurunan suhu dari puncak spike sampai ke dasar terjadi selama 5-40 menit dengan penurunan suhu
-            sebesar 3-9 C. Total durasi terjadinya spike kedua adalah selama 25 sampai 70 menit. Data terkait peristiwa spike kedua dituangkan dalam tabel 4 berikut ini:
-        </p>
-    </div>
+            function menitKeJamMenit($index, $data) {
+                // Pastikan data sudah diurutkan berdasarkan waktu
+                if (!isset($data[$index]->time)) {
+                    throw new Exception("Data tidak memiliki timestamp yang valid");
+                }
+                
+                // Ambil timestamp langsung dari data
+                $timestamp = strtotime($data[$index]->time);
+                
+                // Format ke H:i:s
+                return date("H:i:s", $timestamp);
+            }
 
-    {{-- tabel 4 durasi spike 2 --}}
-    <div class="row mb-3">
-        <table class="table-bordered mb-3" style="width: 100%; margin: auto;">
-            <thead>
-            <tr>
-              <th class="tg-0lax"></th>
-              <th class="tg-0lax">Titik 1</th>
-              <th class="tg-0lax">Titik 2</th>
-              <th class="tg-0lax">titik 3</th>
-              <th class="tg-0lax">titik 4</th>
-              <th class="tg-0lax">titik 5</th>
-              <th class="tg-0lax">titik 7</th>
-              <th class="tg-0lax">titik 8</th>
-              <th class="tg-0lax">titik 9 (center)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td class="tg-0lax">Dimulai pada jam</td>
-              <td class="tg-0lax">19:07:42</td>
-              <td class="tg-0lax">19:07:42</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Suhu awal</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Durasi Start to Peak (menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Suhu Puncak</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Durasi Puncak (menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Suhu Akhir</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Durasi Peak to End (menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Total Durasi Spike (Menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Berakhir pada jam</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Spike yang ke</td>
-              <td class="tg-0lax" colspan="8">2</td>
-            </tr>
-            </tbody>
-        </table>
-        <p style="text-align: center;"> <strong>Table 4.</strong> Durasi Terjadinya Spike Kedua</p>
+            function extractSpikeTableData($spike, $data, $channels) {
+                $rows = [];
+                $startIndex = $spike['start'];
+                $endIndex = $spike['end'];
 
-        <p>
-            Spike ketiga terjadi pada 65 menit dari spike kedua, yakni pada jam 07:22-07:27. Kenaikan suhu awal hingga puncak terjadi selama 20-30 menit dengan kenaikan suhu
-            awal ke puncak sebesar 4-9 C, dengan durasi spike di puncaknya selama 5-10 menit. Penurunan suhu dari puncak spike sampai ke dasar terjadi selama 15-40 menit
-            dengan penurunan suhu sebesar 4-9 C. Total durasi terjadinya spike kedua adalah selama 40 sampai 75 menit. Data terkait peristiwa spike kedua dituangkan dalam
-            tabel 5 berikut ini: 
-        </p>
-    </div>
+                foreach ($channels as $channel) {
+                    $startValue = $data[$startIndex]->$channel;
+                    $peakValue = $startValue;
+                    $peakIndex = $startIndex;
 
-    {{-- tabel 5 durasi spike 3 --}}
-    <div class="row mb-3">
-        <table class="table-bordered mb-3" style="width: 100%; margin: auto;">
-            <thead>
-            <tr>
-              <th class="tg-0lax"></th>
-              <th class="tg-0lax">Titik 1</th>
-              <th class="tg-0lax">Titik 2</th>
-              <th class="tg-0lax">titik 3</th>
-              <th class="tg-0lax">titik 4</th>
-              <th class="tg-0lax">titik 5</th>
-              <th class="tg-0lax">titik 7</th>
-              <th class="tg-0lax">titik 8</th>
-              <th class="tg-0lax">titik 9 (center)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td class="tg-0lax">Dimulai pada jam</td>
-              <td class="tg-0lax">19:07:42</td>
-              <td class="tg-0lax">19:07:42</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Suhu awal</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Durasi Start to Peak (menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Suhu Puncak</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Durasi Puncak (menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Suhu Akhir</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Durasi Peak to End (menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Total Durasi Spike (Menit)</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-              <td class="tg-0lax">0</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Berakhir pada jam</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-              <td class="tg-0lax">00:00:00</td>
-            </tr>
-            <tr>
-              <td class="tg-0lax">Spike yang ke</td>
-              <td class="tg-0lax" colspan="8">3</td>
-            </tr>
-            </tbody>
-        </table>
-        <p style="text-align: center;"> <strong>Table 5.</strong> Durasi Terjadinya Spike Ketiga</p>
+                    for ($i = $startIndex; $i <= $endIndex; $i++) {
+                        if ($data[$i]->$channel > $peakValue) {
+                            $peakValue = $data[$i]->$channel;
+                            $peakIndex = $i;
+                        }
+                    }
+
+                    $endValue = $data[$endIndex]->$channel;
+
+                    $rows[$channel] = [
+                        'jam_mulai' => menitKeJamMenit($startIndex, $data),
+                        'suhu_awal' => $startValue,
+                        'durasi_start_to_peak' => ($peakIndex - $startIndex) * 5,
+                        'suhu_puncak' => $peakValue,
+                        'durasi_puncak' => 5, // asumsikan 1 data point puncak
+                        'suhu_akhir' => $endValue,
+                        'durasi_peak_to_end' => ($endIndex - $peakIndex) * 5,
+                        'total_durasi' => ($endIndex - $startIndex) * 5,
+                        'jam_berakhir' => menitKeJamMenit($endIndex, $data),
+                    ];
+                }
+
+                return $rows;
+            }
+
+            function getTimeDiffInHours($prevEndIndex, $currentStartIndex, $data) {
+                $time1 = strtotime($data[$prevEndIndex]->time);
+                $time2 = strtotime($data[$currentStartIndex]->time);
+                $diffInSeconds = $time2 - $time1;
+                return round($diffInSeconds / 3600, 1); // konversi ke jam, 1 desimal
+            }
+
+            $spikeSummaries = [];
+        @endphp
+
+        @foreach ($spikeDetails as $index => $spike)
+            @php
+                $tableData = extractSpikeTableData($spike, $suhuData, $channels);
+
+                // Ringkasan spike per item
+                $jamMulai = menitKeJamMenit($spike['start'], $suhuData);
+                $jamSelesai = menitKeJamMenit($spike['end'], $suhuData);
+
+                $durasiStartToPeak = [];
+                $durasiPeakToEnd = [];
+                $durasiTotal = [];
+                $selisihNaik = [];
+                $selisihTurun = [];
+
+                foreach ($channels as $ch) {
+                    $d = $tableData[$ch];
+                    $durasiStartToPeak[] = $d['durasi_start_to_peak'];
+                    $durasiPeakToEnd[] = $d['durasi_peak_to_end'];
+                    $durasiTotal[] = $d['total_durasi'];
+                    $selisihNaik[] = round($d['suhu_puncak'] - $d['suhu_awal'], 1);
+                    $selisihTurun[] = round($d['suhu_puncak'] - $d['suhu_akhir'], 1);
+                }
+
+                $summaryText = "Spike ke-" . ($index + 1) . " ";
+                if ($index == 0) {
+                    $summaryText .= "dimulai pada jam $jamMulai - $jamSelesai. ";
+                } else {
+                    $durasiSejakSebelumnya = getTimeDiffInHours($spikeDetails[$index - 1]['end'], $spike['start'], $suhuData);
+                    $summaryText .= "dimulai pada $durasiSejakSebelumnya jam sejak spike sebelumnya, yakni pada jam $jamMulai - $jamSelesai. ";
+                }
+
+                $summaryText .= "Kenaikan suhu awal hingga puncak terjadi selama " . min($durasiStartToPeak) . " - " . max($durasiStartToPeak) . " menit dengan kenaikan suhu sebesar " . min($selisihNaik) . " - " . max($selisihNaik) . " &deg;C, ";
+                $summaryText .= "dengan durasi spike di puncaknya selama 5 menit. ";
+                $summaryText .= "Penurunan suhu dari puncak spike sampai ke akhir terjadi selama " . min($durasiPeakToEnd) . " - " . max($durasiPeakToEnd) . " menit dengan penurunan suhu sebesar " . min($selisihTurun) . " - " . max($selisihTurun) . " &deg;C. ";
+                $summaryText .= "Total durasi spike adalah " . min($durasiTotal) . " - " . max($durasiTotal) . " menit.";
+            @endphp
+
+            <div style="page-break-inside: avoid; margin-bottom: 30px;">
+                <table class="table-bordered mb-3" style="width: 100%; margin: auto;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            @foreach ($channels as $ch)
+                                <th>{{ str_replace('ch', 'Titik ', $ch) }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $labels = [
+                                'jam_mulai' => 'Dimulai pada jam',
+                                'suhu_awal' => 'Suhu awal',
+                                'durasi_start_to_peak' => 'Durasi Start to Peak (menit)',
+                                'suhu_puncak' => 'Suhu Puncak',
+                                'durasi_puncak' => 'Durasi Puncak (menit)',
+                                'suhu_akhir' => 'Suhu Akhir',
+                                'durasi_peak_to_end' => 'Durasi Peak to End (menit)',
+                                'total_durasi' => 'Total Durasi Spike (menit)',
+                                'jam_berakhir' => 'Berakhir pada jam',
+                            ];
+                        @endphp
+
+                        @foreach ($labels as $key => $label)
+                            <tr>
+                                <td>{{ $label }}</td>
+                                @foreach ($channels as $ch)
+                                    <td>{{ $tableData[$ch][$key] }}</td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+
+                        <tr>
+                            <td>Spike yang ke</td>
+                            <td colspan="{{ count($channels) }}">{{ $index + 1 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="text-align: center;">
+                    <strong>Tabel {{ $index + 3 }}.</strong>
+                    Durasi Terjadinya Spike {{ $index + 1 }}
+                </p>
+
+                <p>{!! $summaryText !!}</p>
+            </div>
+        @endforeach
     </div>
 
     {{-- uji penetrasi suhu --}}
@@ -999,6 +876,7 @@
                 </tr>
             </tbody>
         </table>
+        <p style="text-align: center;"> <strong>Tabel.</strong> Hasil Ketercapaian Suhu Produk</p>
 
         <div>
             <p>Berdasarkan tabel di atas, dapat diperoleh informasi berupa:</p>
@@ -1036,16 +914,7 @@
         <img src="{{ $chartUrlPenetrasi }}" style="width: 100%; margin: auto;">
         <p style="text-align: center;"> <strong>Grafik 2.</strong> Penetrasi Produk (Griller) Pada ABF 6</p>
 
-        <p>Grafik tersebut menampilkan kurva dengan 2 pola, yakni melandai selama 6,5 jam kemudian turun (titik 1 dan 2) dan kurva yang langsung bergerak turun namun terjadi
-            kenaikan suhu (titik 3 dan 4). Dengan suhu awal yang terpaut 2,5 C (13,4 C untuk sampel 4; dan 10,9 C untuk sampel 1), menghasilkan suhu akhir dengan selisih yang
-            cukup jauh, yakni terpaut 5,7 C dengan rincian suhu griller titik 1 sebesar -19,9 C sedangkan suhu griller di titik 2, 3, dan 4 sebesar -23,1 hingga -25,6 C. Berbedanya
-            titik 1 terhadap titik 2, 3, dan 4 terjadi karena beberapa hal, utamanya terkait dengan penggunaan rak pendek (yang selisih antar kisinya lebih sempit dibanding rak
-            tinggi, kaitannya dengan aliran udara) dan juga banyaknya produk yang dimasukkan ke dalam ABF. Faktor bangunan dinilai tidak berpengaruh besar terhadap hasil
-            akhir karena konstruksi dindingnya masih rapat dan tidak ada kebocoran (tidak ada bunga es sebagai indikasi kebocoran). Hanya saja, seal karet pada bagian bawah
-            dan samping pintu ABF ini perlu perhatian khusus karena ada celah yang memanjang sepanjang pintu. 
-        </p>
-        <p>Proses blasting griller kali ini menunjukkan adanya 2 pola penurunan suhu, yakni suhu yang langsung turun secara bertahap dan suhu yang ada stagnansi sebelum
-            turun ke minus. Data terkait stagnansi suhu ini dituangkan ke dalam tabel 7 sebagai berikut:</p>
+        <p>Data terkait stagnansi suhu ini dituangkan ke dalam tabel sebagai berikut:</p>
     </div>
 
     {{-- tabel stagnansi --}}
@@ -1125,7 +994,94 @@
                 return $results;
             }
 
+            function generateStagnationAnalysis($stagnationData) {
+                $longest = [
+                    'duration' => '0j 00\'',
+                    'point' => '',
+                    'temp_drop' => 0,
+                    'start_temp' => 0,
+                    'end_temp' => 0
+                ];
+                
+                $shortest = [
+                    'duration' => '99j 99\'',
+                    'point' => '',
+                    'temp_drop' => 0,
+                    'start_temp' => 0,
+                    'end_temp' => 0
+                ];
+                
+                foreach ($stagnationData as $point => $data) {
+                    // Skip if no stagnation found
+                    if ($data['duration'] === '0j 00\'') {
+                        continue;
+                    }
+                    
+                    // Parse duration to minutes for comparison
+                    $durationParts = explode(' ', $data['duration']);
+                    $hours = (int)str_replace('j', '', $durationParts[0]);
+                    $minutes = (int)str_replace("'", '', $durationParts[1]);
+                    $totalMinutes = $hours * 60 + $minutes;
+                    
+                    // Parse longest duration in minutes
+                    $longestParts = explode(' ', $longest['duration']);
+                    $longestMinutes = (int)str_replace('j', '', $longestParts[0]) * 60 + 
+                                    (int)str_replace("'", '', $longestParts[1]);
+                    
+                    // Parse shortest duration in minutes
+                    $shortestParts = explode(' ', $shortest['duration']);
+                    $shortestMinutes = (int)str_replace('j', '', $shortestParts[0]) * 60 + 
+                                    (int)str_replace("'", '', $shortestParts[1]);
+                    
+                    // Find longest duration
+                    if ($totalMinutes > $longestMinutes) {
+                        $longest = [
+                            'duration' => $data['duration'],
+                            'point' => $point,
+                            'start_temp' => $data['start_temp'],
+                            'end_temp' => $data['end_temp'],
+                            'temp_drop' => (float)$data['temp_drop']
+                        ];
+                    }
+                    
+                    // Find shortest duration
+                    if ($totalMinutes > 0 && $totalMinutes < $shortestMinutes) {
+                        $shortest = [
+                            'duration' => $data['duration'],
+                            'point' => $point,
+                            'start_temp' => $data['start_temp'],
+                            'end_temp' => $data['end_temp'],
+                            'temp_drop' => (float)$data['temp_drop']
+                        ];
+                    }
+                }
+                
+                // Generate analysis text
+                $analysis = "Berdasarkan tabel di atas, ";
+                
+                if (!empty($longest['point'])) {
+                    $pointName = ucfirst(str_replace('titik', 'titik ', $longest['point']));
+                    $analysis .= $pointName . " menjadi titik dengan durasi stagnansi suhu terlama, ";
+                    $analysis .= "yakni pada rentang " . $longest['duration'] . " dengan menurunkan suhu sebesar " . 
+                                number_format(abs($longest['temp_drop']), 1) . "&deg;C ";
+                    $analysis .= "(diawali dari suhu " . $longest['start_temp'] . "&deg;C hingga mencapai " . $longest['end_temp'] . "&deg;C)";
+                }
+                
+                if (!empty($shortest['point']) && $shortest['duration'] !== '99j 99\'') {
+                    $pointName = ucfirst(str_replace('titik', 'titik ', $shortest['point']));
+                    $analysis .= ", dan titik dengan stagnansi suhu tercepat terdapat pada " . $pointName . ", ";
+                    $analysis .= "yakni selama " . $shortest['duration'] . " dengan penurunan suhu sebesar " . 
+                                number_format(abs($shortest['temp_drop']), 1) . "&deg;C ";
+                    $analysis .= "(diawali dari suhu " . $shortest['start_temp'] . "&deg;C hingga mencapai suhu " . $shortest['end_temp'] . "&deg;C)";
+                } elseif (empty($longest['point'])) {
+                    $analysis .= "tidak ditemukan periode stagnansi yang signifikan";
+                }
+                
+                return $analysis;
+            }
+
             $stagnationData = generateStagnationTable($suhuData);
+            $analysisText = generateStagnationAnalysis($stagnationData);
         @endphp
 
         <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
@@ -1184,14 +1140,10 @@
           </tbody>
         </table>
 
-        <p style="text-align: center;"> <strong>Table 7.</strong> Durasi Stagnansi Suhu Inti Produk
+        <p style="text-align: center;"> <strong>Tabel.</strong> Durasi Stagnansi Suhu Inti Produk
         </p>
         <p>
-            Berdasarkan tabel di atas, titik 1 menjadi titik dengan durasi stagnansi suhu terlama, yakni pada rentang 6 jam 40 menit hanya menurunkan suhu sebesar 1,1 C (diawali
-            dari suhu -0,9 hingga mencapai -1,9), dan titik dengan stagnansi suhu tercepat terdapat pada titik 3, yakni selama 2 jam dengan penurunan suhu sebesar 0,3 C (diawali
-            dari suhu -1,0 hingga mencapai suhu -1,2). Seperti yang dijelaskan sebelumnya, bahwa stagnansi suhu pada titik 1 dan 2 ini kemungkinan penyebabnya adalah
-            pemilihan jenis rak yang berbeda, dan juga penataan antar rak yang terlalu rapat. Apabila dilakukan pemilihan rak dan penataan yang pas, maka durasi stagnansi suhu
-            pada titik 1 dan 2 dapat diperisingkat. 
+           {!! $analysisText !!}
         </p>
         <p>
             Uji penetrasi suhu ini selain dapat melihat pergerakan suhu dari waktu ke waktu, juga menghasilkan data terkait pencapaian suhu griller pada -18 C sesuai standard yang ditetapkan oleh QC. Data terkait pencapaian suhu griller tersebut dituangkan dalam tabel 8 sebagai berikut:
@@ -1278,7 +1230,7 @@
                     $earliestTitik = $times0c->filter(fn($t) => $t === $earliest0c)->keys()->map(fn($t) => ucfirst($t))->join(' dan ');
                     $latestTitik = $times0c->filter(fn($t) => $t === $latest0c)->keys()->map(fn($t) => ucfirst($t))->join(' dan ');
 
-                    $results['narratives']['0c'] = "Tabel 8 tersebut menjelaskan bahwa sejak mesin ABF dinyalakan pada jam {$startTimeStr}, griller mencapai suhu 0,0 &deg;C mulai dari jam {$earliest0c} ({$earliestTitik}) hingga {$latest0c} ({$latestTitik}).";
+                    $results['narratives']['0c'] = "Tabel tersebut menjelaskan bahwa sejak mesin ABF dinyalakan pada jam {$startTimeStr}, griller mencapai suhu 0,0 &deg;C mulai dari jam {$earliest0c} ({$earliestTitik}) hingga {$latest0c} ({$latestTitik}).";
                 }
 
                 // Narasi -18°C
@@ -1354,7 +1306,7 @@
                 </tr>
             </tbody>
         </table>
-        <p style="text-align: center;"> <strong>Table 8.</strong> Ketercapaian Suhu Produk
+        <p style="text-align: center;"> <strong>Tabel.</strong> Ketercapaian Suhu Produk
         </p>
         <p>{!! $achievementData['narratives']['0c'] !!} {!! $achievementData['narratives']['-18c'] !!} {!! $achievementData['narratives']['penurunan_terlama'] !!}</p>
            
