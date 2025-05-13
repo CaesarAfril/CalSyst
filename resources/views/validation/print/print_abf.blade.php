@@ -17,7 +17,7 @@
         .table-bordered th,
         .table-bordered td {
             border: 1px solid black;
-            padding: 2px;
+            padding: 1px;
             text-align: center;
         }
 
@@ -31,7 +31,7 @@
         .table-transparent th,
         .table-transparent td {
             border: none;
-            padding: 2px;
+            padding: 1px;
             text-align: left;
         }
 
@@ -41,9 +41,9 @@
             font-weight: bold;
         }
 
-        h2, h3, h4,h5 {
-            margin-bottom: unset;
-            padding-bottom: unset;
+        h2, h3, h4, h5 {
+            margin-bottom: unset !important;
+            padding-bottom: unset !important;
         }
 
         ul, ol {
@@ -58,50 +58,101 @@
         .tg th{border-color:black;border-style:solid;border-width:1px;
         font-weight:normal;overflow:hidden;padding:2px;word-break:normal;}
         .tg .tg-0lax{text-align:left;vertical-align:top}
+
+        /* CSS untuk cetak PDF */
+        .header {
+            position: fixed;
+            top: -60px;
+            left: 0;
+            width: 100%;
+        }
+        
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        @page {
+            margin-top: 100px;
+            size: 210mm 330mm;
+            margin-header: 10mm;
+        }
+
+        body {
+            margin-top: 30px;
+        }
+
+        p {
+            line-height: 1.2 !important;
+        }
     </style>
 </head>
 <body>
     {{-- header --}}
-    <table class="table-transparent">
-        <tr>
-            <td style="width: 10%;">
-                <img src="{{ storage_path('app/logo.png') }}" alt="Company Logo" style="width: 50px;">
-            </td>
-            <td>
-                <h2 style="text-align: center; text-transform: uppercase;">HASIL VALIDASI MESIN <span>{{ $dataABF->nama_mesin }}</span> <br> <span>{{ $dataABF->lokasi }}</span> </h2>
-            </td>
-        </tr>
-    </table>
+    <div class="header">
+        <table class="header-table">
+            <tr>
+                <td style="width: 30%; vertical-align: middle;">
+                    <table style="border: none; border-collapse: collapse;">
+                        <tr>
+                            <td style="vertical-align: middle; width: 50px;">
+                                @php
+                                    $path = public_path('storage/image/logo.png');
+                                    if(file_exists($path)) {
+                                        $type = pathinfo($path, PATHINFO_EXTENSION);
+                                        $data = file_get_contents($path);
+                                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                                    }
+                                @endphp
+                                <img src="{{ $base64 ?? '' }}" alt="Logo" style="width: 50px;">
+                            </td>
+                            <td style="vertical-align: middle; padding-left: 10px;">
+                                <div style="font-size: 9px; font-weight: bold; line-height: 1.2;">
+                                    CHAROEN<br>POKPHAND<br>INDONESIA PT.<br>Food Division
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <h2 style="margin-left: -10rem; text-transform: uppercase;">
+                        HASIL VALIDASI MESIN {{ $dataABF->nama_mesin }}<br>
+                        {{ $dataABF->lokasi }}
+                    </h2>
+                </td>
+            </tr>
+        </table>
+    </div>
 
     {{-- penetrasi suhu dingin --}}
-    <h3 style="text-transform: uppercase; margin-top: 2rem;">penetrasi suhu dingin</h3>
+    <h3 style="text-transform: uppercase;">penetrasi suhu dingin</h3>
     <table class="table-bordered mb-3" style="width: 40%;">
         <tr>
-            <td style="padding: 2px;">Waktu Mulai Pengujian</td>
-            <td style="padding: 2px;">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->translatedFormat('d F Y') }}</td>
-            <td style="padding: 2px;">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->format('H:i') }}</td>
+            <td style="padding: 1px;">Waktu Mulai Pengujian</td>
+            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->translatedFormat('d F Y') }}</td>
+            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataABF->start_pengujian)->format('H:i') }}</td>
         </tr>
         <tr>
-            <td style="padding: 2px;">Waktu Akhir Pengujian</td>
-            <td style="padding: 2px;">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->translatedFormat('d F Y') }}</td>
-            <td style="padding: 2px;">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->format('H:i') }}</td>
+            <td style="padding: 1px;">Waktu Akhir Pengujian</td>
+            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->translatedFormat('d F Y') }}</td>
+            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataABF->end_pengujian)->format('H:i') }}</td>
         </tr>
         <tr>
-            <td style="padding: 2px;">Pengujian ke</td>
-            <td colspan="2" style="padding: 2px;">{{ $dataABF ->pengujian }}</td>
+            <td style="padding: 1px;">Pengujian ke</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataABF ->pengujian }}</td>
         </tr>
     </table>
 
     <table class="table-bordered mb-3" style="width: 50%;">
         <tr>
-            <td style="padding: 2px;">Nama Produk</td>
-            <td style="padding: 2px;">{{ $dataABF ->nama_produk }}</td>
+            <td style="padding: 1px;">Nama Produk</td>
+            <td style="padding: 1px;">{{ $dataABF ->nama_produk }}</td>
         </tr>
     </table>
 
     <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-top: .75rem;">
         <tr>
-            <td style="width: 30%; border: 1px solid black; vertical-align: top; padding: 5px;">
+            <td style="width: 30%; border: 1px solid black; vertical-align: top; padding: 2px;">
                 Ingredient <br>
                 Kemasan <br>
                 Nama Mesin <br>
@@ -113,7 +164,7 @@
                 Target Suhu Inti Produk <br>
                 Set Suhu Thermostat
             </td>
-            <td style="width: 70%; border: 1px solid black; vertical-align: top; padding: 5px;">
+            <td style="width: 70%; border: 1px solid black; vertical-align: top; padding: 2px;">
                 {{ $dataABF ->ingredient }} <br>
                 {{ $dataABF ->kemasan }} <br>
                 {{ $dataABF ->nama_mesin }} <br>
@@ -128,30 +179,34 @@
         </tr>
     </table>
 
-    <h3 style="margin-top: 1rem; margin-bottom: unset;">Nama Mesin</h3>
-    <p>{{ $dataABF ->nama_mesin_2 }}</p>
+    <h3 style="margin-top: 1rem;">Nama Mesin</h3>
+    <ul>
+        <li>{{ $dataABF ->nama_mesin_2 }}</li>
+    </ul>
     <table class="table-bordered mb-3" style="width: 40%;">
         <tr>
-            <td style="padding: 2px;">Merek</td>
-            <td colspan="2" style="padding: 2px;">{{ $dataABF ->merek_mesin_2 }}</td>
+            <td style="padding: 1px;">Merek</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataABF ->merek_mesin_2 }}</td>
         </tr>
         <tr>
-            <td style="padding: 2px;">Tipe</td>
-            <td colspan="2" style="padding: 2px;">{{ $dataABF ->tipe_mesin_2 }}</td>
+            <td style="padding: 1px;">Tipe</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataABF ->tipe_mesin_2 }}</td>
         </tr>
         <tr>
-            <td style="padding: 2px;">Freon</td>
-            <td colspan="2" style="padding: 2px;">{{ $dataABF ->freon_mesin_2 }}</td>
+            <td style="padding: 1px;">Freon</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataABF ->freon_mesin_2 }}</td>
         </tr>
         <tr>
-            <td style="padding: 2px;">Kapasitas</td>
-            <td colspan="2" style="padding: 2px;">{{ $dataABF ->kapasitas_mesin_2 }}</td>
+            <td style="padding: 1px;">Kapasitas</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataABF ->kapasitas_mesin_2 }}</td>
         </tr>
     </table>
 
     <h3 style="margin-top: 1rem; margin-bottom: unset;">Lokasi</h3>
-    <p>{{ $dataABF ->lokasi }}</p>
-    <p>{{ $dataABF ->alamat }}</p>
+    <ul>
+        <li>{{ $dataABF ->lokasi }}</li>
+        <li>{{ $dataABF ->alamat }}</li>
+    </ul>
 
     {{-- identifikasi --}}
     <div class="row mb-3">
@@ -183,7 +238,7 @@
                         $data = file_get_contents($path);
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                     @endphp
-                    <img src="{{ $base64 }}" alt="midilogger" style="width: 80%; margin-bottom: 10px;">
+                    <img src="{{ $base64 }}" alt="midilogger" style="width: 80%;">
                     <p>Midilogger Thermologger GL-260</p>
                 </td>
                 <td width="50%">
@@ -193,7 +248,7 @@
                         $data = file_get_contents($path);
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                     @endphp
-                    <img src="{{ $base64 }}" alt="thermologger" style="width: 80%; margin-bottom: 10px;">
+                    <img src="{{ $base64 }}" alt="thermologger" style="width: 80%;">
                     <p>EBRO EBI-11 thermologger</p>
                 </td>
             </tr>
@@ -209,7 +264,7 @@
                         $data = file_get_contents($path);
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                     @endphp
-                    <img src="{{ $base64 }}" alt="probe" style="width: 80%; margin-bottom: 10px;">
+                    <img src="{{ $base64 }}" alt="probe" style="width: 80%;">
                     <p><em>Gambar 1. Peletakan probe sensor suhu Thermocouple Tipe K untuk persebaran suhu</em></p>
                 </td>
                 <td width="50%">
@@ -220,7 +275,7 @@
                         $data = file_get_contents($path);
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                     @endphp
-                    <img src="{{ $base64 }}" alt="core" style="width: 80%; margin-bottom: 10px;">
+                    <img src="{{ $base64 }}" alt="core" style="width: 80%;">
                     <p><em>Gambar 2. Peletakan griller yang terisi thermologger</em></p>
                 </td>
             </tr>
@@ -354,6 +409,8 @@
             $maxSuhuFormatted = number_format($maxSuhu, 2, ',', '.');
 
             $hasilSelisih = "Pada suhu akhir, selisih suhu antar titik terendah-tertinggi sebesar {$selisihFormatted} &deg;C (({$minSuhuFormatted} &deg;C pada titik {$minTitik}) - ({$maxSuhuFormatted} &deg;C pada titik {$maxTitik})).";
+
+            $hasilPersebaran = "Hasil akhir persebaran suhu pada ABF memiliki perbedaan pembacaan pada titik tertinggi-terendah sebesar {$selisihFormatted} &deg;C.";
         @endphp
 
         <table class="table-bordered" style="width: 80%; margin: auto;">
@@ -449,45 +506,234 @@
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut:</p>
         <img src="{{ $chartUrl }}" style="width: 100%; margin: auto;">
         <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu Ruang {{ $dataABF->nama_mesin }} </p>
+
+        @php
+            $penurunan_max_for_grafik = null;
+                $titik_max_for_grafik = null;
+                $suhu_awal_max_for_grafik = null;
+                $suhu_akhir_max_for_grafik = null;
+
+                for ($i = 1; $i <= 9; $i++) {
+                    $chKey = 'ch' . $i;
+
+                    if (isset($suhuAwal->$chKey) && isset($suhuAkhir->$chKey)) {
+                        $awal = floatval($suhuAwal->$chKey);
+                        $akhir = floatval($suhuAkhir->$chKey);
+                        $penurunan = $awal - $akhir;
+
+                        if (is_null($penurunan_max_for_grafik) || $penurunan > $penurunan_max_for_grafik) {
+                            $penurunan_max_for_grafik = $penurunan;
+                            $titik_max_for_grafik = $i;
+                            $suhu_awal_max_for_grafik = $awal;
+                            $suhu_akhir_max_for_grafik = $akhir;
+                        }
+                    }
+                }
+
+                $penurunan_max_formatted_for_grafik = number_format($penurunan_max_for_grafik, 2, ',', '.');
+                $suhu_awal_max_formatted_for_grafik = number_format($suhu_awal_max_for_grafik, 2, ',', '.');
+                $suhu_akhir_max_formatted_for_grafik = number_format($suhu_akhir_max_for_grafik, 2, ',', '.');
+
+                $hasil_max_for_grafik = "Durasi penurunan suhu tercepat terjadi pada titik {$titik_max_for_grafik}, yakni dapat menurunkan suhu sebesar {$penurunan_max_formatted_for_grafik} &deg;C (dari {$suhu_awal_max_formatted_for_grafik} &deg;C ke {$suhu_akhir_max_formatted_for_grafik} &deg;C)";
+
+                // penurunan suhu terlama
+                $penurunan_min_for_grafik = null;
+                $titik_min_for_grafik = null;
+                $suhu_awal_min_for_grafik = null;
+                $suhu_akhir_min_for_grafik = null;
+
+                for ($i = 1; $i <= 9; $i++) {
+                    if ($i === 6) continue;
+
+                    $chKey = 'ch' . $i;
+
+                    if (isset($suhuAwal->$chKey) && isset($suhuAkhir->$chKey)) {
+                        $awal = floatval($suhuAwal->$chKey);
+                        $akhir = floatval($suhuAkhir->$chKey);
+                        $penurunan = $awal - $akhir;
+
+                        if ($penurunan > 0 && (is_null($penurunan_min_for_grafik) || $penurunan < $penurunan_min_for_grafik)) {
+                            $penurunan_min_for_grafik = $penurunan;
+                            $titik_min_for_grafik = $i;
+                            $suhu_awal_min_for_grafik = $awal;
+                            $suhu_akhir_min_for_grafik = $akhir;
+                        }
+                    }
+                }
+
+                $penurunan_min_formatted_for_grafik = number_format($penurunan_min_for_grafik, 2, ',', '.');
+                $suhu_awal_min_formatted_for_grafik = number_format($suhu_awal_min_for_grafik, 2, ',', '.');
+                $suhu_akhir_min_formatted_for_grafik = number_format($suhu_akhir_min_for_grafik, 2, ',', '.');
+
+                $hasil_min_for_grafik = "Durasi penurunan suhu terlambat terjadi pada titik {$titik_min_for_grafik}, yakni dapat menurunkan suhu sebesar {$penurunan_min_formatted_for_grafik} &deg;C (dari {$suhu_awal_min_formatted_for_grafik} &deg;C ke {$suhu_akhir_min_formatted_for_grafik} &deg;C)";
+
+                // suhu akhir
+                $suhu_akhir_data_for_grafik = [];
+
+                for ($i = 1; $i <= 9; $i++) {
+                    if ($i === 6) continue;
+                    $chKey = 'ch' . $i;
+
+                    if (isset($suhuAkhir->$chKey)) {
+                        $suhu = floatval($suhuAkhir->$chKey);
+                        $suhu_akhir_data_for_grafik[$i] = $suhu;
+                    }
+                }
+
+                $min_titik_akhir_for_grafik = array_key_first($suhu_akhir_data_for_grafik);
+                $max_titik_akhir_for_grafik = array_key_first($suhu_akhir_data_for_grafik);
+                $min_suhu_akhir_for_grafik = $suhu_akhir_data_for_grafik[$min_titik_akhir_for_grafik];
+                $max_suhu_akhir_for_grafik = $suhu_akhir_data_for_grafik[$max_titik_akhir_for_grafik];
+
+                foreach ($suhu_akhir_data_for_grafik as $titik => $suhu) {
+                    if ($suhu < $min_suhu_akhir_for_grafik) {
+                        $min_suhu_akhir_for_grafik = $suhu;
+                        $min_titik_akhir_for_grafik = $titik;
+                    }
+
+                    if ($suhu > $max_suhu_akhir_for_grafik) {
+                        $max_suhu_akhir_for_grafik = $suhu;
+                        $max_titik_akhir_for_grafik = $titik;
+                    }
+                }
+
+                $selisih_akhir_for_grafik = $min_suhu_akhir_for_grafik - $max_suhu_akhir_for_grafik;
+                $selisih_akhir_formatted_for_grafik = number_format($selisih_akhir_for_grafik, 2, ',', '.');
+                $min_suhu_akhir_formatted_for_grafik = number_format($min_suhu_akhir_for_grafik, 2, ',', '.');
+                $max_suhu_akhir_formatted_for_grafik = number_format($max_suhu_akhir_for_grafik, 2, ',', '.');
+
+                $hasil_selisih_akhir_for_grafik = "Pada suhu akhir, selisih suhu antar titik terendah-tertinggi sebesar {$selisih_akhir_formatted_for_grafik} &deg;C (({$min_suhu_akhir_formatted_for_grafik} &deg;C pada titik {$min_titik_akhir_for_grafik}) - ({$max_suhu_akhir_formatted_for_grafik} &deg;C pada titik {$max_titik_akhir_for_grafik})).";
+
+                // suhu awal
+                $suhu_awal_data_for_grafik = [];
+
+                for ($i = 1; $i <= 9; $i++) {
+                    if ($i === 6) continue;
+                    $chKey = 'ch' . $i;
+
+                    if (isset($suhuAwal->$chKey)) {
+                        $suhu = floatval($suhuAwal->$chKey);
+                        $suhu_awal_data_for_grafik[$i] = $suhu;
+                    }
+                }
+
+                $min_titik_awal_for_grafik = array_key_first($suhu_awal_data_for_grafik);
+                $max_titik_awal_for_grafik = array_key_first($suhu_awal_data_for_grafik);
+                $min_suhu_awal_for_grafik = $suhu_awal_data_for_grafik[$min_titik_awal_for_grafik];
+                $max_suhu_awal_for_grafik = $suhu_awal_data_for_grafik[$max_titik_awal_for_grafik];
+
+                foreach ($suhu_awal_data_for_grafik as $titik => $suhu) {
+                    if ($suhu < $min_suhu_awal_for_grafik) {
+                        $min_suhu_awal_for_grafik = $suhu;
+                        $min_titik_awal_for_grafik = $titik;
+                    }
+
+                    if ($suhu > $max_suhu_awal_for_grafik) {
+                        $max_suhu_awal_for_grafik = $suhu;
+                        $max_titik_awal_for_grafik = $titik;
+                    }
+                }
+
+                $selisih_awal_for_grafik = $max_suhu_awal_for_grafik - $min_suhu_awal_for_grafik;
+                $selisih_awal_formatted_for_grafik = number_format($selisih_awal_for_grafik, 2, ',', '.');
+                $min_suhu_awal_formatted_for_grafik = number_format($min_suhu_awal_for_grafik, 2, ',', '.');
+                $max_suhu_awal_formatted_for_grafik = number_format($max_suhu_awal_for_grafik, 2, ',', '.');
+        @endphp
+
+        <p>
+            Grafik sebaran suhu di atas menunjukkan bahwa pergerakan suhu dari awal ABF dimulai pada jam {{ $suhuAwal->time ?? '-' }} Pada saat ABF dinyalakan, suhu pada setiap
+            titiknya berbeda-beda (terpaut perbedaan sebesar {{$selisih_awal_formatted_for_grafik}} &deg;C, mulai dari titik tertinggi di titik {{$max_titik_awal_for_grafik}} sebesar {{$max_suhu_awal_formatted_for_grafik}} &deg;C dan terendah di titik {{$min_titik_awal_for_grafik}} sebesar {{$min_suhu_awal_formatted_for_grafik}} &deg;C). ABF dimatikan keesokan harinya pada jam {{ $suhuAkhir->time ?? '-' }}, dan Thermocouple tipe K mendeteksi di suhu di setiap titiknya berbeda, yakni selisih suhu minimum ke maksimumnya sebesar {{$selisih_akhir_formatted_for_grafik}} &deg;C (({{$min_suhu_akhir_formatted_for_grafik}} &deg;C pada titik {{$min_titik_akhir_for_grafik}}) - ({{$max_suhu_akhir_formatted_for_grafik}} &deg;C pada titik {{$max_titik_akhir_for_grafik}})).
+        </p>
     </div>
 
     {{-- spike func --}}
-    @php
+    @php        
         function getSpikeDetails($data) {
-            $channels = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch7', 'ch8', 'ch9']; // exclude ch6, ch10
+            $channels = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch7', 'ch8', 'ch9'];
             $averaged = [];
-
-            // 1. Hitung rata-rata setiap baris
-            foreach ($data as $row) {
-                $sum = 0;
-                foreach ($channels as $ch) {
-                    $sum += $row->$ch;
-                }
-                $averaged[] = $sum / count($channels);
-            }
-
-            // 2. Deteksi spike
-            $threshold = 1;
-            $cooldown = 2; // 2 langkah = 10 menit (karena interval 5 menit)
             $spikes = [];
+            $cooldown = 4; // Minimal 4 interval (20 menit) antara spike
+            $threshold = 1.0; // Minimal kenaikan 1°C untuk dianggap spike
             $lastSpikeEnd = -100;
             $i = 1;
 
-            while ($i < count($averaged)) {
-                $diff = $averaged[$i] - $averaged[$i - 1];
-                if ($diff > $threshold && ($i - $lastSpikeEnd) > $cooldown) {
-                    $start = $i;
-                    $duration = 1;
-                    while (
-                        ($i + 1 < count($averaged)) &&
-                        ($averaged[$i + 1] - $averaged[$i] > 0.2)
-                    ) {
-                        $duration++;
-                        $i++;
+            // Hitung rata-rata suhu per interval
+            foreach ($data as $row) {
+                $sum = 0;
+                foreach ($channels as $ch) $sum += $row->$ch;
+                $averaged[] = $sum / count($channels);
+            }
+
+            while ($i < count($averaged) - 1) {
+                // Cari kenaikan signifikan (minimal $threshold °C)
+                if (($averaged[$i] - $averaged[$i - 1] > $threshold) && ($i - $lastSpikeEnd) > $cooldown) {
+                    $start = $i - 1;
+                    $peak = $i;
+                    $maxTemp = $averaged[$i];
+                    
+                    // Cari puncak spike (kenaikan berkelanjutan)
+                    while ($peak < count($averaged) - 1 && $averaged[$peak + 1] > $averaged[$peak]) {
+                        $peak++;
+                        if ($averaged[$peak] > $maxTemp) {
+                            $maxTemp = $averaged[$peak];
+                        }
                     }
-                    $end = $i;
-                    $spikes[] = ['start' => $start, 'duration' => $duration, 'end' => $end];
-                    $lastSpikeEnd = $end;
+                    
+                    // Cari dasar penurunan
+                    $end = $peak;
+                    $minAfterPeak = $maxTemp;
+                    
+                    // Cari sampai suhu turun minimal 1°C dari puncak atau 30 menit maksimal
+                    $maxFallDuration = 6; // 30 menit (6 interval x 5 menit)
+                    $fallDuration = 0;
+                    
+                    while ($end < count($averaged) - 1 && 
+                        $fallDuration < $maxFallDuration && 
+                        ($maxTemp - $averaged[$end + 1] < 1.0 || $averaged[$end + 1] < $averaged[$end])) {
+                        $end++;
+                        $fallDuration++;
+                        if ($averaged[$end] < $minAfterPeak) {
+                            $minAfterPeak = $averaged[$end];
+                        }
+                    }
+                    
+                    // Hitung durasi kenaikan dan penurunan
+                    $riseDuration = $peak - $start;
+                    $fallDuration = $end - $peak;
+                    $totalDuration = $end - $start;
+                    
+                    // Hanya dianggap spike jika ada penurunan setelah kenaikan
+                    if ($fallDuration > 0 && $riseDuration > 0) {
+                        // Identifikasi channel yang signifikan (naik >1°C)
+                        $significantChannels = [];
+                        $deltaChannels = [];
+                        
+                        foreach ($channels as $ch) {
+                            $delta = $data[$peak]->$ch - $data[$start]->$ch;
+                            $deltaChannels[$ch] = $delta;
+                            if ($delta > 1.0) {
+                                $significantChannels[] = $ch;
+                            }
+                        }
+                        
+                        // Hanya simpan jika ada minimal 1 channel signifikan
+                        if (!empty($significantChannels)) {
+                            $spikes[] = [
+                                'start' => $start,
+                                'peak' => $peak,
+                                'end' => $end,
+                                'duration' => $riseDuration,
+                                'fall_duration' => $fallDuration,
+                                'delta_channels' => $deltaChannels,
+                                'significant_channels' => $significantChannels,
+                                'max_temp' => $maxTemp,
+                                'min_after_peak' => $minAfterPeak
+                            ];
+                            
+                            $lastSpikeEnd = $end;
+                            $i = $end; // Loncat ke akhir spike untuk pencarian berikutnya
+                        }
+                    }
                 }
                 $i++;
             }
@@ -502,20 +748,24 @@
                 return round($minutes / 60, 1) . ' jam';
             }
         }
-
+        
         function formatSpikeNarrative($spikes) {
             $texts = [];
             for ($i = 0; $i < count($spikes); $i++) {
-                $startHour = round(($spikes[$i]['start'] * 5) / 60, 1); // index * 5 menit => jam
-                $durationMinutes = $spikes[$i]['duration'] * 5; // langkah * 5 menit
+                $startMinute = $spikes[$i]['start'] * 5;
+                $durationMinutes = ($spikes[$i]['duration'] + $spikes[$i]['fall_duration']) * 5;
+                $startHour = round($startMinute / 60, 1);
                 $durationFormatted = formatDuration($durationMinutes);
 
                 if ($i == 0) {
-                    $texts[] = "Spike pertama terjadi pada $startHour jam sejak ABF dinyalakan, dan terjadi selama $durationFormatted";
+                    $texts[] = "Spike pertama terjadi pada $startHour jam sejak ABF dinyalakan, dengan durasi total $durationFormatted "
+                            . "(kenaikan selama " . ($spikes[$i]['duration'] * 5) . " menit dan penurunan selama " 
+                            . ($spikes[$i]['fall_duration'] * 5) . " menit)";
                 } else {
-                    $prevEndMinute = $spikes[$i - 1]['end'] * 5;
+                    $prevEndMinute = ($spikes[$i - 1]['end'] + 1) * 5; // +1 to start counting from next interval
                     $currStartMinute = $spikes[$i]['start'] * 5;
                     $sincePrevEnd = round(($currStartMinute - $prevEndMinute) / 60, 1);
+                    
                     $ordinalText = match($i + 1) {
                         2 => "kedua",
                         3 => "ketiga",
@@ -526,8 +776,11 @@
                         8 => "kedelapan",
                         default => "ke-" . ($i + 1),
                     };
+                    
                     $label = ($i == count($spikes) - 1) ? "Spike terakhir ($ordinalText)" : "Spike $ordinalText";
-                    $texts[] = "$label terjadi pada $sincePrevEnd jam setelah spike " . ($i == 1 ? "pertama" : "kedua") . ", selama $durationFormatted";
+                    $texts[] = "$label terjadi $sincePrevEnd jam setelah spike sebelumnya, dengan durasi total $durationFormatted "
+                            . "(kenaikan selama " . ($spikes[$i]['duration'] * 5) . " menit dan penurunan selama " 
+                            . ($spikes[$i]['fall_duration'] * 5) . " menit)";
                 }
             }
 
@@ -543,67 +796,142 @@
 
             $totalIntervalMinutes = 0;
             for ($i = 1; $i < $total; $i++) {
-                $prevEnd = $spikes[$i - 1]['end'] * 5; // menit
+                $prevEnd = ($spikes[$i - 1]['end'] + 1) * 5; // menit (+1 to count from next interval)
                 $currStart = $spikes[$i]['start'] * 5; // menit
                 $interval = $currStart - $prevEnd;
                 $totalIntervalMinutes += $interval;
             }
 
-            $averageIntervalJam = round(($totalIntervalMinutes / ($total - 1)) / 60, 1);
+            $averageIntervalMinutes = $totalIntervalMinutes / ($total - 1);
+            $averageIntervalJam = round($averageIntervalMinutes / 60, 1);
+            $averageFormatted = formatDuration($averageIntervalMinutes);
 
-            return "Total terjadinya spike pada running ABF kali ini sebanyak $total kali, dengan interval $averageIntervalJam jam sekali.";
+            return "Total terjadinya spike sebanyak $total kali dengan interval rata-rata $averageFormatted ($averageIntervalJam jam sekali).";
         }
 
         function formatMenitJam($menit) {
             $jam = round($menit / 60, 1);
             return "$menit menit, atau $jam jam";
         }
-
+        
         function generateSpikeTableRows($spikes) {
             $rows = [];
 
             if (count($spikes) === 0) return '';
 
+            // Format durasi dalam menit dan jam seperti contoh
+            $formatDuration = function($minutes) {
+                $hours = $minutes / 60;
+                return "$minutes menit, atau " . round($hours, 1) . " jam";
+            };
+
             // Durasi dari ON ABF ke Spike 1
             $firstStart = $spikes[0]['start'] * 5;
-            $rows[] = "<tr><td style='padding: 4px;'>Durasi dari ON ABF ke Spike 1</td><td colspan='2' style='padding: 4px;'>" . formatMenitJam($firstStart) . "</td></tr>";
+            $rows[] = "<tr><td style='padding: 4px;'>Durasi dari ON ABF ke Spike 1</td><td style='padding: 4px;'>" 
+                    . $formatDuration($firstStart) . "</td></tr>";
 
-            // Spike 1
-            $durasi1 = $spikes[0]['duration'] * 5;
-            $rows[] = "<tr><td style='padding: 4px;'>Durasi Spike 1</td><td colspan='2' style='padding: 4px;'>{$durasi1} menit</td></tr>";
+            // Durasi Spike 1
+            $durasi1 = ($spikes[0]['duration'] + $spikes[0]['fall_duration']) * 5;
+            $rows[] = "<tr><td style='padding: 4px;'>Durasi Spike 1</td><td style='padding: 4px;'>" 
+                    . $durasi1 . " menit</td></tr>";
 
             for ($i = 1; $i < count($spikes); $i++) {
-                $prevEnd = $spikes[$i - 1]['end'] * 5;
+                // Durasi antar spike
+                $prevEnd = ($spikes[$i - 1]['end'] + 1) * 5; // +1 untuk mulai dari interval berikutnya
                 $thisStart = $spikes[$i]['start'] * 5;
                 $selisih = $thisStart - $prevEnd;
-                $rows[] = "<tr><td style='padding: 4px;'>Durasi dari Spike $i ke Spike " . ($i + 1) . "</td><td colspan='2' style='padding: 4px;'>" . formatMenitJam($selisih) . "</td></tr>";
+                $rows[] = "<tr><td style='padding: 4px;'>Durasi dari Spike $i ke Spike " . ($i + 1) . "</td><td style='padding: 4px;'>" 
+                        . $formatDuration($selisih) . "</td></tr>";
 
-                $durasi = $spikes[$i]['duration'] * 5;
-                $durasiFormat = ($durasi < 60) ? "$durasi menit" : formatMenitJam($durasi);
-                $rows[] = "<tr><td style='padding: 4px;'>Durasi Spike " . ($i + 1) . "</td><td colspan='2' style='padding: 4px;'>$durasiFormat</td></tr>";
+                // Durasi spike
+                $durasi = ($spikes[$i]['duration'] + $spikes[$i]['fall_duration']) * 5;
+                $rows[] = "<tr><td style='padding: 4px;'>Durasi Spike " . ($i + 1) . "</td><td style='padding: 4px;'>" 
+                        . $durasi . " menit</td></tr>";
             }
 
             // Interval rata-rata
             if (count($spikes) > 1) {
                 $totalInterval = 0;
                 for ($i = 1; $i < count($spikes); $i++) {
-                    $prevEnd = $spikes[$i - 1]['end'] * 5;
+                    $prevEnd = ($spikes[$i - 1]['end'] + 1) * 5;
                     $currStart = $spikes[$i]['start'] * 5;
                     $totalInterval += ($currStart - $prevEnd);
                 }
-                $rataJam = round(($totalInterval / (count($spikes) - 1)) / 60, 1);
-                $rows[] = "<tr><td style='padding: 4px;'>Interval terjadinya Spike</td><td colspan='2' style='padding: 4px;'>{$rataJam} jam sekali</td></tr>";
+                $rataInterval = $totalInterval / (count($spikes) - 1);
+                $rataJam = round($rataInterval / 60, 1);
+                $rows[] = "<tr><td style='padding: 4px;'>Interval terjadinya Spike</td><td style='padding: 4px;'>" 
+                        . $formatDuration($rataInterval) . " (" . $rataJam . " jam sekali)</td></tr>";
             }
 
             return implode("\n", $rows);
         }
+        
+        function generateSpikeNarrative($spike, $data, $startTimeStr = '16:15') {
+            $channels = ['ch1','ch2','ch3','ch4','ch5','ch7','ch8','ch9'];
+            
+            // Ubah string menjadi DateTime
+            $startTime = new DateTime($startTimeStr);
+
+            $startMinute = $spike['start'] * 5;
+            $peakMinute = $spike['peak'] * 5;
+            $fallMinute = $spike['fall_duration'] * 5;
+
+            // Hitung jam real dari start spike
+            $startTimestamp = clone $startTime;
+            $startTimestamp->modify("+{$startMinute} minutes");
+            $startJam = $startTimestamp->format('H:i');
+            $jamSetelahON = round($startMinute / 60, 1);
+
+            // Format channel yang signifikan
+            $points = [];
+            foreach ($spike['significant_channels'] as $ch) {
+                $index = array_search($ch, $channels) + 1;
+                $points[] = $index;
+            }
+
+            // Gabungkan angka channel ke dalam bentuk range
+            sort($points);
+            $ranges = [];
+            $start = $end = $points[0];
+            for ($i = 1; $i < count($points); $i++) {
+                if ($points[$i] == $end + 1) {
+                    $end = $points[$i];
+                } else {
+                    $ranges[] = ($start == $end) ? "$start" : "$start-$end";
+                    $start = $end = $points[$i];
+                }
+            }
+            $ranges[] = ($start == $end) ? "$start" : "$start-$end";
+            $titikText = implode(", ", $ranges);
+
+            // Suhu awal - puncak per channel
+            $suhuAwal = $data[$spike['start']];
+            $suhuPuncak = $data[$spike['peak']];
+            $minNaik = 99;
+            $maxNaik = -99;
+
+            foreach ($channels as $ch) {
+                $delta = $suhuPuncak->$ch - $suhuAwal->$ch;
+                $minNaik = min($minNaik, $delta);
+                $maxNaik = max($maxNaik, $delta);
+            }
+
+            $totalDuration = ($spike['duration'] + $spike['fall_duration']) * 5;
+
+            return "Spike pertama dimulai pada titik $titikText pada jam $startJam, atau $jamSetelahON jam setelah ABF dimulai yang disusul oleh titik yang lain pada rentang waktu 5 menit. "
+                . "Kenaikan suhu awal hingga puncak terjadi selama " . ($spike['duration'] * 5) . " menit, "
+                . "dengan suhu awal sampai suhu di puncak spike mengalami kenaikan sebesar " . round($minNaik, 1) . " - " . round($maxNaik, 1) . "&deg;C. "
+                . "Penurunan suhu dari puncak spike sampai ke dasar terjadi selama " . ($spike['fall_duration'] * 5) . " menit "
+                . "dengan penurunan suhu " . round($minNaik, 1) . " - " . round($maxNaik, 1) . " &deg;C. " . "Total durasi terjadinya spike pertama adalah selama $totalDuration menit.";
+        }
+
 
         $spikeDetails = getSpikeDetails($suhuData);
+        $narasiSpike1 = count($spikeDetails) > 0 ? generateSpikeNarrative($spikeDetails[0], $suhuData, $suhuAwal->time) : 'Tidak ada spike terdeteksi.';
     @endphp
 
     {{-- tabel 2 durasi keseluruhan spike --}}
     <div class="row mb-3">
-
         <p>
             Terdapat peristiwa lonjakan suhu sesaat (spike) sebanyak {{ count($spikeDetails) }} kali selama proses blast freezing.
             {{ formatSpikeNarrative($spikeDetails) }} {{ formatSpikeSummary($spikeDetails) }}
@@ -613,13 +941,15 @@
 
         <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
             <tr>
-                <td style="padding: 4px;"></td>
-                <td colspan="2" style="padding: 4px;">Durasi</td>
+                <td style="padding: 1px;"></td>
+                <td style="padding: 1px;">Durasi</td>
             </tr>
             {!! generateSpikeTableRows($spikeDetails) !!}
         </table>
         <p style="text-align: center;"> <strong>Tabel 2.</strong> Durasi Keseluruhan Terjadinya Spike</p>
 
+        <p>{!! $narasiSpike1 !!}</p>
+        <p>Data terkait peristiwa spike dituangkan dalam tabel berikut ini:</p>
     </div>
 
     {{-- tabel 3 durasi ketiga spike  --}}
@@ -1162,6 +1492,7 @@
                         '0c' => '',
                         '-18c' => '',
                         'penurunan_terlama' => '',
+                        'summary_18c' => '' // Tambahan untuk output yang diminta
                     ]
                 ];
 
@@ -1251,9 +1582,17 @@
                     $results['narratives']['penurunan_terlama'] = "Artinya, sejak pencapaian suhu nol hingga pencapaian target pada suhu -18&nbsp;&deg;C, " . ucfirst($maxDropTitik) . " memiliki penurunan yang terlama dibandingkan dengan titik yang lain.";
                 }
 
+                // Menambahkan output yang diminta
+                $durations18c = collect($results['-18c']['durations'])->filter(fn($d) => $d !== 'N/A');
+                if ($durations18c->isNotEmpty()) {
+                    $minDuration = $durations18c->min();
+                    $maxDuration = $durations18c->max();
+                    $results['narratives']['summary_18c'] = "Durasi waktu yang dibutuhkan griller pada ABF agar penetrasi suhu mencapai -18 &deg;C adalah selama {$minDuration} jam (tercepat) dan {$maxDuration} jam (terlama).";
+                }
+
                 return $results;
             }
-
+            
             $achievementData = generateTemperatureAchievementTable($suhuData);
         @endphp
 
@@ -1316,12 +1655,8 @@
     <div class="row mb-3">
         <h3 class="mb-3" style="margin-bottom: 1rem;">G. KESIMPULAN</h3>
         <ul style="list-style-type: none;">
-            <li>1. Hasil akhir persebaran suhu pada ABF 3 memiliki perbedaan pembacaan pada titik tertinggi-terendah sebesar 3,6 °C. Rentang tersebut tergolong homogen, mengingat
-                banyaknya produk yang dimasukkan ke dalam ABF dan pemilihan jenis rak. Apabila user ingin menjadikan hasil validasi ini sebagai acuan, maka dapat menggunakan titik
-                yang capaian suhunya tertinggi</li>
-            <li>2. Durasi waktu yang dibutuhkan griller pada ABF 3 agar penetrasi suhu mencapai -18 C adalah selama 13,1 jam (tercepat) dan 16,8 jam (terlama). Perlu dilakukan penyesuaian
-                dalam hal penataan dan pemilihan rak, apabila user menginginkan hasil yang seragam.
-               </li>
+            <li>1. {!!  $hasilPersebaran !!}</li>
+            <li>2. {!! $achievementData['narratives']['summary_18c'] ?? '' !!}</li>
         </ul>
     </div>
 </body>
