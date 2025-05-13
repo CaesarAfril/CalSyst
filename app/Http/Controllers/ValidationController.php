@@ -280,7 +280,7 @@ class ValidationController extends Controller
                             'text' => 'Suhu (°C)'
                         ],
                         'ticks' => [
-                            'stepSize' => 5
+                            'stepSize' => 5,
                         ]
                     ],
                     'x' => [
@@ -305,7 +305,10 @@ class ValidationController extends Controller
             'suhuData' => $suhuData,
             'chartUrl' => $chartUrl,
             'chartUrlPenetrasi' => $chartUrlPenetrasi,
-        ])->setOptions(['isRemoteEnabled' => true]);
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
 
         return $pdf->stream('laporan-abf-' . $dataABF->nama_produk . '.pdf');
     }
