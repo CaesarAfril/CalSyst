@@ -32,7 +32,7 @@
                         <div class="modal-body">
                             <!-- Plant Name Input -->
                             <div class="mb-3">
-                                <label for="Plant_name" class="form-label">Nama Plant</label>
+                                <label for="plant_name" class="form-label">Nama Plant</label>
                                 <input
                                     type="text"
                                     class="form-control"

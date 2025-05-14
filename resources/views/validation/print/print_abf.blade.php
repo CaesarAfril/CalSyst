@@ -115,7 +115,7 @@
                     </table>
                 </td>
                 <td style="text-align: center; vertical-align: middle;">
-                    <h2 style="margin-left: -10rem; text-transform: uppercase;">
+                    <h2 style="margin-left: -12rem; text-transform: uppercase;">
                         HASIL VALIDASI MESIN {{ $dataABF->nama_mesin }}<br>
                         {{ $dataABF->lokasi }}
                     </h2>
@@ -317,7 +317,10 @@
             $suhuAwalMax = null;
             $suhuAkhirMax = null;
 
-            for ($i = 1; $i <= 10; $i++) {
+            for ($i = 1; $i <= 9; $i++) {
+
+                if ($i === 6) continue;
+
                 $chKey = 'ch' . $i;
 
                 if (isset($suhuAwal->$chKey) && isset($suhuAkhir->$chKey)) {
@@ -346,7 +349,7 @@
             $suhuAwalMin = null;
             $suhuAkhirMin = null;
 
-            for ($i = 1; $i <= 10; $i++) {
+            for ($i = 1; $i <= 9; $i++) {
                 // skip ch6 karena tidak digunakan
                 if ($i === 6) continue;
 
@@ -376,7 +379,7 @@
             // selisih akhir
             $suhuAkhirData = [];
 
-            for ($i = 1; $i <= 10; $i++) {
+            for ($i = 1; $i <= 9; $i++) {
                 if ($i === 6) continue; // lewati ch6
                 $chKey = 'ch' . $i;
 
@@ -936,9 +939,7 @@
             Terdapat peristiwa lonjakan suhu sesaat (spike) sebanyak {{ count($spikeDetails) }} kali selama proses blast freezing.
             {{ formatSpikeNarrative($spikeDetails) }} {{ formatSpikeSummary($spikeDetails) }}
         </p>
-
         <p>Data terkait durasi spike dituangkan dalam tabel berikut ini:</p>
-
         <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
             <tr>
                 <td style="padding: 1px;"></td>
@@ -947,7 +948,6 @@
             {!! generateSpikeTableRows($spikeDetails) !!}
         </table>
         <p style="text-align: center;"> <strong>Tabel 2.</strong> Durasi Keseluruhan Terjadinya Spike</p>
-
         <p>{!! $narasiSpike1 !!}</p>
         <p>Data terkait peristiwa spike dituangkan dalam tabel berikut ini:</p>
     </div>
@@ -1242,7 +1242,7 @@
     <div class="row mb-3">
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut: </p>
         <img src="{{ $chartUrlPenetrasi }}" style="width: 100%; margin: auto;">
-        <p style="text-align: center;"> <strong>Grafik 2.</strong> Penetrasi Produk (Griller) Pada ABF 6</p>
+        <p style="text-align: center;"> <strong>Grafik 2.</strong> Penetrasi Produk (Griller) Pada ABF</p>
 
         <p>Data terkait stagnansi suhu ini dituangkan ke dalam tabel sebagai berikut:</p>
     </div>
@@ -1595,7 +1595,7 @@
             
             $achievementData = generateTemperatureAchievementTable($suhuData);
         @endphp
-
+        
         <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
             <thead>
                 <tr>

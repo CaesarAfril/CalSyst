@@ -50,7 +50,9 @@ class ReportController extends Controller
         $expired = Carbon::parse($request->tanggal)->addMonths(6);
 
         // Construct the certificate number
-        $certificate = $asset->plant->abbreviaton . '/' . $monthRoman . '/' . $year;
+        $rowNumber = $this->getRowNumberForCalibration($tanggal, $year);
+        $certificate = $rowNumber . '/' . $asset->plant->abbreviaton . '/' . $monthRoman . '/' . $year;
+
         try {
             \DB::beginTransaction();
 
@@ -146,7 +148,9 @@ class ReportController extends Controller
         $expired = Carbon::parse($request->tanggal)->addMonths(6);
 
         // Construct the certificate number
-        $certificate = $asset->plant->abbreviaton . '/' . $monthRoman . '/' . $year;
+        $rowNumber = $this->getRowNumberForCalibration($tanggal, $year);
+        $certificate = $rowNumber . '/' . $asset->plant->abbreviaton . '/' . $monthRoman . '/' . $year;
+
         try {
             \DB::beginTransaction();
 
@@ -240,7 +244,9 @@ class ReportController extends Controller
         $monthRoman = $this->toRoman($tanggal->month);
         $year = $tanggal->year;
         $expired = Carbon::parse($request->tanggal)->addMonths(6);
-        $certificate = $asset->plant->abbreviaton . '/' . $monthRoman . '/' . $year;
+
+        $rowNumber = $this->getRowNumberForCalibration($tanggal, $year);
+        $certificate = $rowNumber . '/' . $asset->plant->abbreviaton . '/' . $monthRoman . '/' . $year;
 
         try {
             \DB::beginTransaction();
@@ -384,5 +390,22 @@ class ReportController extends Controller
         }
 
         return redirect()->route($redirectRoute)->with('error', 'Data tidak ditemukan');
+    }
+
+    private function getRowNumberForCalibration(Carbon $tanggal, $year): int
+    {
+        // Fetch all calibrations from the year and merge them
+        $all = collect([
+            ...Temp_calibration::whereYear('date', $year)->select('uuid', 'date')->get()->map(fn($i) => ['type' => 'temp', 'uuid' => $i->uuid, 'date' => $i->date]),
+            ...Scale_calibration::whereYear('date', $year)->select('uuid', 'date')->get()->map(fn($i) => ['type' => 'scale', 'uuid' => $i->uuid, 'date' => $i->date]),
+            ...Display_calibration::whereYear('date', $year)->select('uuid', 'date')->get()->map(fn($i) => ['type' => 'display', 'uuid' => $i->uuid, 'date' => $i->date]),
+        ])
+            ->sortBy('date')
+            ->values();
+
+        // Count how many entries are before or on the given date (including the current one)
+        return $all->filter(function ($item) use ($tanggal) {
+            return $item['date'] <= $tanggal;
+        })->count() + 1; // Add 1 for the current row
     }
 }

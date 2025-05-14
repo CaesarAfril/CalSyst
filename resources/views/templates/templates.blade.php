@@ -12,11 +12,11 @@
     <meta charset="utf-8" />
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+        content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
 
     <title>CalSys</title>
 
-    <meta name="description" content="" />
+    <meta name="description" content="web kalibrasi dan validasi" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
@@ -26,36 +26,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
 
     <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/fonts/boxicons.css" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/fonts/boxicons.css" rel="preload" as="style"  />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/css/demo.css" />
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/added.css" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/css/core.css" class="template-customizer-core-css" rel="preload" as="style"  />
+    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" rel="preload" as="style"  />
+    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/css/demo.css" rel="preload" as="style"  />
+    <link rel="stylesheet" href="{{ asset('assets') }}/css/added.css" rel="preload" as="style"  />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-    <link rel="stylesheet" href="{{ asset('font/css/all.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/libs/apex-charts/apex-charts.css" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" rel="preload" as="style"  />
+    <link rel="stylesheet" href="{{ asset('font/css/all.css') }}" rel="preload" as="style"  />
+    <link rel="stylesheet" href="{{ asset('assets') }}/sneat/assets/vendor/libs/apex-charts/apex-charts.css" rel="preload" as="style"  />
 
     <!-- Page CSS -->
 
     <!-- Helpers -->
-    <script src="{{ asset('assets') }}/sneat/assets/vendor/js/helpers.js"></script>
+    <script src="{{ asset('assets') }}/sneat/assets/vendor/js/helpers.js" defer></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="{{ asset('assets') }}/sneat/assets/js/config.js"></script>
+    <script src="{{ asset('assets') }}/sneat/assets/js/config.js" defer></script>
 
-    <script type="text/javascript" src="{{ asset('assets') }}/dist/sweetalert2.all.min.js"></script>
+    <script type="text/javascript" src="{{ asset('assets') }}/dist/sweetalert2.all.min.js" defer></script>
     <!-- <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script> -->
-    <script src="https://code.jquery.com/jquery-3.7.0.slim.js" integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.slim.js" integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c=" crossorigin="anonymous" defer></script>
 
     <!-- Script dari perpus -->
-    <script type="text/javascript" src="{{ asset('assets') }}/js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="{{ asset('assets') }}/js/bootstrap.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ asset('assets') }}/js/jquery-3.2.1.min.js" defer></script>
+    <script type="text/javascript" src="{{ asset('assets') }}/js/bootstrap.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" defer></script>
 
 </head>
 <style>
@@ -420,7 +420,7 @@
                 <!-- Navbar -->
                 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-                        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)" aria-label="hamburger">
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
                     </div>
@@ -433,7 +433,7 @@
                             </div>
                         </div>
 
-                        <ul class="navbar-nav flex-row align-items-center ms-auto" style="width:150px">
+                        <div class="navbar-nav flex-row align-items-center ms-auto" style="width:150px">
                             <div class="btn-group dropleft">
                                 <button type="button" class="btn btn-primary dropdown-toggle hide-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="bx bx-dots-vertical-rounded"></i>
@@ -448,7 +448,7 @@
                                 </div>
                             </div>
                             </a>
-                        </ul>
+                        </div>
                     </div>
                 </nav>
                 <!-- / Navbar -->
@@ -499,7 +499,7 @@
     </div>
     <!-- / Layout wrapper -->
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script>
         $(document).click(function() {
             var id_packing = $(this).attr();
@@ -526,23 +526,23 @@
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
-    <script src="{{ asset('assets') }}/sneat/assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="{{ asset('assets') }}/sneat/assets/vendor/libs/popper/popper.js"></script>
-    <script src="{{ asset('assets') }}/sneat/assets/vendor/js/bootstrap.js"></script>
-    <script src="{{ asset('assets') }}/sneat/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <script type="text/javascript" src="{{ asset('assets') }}/dist/sweetalert2.all.min.js"></script>
+    <script src="{{ asset('assets') }}/sneat/assets/vendor/libs/jquery/jquery.js" defer></script>
+    <script src="{{ asset('assets') }}/sneat/assets/vendor/libs/popper/popper.js" defer></script>
+    <script src="{{ asset('assets') }}/sneat/assets/vendor/js/bootstrap.js" defer></script>
+    <script src="{{ asset('assets') }}/sneat/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js" defer></script>
+    <script type="text/javascript" src="{{ asset('assets') }}/dist/sweetalert2.all.min.js" defer></script>
 
-    <script src="{{ asset('assets') }}/sneat/assets/vendor/js/menu.js"></script>
+    <script src="{{ asset('assets') }}/sneat/assets/vendor/js/menu.js" defer></script>
     <!-- endbuild -->
 
     <!-- Vendors JS -->
-    <script src="{{ asset('assets') }}/sneat/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    {{-- <script src="{{ asset('assets') }}/sneat/assets/vendor/libs/apex-charts/apexcharts.js"></script> --}}
 
     <!-- Main JS -->
-    <script src="{{ asset('assets') }}/sneat/assets/js/main.js"></script>
+    <script src="{{ asset('assets') }}/sneat/assets/js/main.js" defer></script>
 
     <!-- Page JS -->
-    <script src="{{ asset('assets') }}/sneat/assets/js/dashboards-analytics.js"></script>
+    <script src="{{ asset('assets') }}/sneat/assets/js/dashboards-analytics.js" defer></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
