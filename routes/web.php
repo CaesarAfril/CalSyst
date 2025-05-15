@@ -126,6 +126,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/toggle/{table}', [DashboardController::class, 'toggleTableVisibility'])->name('dashboard.toggleTable');
 
+    Route::post('/validation_asset/send-warning', [Validation_assetController::class, 'sendEarlyWarning'])->name('validation_asset.sendWarning');
+    Route::post('/validation-asset/early-warning-2', [Validation_assetController::class, 'sendEarlyWarning2'])->name('validation_asset.sendEarlyWarning2');
+
     Route::get('/validation/slaughterhouse/screwchiller', [ValidationController::class, 'screwChiller'])->name('slaughterhouse-screwchiller');
     Route::get('/validation/slaughterhouse/ABF', [ValidationController::class, 'ABF'])->name('slaughterhouse-ABF');
     Route::get('/validation/slaughterhouse/IQF', [ValidationController::class, 'IQF'])->name('slaughterhouse-IQF');
@@ -137,10 +140,19 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/validation/sausage/smoke-house', [ValidationController::class, 'smokeHouse'])->name('sausage-smoke-house');
 
+    Route::get('/validation/sausage/smoke-house-fessmann', [ValidationController::class, 'smokeHouseFessmann'])->name('sausage-smoke-house-fessmann');
+
     Route::get('/validation/breadcrumb/aging', [ValidationController::class, 'aging'])->name('breadcrumb-aging');
 
-    Route::post('/validation_asset/send-warning', [Validation_assetController::class, 'sendEarlyWarning'])->name('validation_asset.sendWarning');
-    Route::post('/validation-asset/early-warning-2', [Validation_assetController::class, 'sendEarlyWarning2'])->name('validation_asset.sendEarlyWarning2');
+    Route::get('/validation/laboratory/autoclave1', [ValidationController::class, 'autoclave1'])->name('laboratory-autoclave1');
+
+    Route::get('/validation/laboratory/autoclave2', [ValidationController::class, 'autoclave2'])->name('laboratory-autoclave2');
+
+    Route::get('/validation/laboratory/ovenmemert1', [ValidationController::class, 'ovenMemert1'])->name('laboratory-ovenmemert1');
+
+    Route::get('/validation/laboratory/ovenmemert2', [ValidationController::class, 'ovenMemert2'])->name('laboratory-ovenmemert2');
+
+
 
     Route::get('report/validation/addDataScrewchiller', [ValidationController::class, 'screwChiller_addData'])->name('report.validation.addDataScrewchiller');
     Route::get('report/validation/addDataABF', [ValidationController::class, 'ABF_addData'])->name('report.validation.addDataABF');
@@ -150,10 +162,41 @@ Route::middleware(['auth'])->group(function () {
     Route::get('report/validation/addDataFryerMarel', [ValidationController::class, 'fryerMarel_addData'])->name('report.validation.addDataFryerMarel');
     Route::get('report/validation/addDatahiCook', [ValidationController::class, 'hiCook_addData'])->name('report.validation.addDatahiCook');
     Route::get('report/validation/addDataSmokeHouse', [ValidationController::class, 'smokeHouse_addData'])->name('report.validation.addDataSmokeHouse');
+    Route::get('report/validation/addDataSmokeHouseFessmann', [ValidationController::class, 'smokeHouseFessmann_addData'])->name('report.validation.addDataSmokeHouseFessmann');
     Route::get('report/validation/addDataAging', [ValidationController::class, 'aging_addData'])->name('report.validation.addDataAging');
+    Route::get('report/validation/addDataAutoclave1', [ValidationController::class, 'autoclave1_addData'])->name('report.validation.addDataAutoclave1');
+    Route::get('report/validation/addDataAutoclave2', [ValidationController::class, 'autoclave2_addData'])->name('report.validation.addDataAutoclave2');
+    Route::get('report/validation/addDataOvenmemert1', [ValidationController::class, 'ovenMemert1_addData'])->name('report.validation.addDataOvenmemert1');
+    Route::get('report/validation/addDataOvenmemert2', [ValidationController::class, 'ovenMemert2_addData'])->name('report.validation.addDataOvenmemert2');
 
     Route::post('/validation/abf/store', [ValidationController::class, 'storeABF'])->name('validation.storeABF');
     Route::delete('/validation/abf/{id}', [ValidationController::class, 'deleteABF'])->name('validation.abf.delete');
     Route::get('/validation/abf/print/{id}', [ValidationController::class, 'printABF'])->name('report.abf.print');
+
+    Route::get('/validation/iqf/print', [ValidationController::class, 'printIQF'])->name('report.iqf.print');
+
+    Route::get('/validation/screwchiller/print', [ValidationController::class, 'printScrewChiller'])->name('report.screwchiller.print');
+
+    Route::get('/validation/fryer1/print', [ValidationController::class, 'printFryer1'])->name('report.fryer1.print');
+
+    Route::get('/validation/fryer2/print', [ValidationController::class, 'printFryer2'])->name('report.fryer2.print');
+
+    Route::get('/validation/fryerMarel/print', [ValidationController::class, 'printFryerMarel'])->name('report.fryerMarel.print');
+
+    Route::get('/validation/hiCook/print', [ValidationController::class, 'printHicook'])->name('report.hiCook.print');
+
+    Route::get('/validation/smokeHouse/print', [ValidationController::class, 'printSmokehouse'])->name('report.smokeHouse.print');
+
+    Route::get('/validation/smokeHouseFessmann/print', [ValidationController::class, 'printSmokehouseFessmann'])->name('report.smokeHouseFessmann.print');
+
+    Route::get('/validation/aging/print', [ValidationController::class, 'printAging'])->name('report.aging.print');
+
+    Route::get('/validation/autoclave1/print', [ValidationController::class, 'printAutoclave1'])->name('report.autoclave1.print');
+
+    Route::get('/validation/autoclave2/print', [ValidationController::class, 'printAutoclave2'])->name('report.autoclave2.print');
+
+    Route::get('/validation/ovenmemert1/print', [ValidationController::class, 'printOvenmemert1'])->name('report.ovenmemert1.print');
+
+    Route::get('/validation/ovenmemert2/print', [ValidationController::class, 'printOvenmemert2'])->name('report.ovenmemert2.print');
 
 });

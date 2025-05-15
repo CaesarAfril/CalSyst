@@ -7,7 +7,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\AbfValidation;
 use App\Models\SuhuAbfAll;
 use PDF;
-use App\Imports\PenetrasiSuhuImport;
 use Illuminate\Support\Facades\Storage;
 \Carbon\Carbon::setLocale('id');
 use Illuminate\Support\Facades\DB;
@@ -23,6 +22,17 @@ class ValidationController extends Controller
     public function screwChiller_addData()
     {
         return view('validation.store.store_screwchiller');
+    }
+
+    public function printScrewChiller()
+    {
+        $pdf = PDF::loadView('validation.print.print_screwChiller', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-screwchiller.pdf');
     }
 
     public function ABF()
@@ -109,6 +119,7 @@ class ValidationController extends Controller
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
     public function deleteABF($id)
     {
         $data = AbfValidation::findOrFail($id);
@@ -119,9 +130,9 @@ class ValidationController extends Controller
 
     public function printABF($id)
     {
-        $dataABF = AbfValidation::findOrFail($id);
-        $suhuData = SuhuAbfAll::where('abf_validation_id', $id)
-            ->get();
+        $dataABF = AbfValidation::with('suhuAbfAll')->findOrFail($id);
+
+        $suhuData = $dataABF->suhuAbfAll;
 
         $suhuAwal = $suhuData->first();
         $suhuAkhir = $suhuData->last();
@@ -323,17 +334,38 @@ class ValidationController extends Controller
         return view('validation.store.store_IQF');
     }
 
+    public function printIQF()
+    {
+        $pdf = PDF::loadView('validation.print.print_IQF', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-IQF.pdf');
+    }
+
     // further
     public function fryer1()
     {
         return view('validation.further.fryer1');
     }
 
+    public function printFryer1()
+    {
+        $pdf = PDF::loadView('validation.print.print_fryer1', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-fryer1.pdf');
+    }
+
     public function fryer1_addData()
     {
         return view('validation.store.store_fryer1');
     }
-
 
     public function fryer2()
     {
@@ -343,6 +375,17 @@ class ValidationController extends Controller
     public function fryer2_addData()
     {
         return view('validation.store.store_fryer2');
+    }
+
+    public function printFryer2()
+    {
+        $pdf = PDF::loadView('validation.print.print_fryer2', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-fryer2.pdf');
     }
 
     public function fryerMarel()
@@ -355,6 +398,17 @@ class ValidationController extends Controller
         return view('validation.store.store_fryerMarel');
     }
 
+    public function printFryerMarel()
+    {
+        $pdf = PDF::loadView('validation.print.print_fryerMarel', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-fryer-marel.pdf');
+    }
+
     public function hiCook()
     {
         return view('validation.further.hicook');
@@ -363,6 +417,17 @@ class ValidationController extends Controller
     public function hiCook_addData()
     {
         return view('validation.store.store_hiCook');
+    }
+
+    public function printHicook()
+    {
+        $pdf = PDF::loadView('validation.print.print_hiCook', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-hiCook.pdf');
     }
 
     // sausage
@@ -376,6 +441,38 @@ class ValidationController extends Controller
         return view('validation.store.store_smokeHouse');
     }
 
+    public function printSmokehouse()
+    {
+        $pdf = PDF::loadView('validation.print.print_smokeHouse', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-smokehouse.pdf');
+    }
+
+    public function smokeHouseFessmann()
+    {
+        return view('validation.sausage.smokehouse_fessmann');
+    }
+
+    public function smokeHouseFessmann_addData()
+    {
+        return view('validation.store.store_smokeHouse_fessmann');
+    }
+
+    public function printSmokehouseFessmann()
+    {
+        $pdf = PDF::loadView('validation.print.print_smokeHouse_fessmann', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-smokehouse-fessmann.pdf');
+    }
+
     // breadcrumb
     public function aging()
     {
@@ -385,5 +482,101 @@ class ValidationController extends Controller
     public function aging_addData()
     {
         return view('validation.store.store_aging');
+    }
+
+    public function printAging()
+    {
+        $pdf = PDF::loadView('validation.print.print_aging', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-aging.pdf');
+    }
+
+    // laboratory
+    public function autoclave1()
+    {
+        return view('validation.laboratory.autoclave_hl_36_ae');
+    }
+
+    public function autoclave1_addData()
+    {
+        return view('validation.store.store_autoclave1');
+    }
+
+    public function printAutoclave1()
+    {
+        $pdf = PDF::loadView('validation.print.print_autoclave1', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-autoclave1.pdf');
+    }
+
+    public function autoclave2()
+    {
+        return view('validation.laboratory.autoclave_hve_50');
+    }
+
+    public function autoclave2_addData()
+    {
+        return view('validation.store.store_autoclave2');
+    }
+
+    public function printAutoclave2()
+    {
+        $pdf = PDF::loadView('validation.print.print_autoclave2', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-autoclave2.pdf');
+    }
+
+    public function ovenMemert1()
+    {
+        return view('validation.laboratory.ovenmemert1');
+    }
+
+    public function ovenMemert1_addData()
+    {
+        return view('validation.store.store_ovenmemert1');
+    }
+
+    public function printOvenmemert1()
+    {
+        $pdf = PDF::loadView('validation.print.print_ovenmemert1', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-ovenmemert1.pdf');
+    }
+
+    public function ovenMemert2()
+    {
+        return view('validation.laboratory.ovenmemert2');
+    }
+
+    public function ovenMemert2_addData()
+    {
+        return view('validation.store.store_ovenmemert2');
+    }
+
+    public function printOvenmemert2()
+    {
+        $pdf = PDF::loadView('validation.print.print_ovenmemert2', [
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-ovenmemert2.pdf');
     }
 }

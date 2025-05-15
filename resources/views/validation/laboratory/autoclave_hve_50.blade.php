@@ -7,8 +7,8 @@
 <div class="container-xxl flex-grow-1 container-p-y p-0" style="border-radius: 16px;">
     <div class="card px-5 py-5" style="border-radius: 1rem;">
         <h5 class="card-header d-flex justify-content-between align-items-center p-0 mb-4">
-            Fryer Marel
-            <a href="{{ route('report.validation.addDataFryerMarel') }}" class="btn btn-primary">
+            Autoclave HVE-50
+            <a href="{{ route('report.validation.addDataAutoclave2') }}" class="btn btn-primary">
                 +
             </a>
         </h5>
@@ -38,7 +38,7 @@
                             <td>0</td>
                             <td>0</td>
                             <td class="d-flex justify-content-center">
-                                <a href="{{ route('report.fryerMarel.print') }}" class="btn btn-primary btn-sm me-2" target="_blank">
+                                <a href="{{ route('report.autoclave2.print') }}" class="btn btn-primary btn-sm me-2" target="_blank">
                                     Cetak PDF
                                 </a>
                                 <form action="" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
