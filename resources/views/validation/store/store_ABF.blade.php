@@ -2,7 +2,6 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y px-0">
     <div class="card">
-
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}

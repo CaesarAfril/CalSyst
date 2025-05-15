@@ -222,7 +222,7 @@
         <h3>B. TUJUAN</h3>
         <ul style="list-style-type: none;">
             <li>1. Mengetahui kinerja persebaran suhu ABF</li>
-            <li>2. Mengetahui lama waktu yang dibutuhkan griller untuk mencapai suhu -18 °C</li>
+            <li>2. Mengetahui lama waktu yang dibutuhkan griller untuk mencapai suhu -18 &deg;C</li>
         </ul>
     </div>
 
@@ -936,8 +936,7 @@
     {{-- tabel 2 durasi keseluruhan spike --}}
     <div class="row mb-3">
         <p>
-            Terdapat peristiwa lonjakan suhu sesaat (spike) sebanyak {{ count($spikeDetails) }} kali selama proses blast freezing.
-            {{ formatSpikeNarrative($spikeDetails) }} {{ formatSpikeSummary($spikeDetails) }}
+            Terdapat peristiwa lonjakan suhu sesaat (spike) sebanyak {{ count($spikeDetails) }} kali selama proses blast freezing.{{ formatSpikeNarrative($spikeDetails) }} {{ formatSpikeSummary($spikeDetails) }}
         </p>
         <p>Data terkait durasi spike dituangkan dalam tabel berikut ini:</p>
         <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
@@ -1166,46 +1165,47 @@
         <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
             <thead>
                 <tr>
-                <th class="tg-0pky"></th>
-                <th class="tg-0pky">Titik 1</th>
-                <th class="tg-0pky">Titik 2</th>
-                <th class="tg-0pky">titik 3</th>
-                <th class="tg-0pky">titik 4</th>
+                    <th class="tg-0pky"></th>
+                    <th class="tg-0pky">Titik 1</th>
+                    <th class="tg-0pky">Titik 2</th>
+                    <th class="tg-0pky">titik 3</th>
+                    <th class="tg-0pky">titik 4</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                <td class="tg-0pky">SUHU AWAL</td>
-                <td class="tg-0pky">{{ $suhuAwal->titik1 ?? '-' }}</td>
-                <td class="tg-0pky">{{ $suhuAwal->titik2 ?? '-' }}</td>
-                <td class="tg-0pky">{{ $suhuAwal->titik3 ?? '-' }}</td>
-                <td class="tg-0pky">{{ $suhuAwal->titik4 ?? '-' }}</td>
+                    <td class="tg-0pky">SUHU AWAL</td>
+                    <td class="tg-0pky">{{ $suhuAwal->titik1 ?? '-' }}</td>
+                    <td class="tg-0pky">{{ $suhuAwal->titik2 ?? '-' }}</td>
+                    <td class="tg-0pky">{{ $suhuAwal->titik3 ?? '-' }}</td>
+                    <td class="tg-0pky">{{ $suhuAwal->titik4 ?? '-' }}</td>
                 </tr>
                 <tr>
-                <td class="tg-0pky">Durasi sejak start ABF (menit)</td>
-                <td class="tg-0pky" colspan="4">0</td>
+                    <td class="tg-0pky">Durasi sejak start ABF (menit)</td>
+                    <td class="tg-0pky" colspan="4">0</td>
                 </tr>
                 <tr>
-                <td class="tg-0pky">yakni pada jam </td>
-                <td class="tg-0pky" colspan="4">{{ $suhuAwal->time ?? '-' }}</td>
+                    <td class="tg-0pky">yakni pada jam </td>
+                    <td class="tg-0pky" colspan="4">{{ $suhuAwal->time ?? '-' }}</td>
                 </tr>
                 <tr>
-                <td class="tg-0pky">SUHU AKHIR</td>
-                <td class="tg-0pky">{{ $suhuAkhir->titik1 ?? '-' }}</td>
-                <td class="tg-0pky">{{ $suhuAkhir->titik2 ?? '-' }}</td>
-                <td class="tg-0pky">{{ $suhuAkhir->titik3 ?? '-' }}</td>
-                <td class="tg-0pky">{{ $suhuAkhir->titik4 ?? '-' }}</td>
+                    <td class="tg-0pky">SUHU AKHIR</td>
+                    <td class="tg-0pky">{{ $suhuAkhir->titik1 ?? '-' }}</td>
+                    <td class="tg-0pky">{{ $suhuAkhir->titik2 ?? '-' }}</td>
+                    <td class="tg-0pky">{{ $suhuAkhir->titik3 ?? '-' }}</td>
+                    <td class="tg-0pky">{{ $suhuAkhir->titik4 ?? '-' }}</td>
                 </tr>
                 <tr>
-                <td class="tg-0pky">Durasi sejak start ABF</td>
-                <td class="tg-0pky" colspan="4">{{ $durasi }}</td>
+                    <td class="tg-0pky">Durasi sejak start ABF</td>
+                    <td class="tg-0pky" colspan="4">{{ $durasi }}</td>
                 </tr>
                 <tr>
-                <td class="tg-0pky">yakni pada jam </td>
-                <td class="tg-0pky" colspan="4">{{ $suhuAkhir->time ?? '-' }}</td>
+                    <td class="tg-0pky">yakni pada jam </td>
+                    <td class="tg-0pky" colspan="4">{{ $suhuAkhir->time ?? '-' }}</td>
                 </tr>
             </tbody>
         </table>
+
         <p style="text-align: center;"> <strong>Tabel.</strong> Hasil Ketercapaian Suhu Produk</p>
 
         <div>

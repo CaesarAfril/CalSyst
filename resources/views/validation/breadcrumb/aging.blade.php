@@ -38,7 +38,7 @@
                             <td>0</td>
                             <td>0</td>
                             <td class="d-flex justify-content-center">
-                                <a href="" class="btn btn-primary btn-sm me-2" target="_blank">
+                                <a href="{{ route('report.aging.print') }}" class="btn btn-primary btn-sm me-2" target="_blank">
                                     Cetak PDF
                                 </a>
                                 <form action="" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">

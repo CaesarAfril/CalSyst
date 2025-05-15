@@ -34,6 +34,6 @@ class AbfValidation extends Model
 
     public function suhuAbfAll()
     {
-        return $this->hasMany(SuhuAbfAll::class);
+        return $this->hasMany(SuhuAbfAll::class, 'abf_validation_id');
     }
 }
