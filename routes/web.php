@@ -173,6 +173,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/validation/abf/{id}', [ValidationController::class, 'deleteABF'])->name('validation.abf.delete');
     Route::get('/validation/abf/print/{id}', [ValidationController::class, 'printABF'])->name('report.abf.print');
 
+    Route::post('/validation/fryerMarel/store', [ValidationController::class, 'storeFryerMarel'])->name('validation.storeFryerMarel');
+
     Route::get('/validation/iqf/print', [ValidationController::class, 'printIQF'])->name('report.iqf.print');
 
     Route::get('/validation/screwchiller/print', [ValidationController::class, 'printScrewChiller'])->name('report.screwchiller.print');

@@ -18,6 +18,7 @@
                 <thead>
                     <tr class="text-nowrap" style="background-color: rgb(66, 73, 92);">
                         <th style="color: #fff">No.</th>
+                        <th style="color: #fff">Tanggal pengujian</th>
                         <th style="color: #fff">Nama Produk</th>
                         <th style="color: #fff">Nama Mesin</th>
                         <th style="color: #fff">Merek</th>
@@ -30,6 +31,7 @@
                 <tbody>
                     {{-- @forelse ($dataABF as $item) --}}
                         <tr>
+                            <th>0</th>
                             <th>0</th>
                             <td>0</td>
                             <td>0</td>
