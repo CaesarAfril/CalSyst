@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\AbfValidation;
+use App\Models\FryerMarelValidation;
 use App\Models\SuhuAbfAll;
 use PDF;
 use Illuminate\Support\Facades\Storage;
@@ -70,7 +71,6 @@ class ValidationController extends Controller
             'kapasitas_mesin_2' => 'nullable|string',
             'lokasi' => 'nullable|string',
             'alamat' => 'nullable|string',
-            // 'penetrasi_suhu' => 'nullable|mimes:xls,xlsx',
             'all_suhu' => 'required|mimes:xls,xlsx'
         ]);
 
@@ -396,6 +396,39 @@ class ValidationController extends Controller
     public function fryerMarel_addData()
     {
         return view('validation.store.store_fryerMarel');
+    }
+
+    public function storeFryerMarel(Request $request)
+    {
+        $validated = $request->validate([
+            'nama_produk' => 'nullable|string',
+            'ingredient' => 'nullable|string',
+            'kemasan' => 'nullable|string',
+            'nama_mesin' => 'nullable|string',
+            'dimensi' => 'nullable|string',
+            'target_suhu' => 'nullable|string',
+            'start_pengujian' => 'nullable|date',
+            'end_pengujian' => 'nullable|date',
+            'setting_suhu_mesin' => 'nullable|string',
+            'waktu_produk_infeed' => 'nullable|string',
+            'suhu_awal_inti' => 'nullable|string',
+            'suhu_akhir_inti' => 'nullable|string',
+            'batch' => 'nullable|string',
+            'waktu_pemasakan' => 'nullable|string',
+            'nama_mesin_2' => 'nullable|string',
+            'merek_mesin_2' => 'nullable|string',
+            'tipe_mesin_2' => 'nullable|string',
+            'speed_conv_mesin_2' => 'nullable|string',
+            'kapasitas_mesin_2' => 'nullable|string',
+            'lokasi' => 'nullable|string',
+            'alamat' => 'nullable|string',
+            // 'all_suhu' => $filePath,
+        ]);
+
+        FryerMarelValidation::create($validated);
+
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan!');
     }
 
     public function printFryerMarel()
