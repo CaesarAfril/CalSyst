@@ -30,6 +30,10 @@ class FryerMarelValidation extends Model
         'kapasitas_mesin_2',
         'lokasi',
         'alamat',
-        // 'suhu_fryer_marel',
     ];
+
+    public function suhuFryerMarel()
+    {
+        return $this->hasMany(SuhuFryerMarel::class);
+    }
 }

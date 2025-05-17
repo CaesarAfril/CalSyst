@@ -5,8 +5,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\AbfValidation;
-use App\Models\FryerMarelValidation;
 use App\Models\SuhuAbfAll;
+use App\Models\FryerMarelValidation;
+use App\Models\SuhuFryerMarel;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 \Carbon\Carbon::setLocale('id');
@@ -390,7 +391,8 @@ class ValidationController extends Controller
 
     public function fryerMarel()
     {
-        return view('validation.further.fryerMarel');
+        $dataFryerMarel = FryerMarelValidation::latest()->get();
+        return view('validation.further.fryerMarel', compact('dataFryerMarel'));
     }
 
     public function fryerMarel_addData()
@@ -422,24 +424,321 @@ class ValidationController extends Controller
             'kapasitas_mesin_2' => 'nullable|string',
             'lokasi' => 'nullable|string',
             'alamat' => 'nullable|string',
-            // 'all_suhu' => $filePath,
+            'suhu_fryer_marel' => 'required|file|mimes:xls,xlsx',
         ]);
 
-        FryerMarelValidation::create($validated);
+        // Simpan data utama
+        $fryerMarel = FryerMarelValidation::create($validated);
 
+        if ($request->hasFile('suhu_fryer_marel')) {
+            $file = $request->file('suhu_fryer_marel');
 
-        return redirect()->back()->with('success', 'Data berhasil disimpan!');
+            // Simpan file untuk referensi
+            $filePath = $file->store('fryer_marel_temps');
+
+            // Baca data dari Excel
+            $data = Excel::toArray([], $file)[0]; // Ambil sheet pertama
+
+            // Lewati header (baris pertama)
+            $rows = array_slice($data, 1);
+
+            foreach ($rows as $row) {
+                SuhuFryerMarel::create([
+                    'fryer_marel_validation_id' => $fryerMarel->id,
+                    'time' => $row[0] ?? null, // Kolom A (Date&Time)
+                    'speed' => $row[1] ?? null,      // Kolom B (Speed)
+                    'ch1' => $this->parseTemperature($row[2] ?? null),
+                    'ch2' => $this->parseTemperature($row[3] ?? null),
+                    'ch3' => $this->parseTemperature($row[4] ?? null),
+                    'ch4' => $this->parseTemperature($row[5] ?? null),
+                    'ch5' => $this->parseTemperature($row[6] ?? null),
+                    'ch6' => $this->parseTemperature($row[7] ?? null),
+                    'ch7' => $this->parseTemperature($row[8] ?? null),
+                    'ch8' => $this->parseTemperature($row[9] ?? null),
+                    'ch9' => $this->parseTemperature($row[10] ?? null),
+                    'ch10' => $this->parseTemperature($row[11] ?? null),
+                ]);
+            }
+        }
+
+        return redirect('/validation/further/fryer-marel')->with('success', 'Data berhasil disimpan!');
     }
 
-    public function printFryerMarel()
+    private function parseTemperature($value)
     {
+        if (is_null($value)) {
+            return null;
+        }
+
+        // Ubah koma menjadi titik untuk format desimal
+        return str_replace(',', '.', $value);
+    }
+
+    public function deleteFryerMarel($id)
+    {
+        $dataFryerMarel = FryerMarelValidation::findOrFail($id);
+        $dataFryerMarel->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
+    }
+
+    public function printFryerMarel($id, Request $request)
+    {
+        $dataFryerMarel = FryerMarelValidation::with('suhuFryerMarel')->findOrFail($id);
+
+        $suhuData = $dataFryerMarel->suhuFryerMarel;
+        $suhuAwal = $suhuData->first();
+        $suhuAkhir = $suhuData->last();
+
+        // Hitung durasi
+        $duration = $suhuAwal->time && $suhuAkhir->time
+            ? Carbon::parse($suhuAwal->time)->diff(Carbon::parse($suhuAkhir->time))
+            : null;
+
+        // 1. Ambil input dari DB jika ada, jika tidak gunakan input user
+        $settingFromDB = $dataFryerMarel->setting_suhu_mesin; // Asumsi ada kolom di DB
+        $inputRange = $request->input('setting_suhu_mesin', $settingFromDB ?? '155-170');
+
+        // 2. Parse range dengan lebih robust
+        $rangeParts = preg_split('/\s*-\s*/', trim($inputRange), 2);
+
+        // 3. Validasi dan konversi
+        $minSuhu = (float) ($rangeParts[0] ?? 155);
+        $maxSuhu = (float) ($rangeParts[1] ?? $minSuhu + 15); // Default range 15° jika hanya 1 nilai
+
+        // Deteksi anomaly dengan range terbaru
+        $anomalies = $this->detectTemperatureAnomalies($suhuData, $minSuhu, $maxSuhu);
+
+        $conclusion = $this->generateAnomalyConclusion($anomalies, $minSuhu, $maxSuhu);
+
+        $chartFryerMarel = [
+            'type' => 'line',
+            'data' => [
+                'labels' => $suhuData->map(function ($item) {
+                    return \Carbon\Carbon::parse($item->time)->format('H:i');
+                })->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Titik 1',
+                        'data' => $suhuData->pluck('ch1')->toArray(),
+                        'borderColor' => '#FF6384', // Merah muda
+                        'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 2',
+                        'data' => $suhuData->pluck('ch2')->toArray(),
+                        'borderColor' => '#36A2EB', // Biru
+                        'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 3',
+                        'data' => $suhuData->pluck('ch3')->toArray(),
+                        'borderColor' => '#FFCE56', // Kuning
+                        'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 4',
+                        'data' => $suhuData->pluck('ch4')->toArray(),
+                        'borderColor' => '#4BC0C0', // Cyan
+                        'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 5',
+                        'data' => $suhuData->pluck('ch5')->toArray(),
+                        'borderColor' => '#9966FF', // Ungu
+                        'backgroundColor' => 'rgba(153, 102, 255, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 6',
+                        'data' => $suhuData->pluck('ch6')->toArray(),
+                        'borderColor' => '#FF9F40', // Oranye
+                        'backgroundColor' => 'rgba(255, 159, 64, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 7',
+                        'data' => $suhuData->pluck('ch7')->toArray(),
+                        'borderColor' => '#8AC249', // Hijau muda
+                        'backgroundColor' => 'rgba(138, 194, 73, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 8',
+                        'data' => $suhuData->pluck('ch8')->toArray(),
+                        'borderColor' => '#EA5F89', // Merah muda tua
+                        'backgroundColor' => 'rgba(234, 95, 137, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 9',
+                        'data' => $suhuData->pluck('ch9')->toArray(),
+                        'borderColor' => '#0B4F6C', // Biru tua
+                        'backgroundColor' => 'rgba(11, 79, 108, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 10',
+                        'data' => $suhuData->pluck('ch10')->toArray(),
+                        'borderColor' => '#63C8CD', // Biru hijau
+                        'backgroundColor' => 'rgba(99, 200, 205, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ]
+                ]
+            ],
+            'options' => [
+                'elements' => [
+                    'point' => [
+                        'radius' => 0
+                    ]
+                ],
+                'responsive' => true,
+                'plugins' => [
+                    'title' => [
+                        'display' => true,
+                        'text' => 'Grafik Sebaran Suhu Terhadap Waktu'
+                    ],
+                    'legend' => [
+                        'position' => 'bottom'
+                    ]
+                ],
+                'scales' => [
+                    'y' => [
+                        'min' => 0,
+                        'max' => 0,
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Suhu (°C)'
+                        ],
+                        'ticks' => [
+                            'stepSize' => 5
+                        ]
+                    ],
+                    'x' => [
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Waktu'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $chartUrlFryerMarel = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartFryerMarel));
+
         $pdf = PDF::loadView('validation.print.print_fryerMarel', [
+            'dataFryerMarel' => $dataFryerMarel,
+            'suhuAwal' => $suhuAwal,
+            'suhuAkhir' => $suhuAkhir,
+            'suhuData' => $suhuData,
+            'chartUrlFryerMarel' => $chartUrlFryerMarel,
+            'anomalies' => $anomalies,
+            'minSuhu' => $minSuhu,
+            'maxSuhu' => $maxSuhu,
+            'conclusion' => $conclusion,
+            'duration' => $duration
+
         ])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
 
-        return $pdf->stream('laporan-fryer-marel.pdf');
+        return $pdf->stream('laporan-abf-' . $dataFryerMarel->nama_produk . '.pdf');
+    }
+
+    private function detectTemperatureAnomalies($suhuData, $minSuhu, $maxSuhu)
+    {
+        $anomalies = [];
+        $currentAnomalies = [];
+
+        foreach ($suhuData as $data) {
+            $waktu = \Carbon\Carbon::parse($data->time);
+
+            for ($i = 1; $i <= 10; $i++) {
+                $suhu = $data["ch{$i}"] ?? null;
+                $isAnomaly = $suhu !== null && ($suhu < $minSuhu || $suhu > $maxSuhu);
+
+                if ($isAnomaly) {
+                    if (!isset($currentAnomalies[$i])) {
+                        // Catat suhu awal saat pertama kali anomaly terjadi
+                        $currentAnomalies[$i] = [
+                            'titik' => $i,
+                            'start_time' => $waktu,
+                            'end_time' => $waktu,
+                            'suhu_awal_anomali' => $suhu,
+                            'suhu_terakhir' => $suhu,
+                            'status' => $suhu < $minSuhu ? 'Rendah' : 'Tinggi'
+                        ];
+                    } else {
+                        $currentAnomalies[$i]['end_time'] = $waktu;
+                        $currentAnomalies[$i]['suhu_terakhir'] = $suhu;
+                    }
+                } elseif (isset($currentAnomalies[$i])) {
+                    $currentAnomalies[$i]['duration'] =
+                        $currentAnomalies[$i]['start_time']->diffInMinutes($currentAnomalies[$i]['end_time']);
+                    $anomalies[] = $currentAnomalies[$i];
+                    unset($currentAnomalies[$i]);
+                }
+            }
+        }
+
+        // Tambahkan anomaly yang masih berlangsung
+        foreach ($currentAnomalies as $anomaly) {
+            $anomaly['duration'] = $anomaly['start_time']->diffInMinutes($anomaly['end_time']);
+            $anomalies[] = $anomaly;
+        }
+
+        return $anomalies;
+    }
+
+    private function generateAnomalyConclusion($anomalies)
+    {
+        $totalAnomalies = count($anomalies);
+
+        // Inisialisasi variabel analisis
+        $stats = [
+            'low' => 0,
+            'high' => 0,
+            'points' => [],
+            'durations' => [],
+            'examples' => []
+        ];
+
+        foreach ($anomalies as $anomaly) {
+            $stats[$anomaly['status'] === 'Rendah' ? 'low' : 'high']++;
+            $stats['points'][$anomaly['titik']] = true;
+            $stats['durations'][] = $anomaly['duration'];
+            $stats['examples'][] = "Titik {$anomaly['titik']} ({$anomaly['duration']} menit)";
+        }
+
+        // Hitung statistik
+        $pointList = implode(', ', array_keys($stats['points']));
+        $avgDuration = round(array_sum($stats['durations']) / $totalAnomalies);
+        $minDuration = min($stats['durations']);
+        $maxDuration = max($stats['durations']);
+
+        // Bangun kesimpulan deskriptif
+        $conclusion = "<p class='conclusion'>Hasil analisis menunjukkan ";
+        $conclusion .= "terdiri dari {$stats['low']} anomaly di bawah range dan {$stats['high']} anomaly di atas range. ";
+        $conclusion .= "Penyimpangan terjadi di <strong>$pointList</strong> dengan durasi bervariasi antara $minDuration-$maxDuration menit ";
+        $conclusion .= "(rata-rata $avgDuration detik per kejadian). ";
+        $conclusion .= "Anomali tercepat terjadi selama $minDuration menit, sementara yang terlama mencapai $maxDuration menit. ";
+
+        return $conclusion;
     }
 
     public function hiCook()
