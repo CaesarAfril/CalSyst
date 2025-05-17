@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('abf_validation', function (Blueprint $table) {
-            $table->dropColumn('penetrasi_suhu');
-            $table->dropColumn('suhu_awal_penetrasi');
-            $table->dropColumn('suhu_akhir_penetrasi');
+            // $table->dropColumn('penetrasi_suhu');
+            // $table->dropColumn('suhu_awal_penetrasi');
+            // $table->dropColumn('suhu_akhir_penetrasi');
         });
     }
 
@@ -24,9 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('abf_validation', function (Blueprint $table) {
-            $table->string('penetrasi_suhu')->nullable();
-            $table->json('suhu_awal_penetrasi')->nullable();
-            $table->json('suhu_akhir_penetrasi')->nullable();
+            // $table->string('penetrasi_suhu')->nullable();
+            // $table->json('suhu_awal_penetrasi')->nullable();
+            // $table->json('suhu_akhir_penetrasi')->nullable();
         });
     }
 };

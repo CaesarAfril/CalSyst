@@ -132,7 +132,7 @@
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
                         <label for="suhu_fryer_marel" class="form-label">Data sebaran suhu dan suhu pusat produk</label>
-                        {{-- <input class="form-control" type="file" name="suhu_fryer_marel" id="suhu_fryer_marel" accept=".xls,.xlsx" required> --}}
+                        <input class="form-control" type="file" name="suhu_fryer_marel" id="suhu_fryer_marel" accept=".xls,.xlsx" required>
                     </div>
                 </div>
 
