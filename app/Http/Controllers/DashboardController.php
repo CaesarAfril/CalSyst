@@ -26,7 +26,7 @@ class DashboardController extends Controller
             'latest_scale_calibration',
         ])->get();
 
-        $onTrackAsset = External_calibration::with(['asset', 'latestCalibrationFile'])->get();
+        $onTrackAsset = External_calibration::with(['asset', 'latestCalibrationFile'])->where('status', NULL)->get();
 
         $progressTimeline = [
             'Persiapan Pengajuan' => 0,
