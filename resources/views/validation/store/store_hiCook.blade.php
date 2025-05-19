@@ -21,35 +21,6 @@
             <form action="" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row mb-3">
-                    <div class="d-flex justify-center align-content-center align-items-center mb-3">
-                        <div class="col-sm-2">
-                            <label for="start_pengujian" class="form-label">Waktu Mulai Pengujian</label>
-                        </div>
-                        <div class="col-sm-10">
-                            <input type="datetime-local" name="start_pengujian" id="start_pengujian" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-center align-content-center align-items-center mb-3">
-                        <div class="col-sm-2">
-                            <label for="end_pengujian" class="form-label">Waktu Akhir Pengujian</label>
-                        </div>
-                        <div class="col-sm-10">
-                            <input type="datetime-local" name="end_pengujian" id="end_pengujian" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-center align-content-center align-items-center mb-3">
-                        <div class="col-sm-2">
-                            <label for="pengujian" class="form-label">Pengujian Ke</label>
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="number" name="pengujian" id="pengujian" class="form-control" placeholder="Masukkan nilai pengujian" required >
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
                         <label for="nama_produk" class="form-label">Nama Produk</label>
                         <input type="text" name="nama_produk" id="nama_produk" class="form-control" placeholder="Masukkan nama produk" required>
@@ -70,30 +41,56 @@
                         <label for="dimensi" class="form-label">Dimensi (p x l x t) </label>
                         <input type="text" name="dimensi" id="dimensi" class="form-control" placeholder="Masukkan dimesni (p x l x t)" required>
                     </div>
-                    <div class="col-sm-6 mb-3">
-                        <label for="kapasitas" class="form-label">Kapasitas Hi Cook</label>
-                        <input type="text" name="kapasitas" id="kapasitas" class="form-control" placeholder="Masukkan kapasitas" required>
-                    </div>
-                    <div class="col-sm-6 mb-3">
-                        <label for="susuan" class="form-label">Jumlah susunan dalam rak</label>
-                        <input type="text" name="susunan" id="susunan" class="form-control" placeholder="Masukkan jumlah susunan" required>
-                    </div>
-                    <div class="col-sm-6 mb-3">
-                        <label for="isi_rak" class="form-label">Isi rak saat pengujian</label>
-                        <input type="text" name="isi_rak" id="isi_rak" class="form-control" placeholder="Masukkan isi rak" required>
-                    </div>
-                    <div class="col-sm-6 mb-3">
-                        <label for="penumpukan" class="form-label">Penumpukan produk</label>
-                        <input type="text" name="penumpukan" id="penumpukan" class="form-control" placeholder="Masukkan penumpukan produk" required>
-                    </div>
 
                     <div class="col-sm-6 mb-3">
                         <label for="target_suhu" class="form-label">Target suhu inti produk</label>
                         <input type="text" name="target_suhu" id="target_suhu" class="form-control" placeholder="Masukkan target suhu inti produk" required>
                     </div>
+                </div>
+
+                {{-- time --}}
+                <div class="row mb-3">
+                    <div class="d-flex justify-center align-content-center align-items-center mb-3">
+                        <div class="col-sm-2">
+                            <label for="start_pengujian" class="form-label">Waktu Mulai Pengujian</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <input type="datetime-local" name="start_pengujian" id="start_pengujian" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-center align-content-center align-items-center mb-3">
+                        <div class="col-sm-2">
+                            <label for="end_pengujian" class="form-label">Waktu Akhir Pengujian</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <input type="datetime-local" name="end_pengujian" id="end_pengujian" class="form-control" required>
+                        </div>
+                    </div>
+
                     <div class="col-sm-6 mb-3">
-                        <label for="set_thermostat" class="form-label">Set suhu thermostat</label>
-                        <input type="text" name="set_thermostat" id="set_thermostat" class="form-control" placeholder="Masukkan set suhu" required>
+                        <label for="setting_suhu_mesin" class="form-label">Setting Suhu Mesin</label>
+                        <input type="text" name="setting_suhu_mesin" id="setting_suhu_mesin" class="form-control" placeholder="Masukkan setting suhu mesin" required>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="waktu_produk_infeed" class="form-label">Waktu Produk Dari Infeed ke Outfeed</label>
+                        <input type="time" step="0.001" name="waktu_produk_infeed" id="waktu_produk_infeed" class="form-control"  placeholder="HH:MM:SS.MS (contoh: 14:30:15.123)" required>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="suhu_awal_inti" class="form-label">Suhu Awal Inti Produk</label>
+                        <input type="text" name="suhu_awal_inti" id="suhu_awal_inti" class="form-control" placeholder="Masukkan suhu awal" required>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="suhu_akhir_inti" class="form-label">Suhu Akhir Inti Produk</label>
+                        <input type="text" name="suhu_akhir_inti" id="suhu_akhir_inti" class="form-control" placeholder="Masukkan suhu akhir" required>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="batch" class="form-label">batch ke-</label>
+                        <input type="text" name="batch" id="batch" class="form-control" placeholder="Masukkan batch" required>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="waktu_pemasakan" class="form-label">Waktu Pemasakan</label>
+                        <input type="time" step="0.001" name="waktu_pemasakan" id="waktu_pemasakan" class="form-control"  placeholder="HH:MM:SS.MS (contoh: 14:30:15.123)" required>
                     </div>
                 </div>
 
@@ -111,15 +108,15 @@
                         <input type="text" name="tipe_mesin_2" id="tipe_mesin_2" class="form-control" placeholder="Masukkan tipe" required>
                     </div>
                     <div class="col-sm-6 mb-3">
-                        <label for="freon_mesin_2" class="form-label">Freon</label>
-                        <input type="text" name="freon_mesin_2" id="freon_mesin_2" class="form-control" placeholder="Masukkan freon" required>
+                        <label for="speed_conv_mesin_2" class="form-label">Speed Conv</label>
+                        <input type="text" name="speed_conv_mesin_2" id="speed_conv_mesin_2" class="form-control" placeholder="Masukkan Speed" required>
                     </div>
                     <div class="col-sm-6 mb-3">
                         <label for="kapasitas_mesin_2" class="form-label">Kapasitas</label>
                         <input type="text" name="kapasitas_mesin_2" id="kapasitas_mesin_2" class="form-control" placeholder="Masukkan kapasitas" required>
                     </div>
                 </div>
-
+                
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
                         <label for="lokasi" class="form-label">Lokasi</label>
@@ -134,8 +131,8 @@
                 {{-- import all suhu excel --}}
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
-                        <label for="all_suhu" class="form-label">Data sebaran suhu dan suhu pusat produk</label>
-                        <input class="form-control" type="file" name="all_suhu" id="all_suhu" accept=".xls,.xlsx" required>
+                        <label for="suhu_fryer_marel" class="form-label">Data sebaran suhu dan suhu pusat produk</label>
+                        <input class="form-control" type="file" name="suhu_fryer_marel" id="suhu_fryer_marel" accept=".xls,.xlsx" required>
                     </div>
                 </div>
 

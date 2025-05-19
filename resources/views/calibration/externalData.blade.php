@@ -747,13 +747,13 @@
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
                                 {{ $report->latestCalibrationFile->filename }}
                             </a>
-                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveSertifikat-{{ $report->latestCalibrationFile->uuid }}">
+                            {{-- <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveSertifikat-{{ $report->latestCalibrationFile->uuid }}">
                                 Approve
                             </button>
 
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalSertifikat">
                                 <i class="fas fa-exclamation-circle"></i> Add Notes
-                            </button>
+                            </button> --}}
                             {{-- SERTIFIKAT --}}     
                                 {{-- approve --}}
                                 <div class="modal fade" id="approveSertifikat-{{ $report->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">

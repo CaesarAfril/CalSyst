@@ -26,7 +26,7 @@ class DashboardController extends Controller
             'latest_scale_calibration',
         ])->get();
 
-        $onTrackAsset = External_calibration::with(['asset', 'latestCalibrationFile'])->get();
+        $onTrackAsset = External_calibration::with(['asset', 'latestCalibrationFile'])->where('status', NULL)->get();
 
         $progressTimeline = [
             'Persiapan Pengajuan' => 0,
@@ -57,6 +57,12 @@ class DashboardController extends Controller
             $status = $item->asset->latest_external_calibration->status ?? null;
 
             if ($progress === 'Sertifikat' && is_null($status)) {
+                return false;
+            }
+
+            $approval = $item->asset->latest_external_calibration_file->approval ?? null;
+
+            if ($approval == 1) {
                 return false;
             }
             return true;
@@ -121,23 +127,6 @@ class DashboardController extends Controller
             $progress = $item->asset->latest_external_calibration->progress_status ?? null;
             return in_array($progress, $progressStages);
         })->count();
-
-        // menampilkan 3-6 bulan untuk data mendekati ED
-        // $now = now();
-        // $threeMonthsLater = $now->copy()->addMonths(3);
-        // $sixMonthsLater = $now->copy()->addMonths(6);
-        // $sortColumn = request()->get('sort', 'category.calibration');
-        // $sortDirection = request()->get('direction', 'asc');
-
-        // $expiringAssets = Assets::with('category')
-        //     ->join('category', 'category.uuid', '=', 'assets.category_uuid') // join dengan table category
-        //     ->select('assets.*') // <-- PENTING: agar yang dikembalikan tetap instance model Assets
-        //     ->whereNotNull('assets.expired_date')
-        //     ->whereBetween('assets.expired_date', [$threeMonthsLater, $sixMonthsLater])
-        //     ->orderBy('category.calibration', $sortDirection)
-        //     ->paginate(10);
-        // $expiringCount = $expiringAssets->count();
-        // $approachingEDCount = $expiringAssets->total();
 
         $now = now();
         $threeMonthsLater = $now->copy()->addMonths(3);
@@ -205,6 +194,7 @@ class DashboardController extends Controller
             $asset->reminder_status = $this->getReminderStatus($asset->expired_date);
             return $asset;
         });
+
         $onTrackAsset->map(function ($item) {
             $asset = $item->asset;
             $asset->reminder_status = app(DashboardController::class)->getReminderStatus($asset->expired_date);
