@@ -222,25 +222,25 @@
 
     {{-- identifikasi --}}
     <div class="row mb-3">
-        <h3>A. IDENTIFIKASI</h3>
+        <h3>IDENTIFIKASI</h3>
         <ul style="list-style-type: none;">
-            <li>1. Melakukan validasi kesesuaian distribusi suhu dalam mesin Fryer Marel</li>
-            {{-- <li>2. Melakukan validasi kesesuaian penetrasi suhu pada produk Griller Yamiku pada saat proses blast freezing</li> --}}
+            <li>1. Kalibrasi enclosure untuk mengetahui bahwa kinerja sensor dan mesin dalam keadaan baik atau membutuhkan perbaikan.</li>
+            <li>2. Melakukan validasi kesesuaian distribusi & penetrasi suhu pada Fiesta Crispy Crunch yang dimasak menggunakan Fryer Marel.</li>
         </ul>
     </div>
 
     {{-- tujuan --}}
     <div class="row mb-3">
-        <h3>B. TUJUAN</h3>
+        <h3>TUJUAN</h3>
         <ul style="list-style-type: none;">
-            <li>1. Mengetahui kinerja persebaran suhu Fryer Marel</li>
-            {{-- <li>2. Mengetahui lama waktu yang dibutuhkan griller untuk mencapai suhu -18 &deg;C</li> --}}
+            <li>1. Dapat mengetahui kinerja sistem dan sensor dari Fryer dan dapat melakukan perbaikan apabila terjadi ketidaksesuaian</li>
+            <li>2. Memastikan bahwa proses pemasakan sesuai dengan spesifikasi yang ada.</li>
         </ul>
     </div>
 
     {{-- peralatan --}}
     <div class="row mb-3">
-        <h3>C. PERALATAN & LAYOUT</h3>
+        <h3>PERALATAN & LAYOUT</h3>
         <table width="100%" style="text-align: center;">
             <tr>
                 <td width="50%">
@@ -250,53 +250,66 @@
                         $data = file_get_contents($path);
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                     @endphp
-                    <img src="{{ $base64 }}" alt="midilogger" style="width: 80%;">
-                    <p>Midilogger Thermologger GL-260</p>
-                </td>
-                <td width="50%">
-                    @php
-                        $path = public_path('storage/image/ebro.jpg');
-                        $type = pathinfo($path, PATHINFO_EXTENSION);
-                        $data = file_get_contents($path);
-                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                    @endphp
-                    <img src="{{ $base64 }}" alt="thermologger" style="width: 80%;">
-                    <p>EBRO EBI-11 thermologger</p>
+                    <img src="{{ $base64 }}" alt="midilogger" style="width: 30%; margin: auto;">
+                    <p>Graphtec Midi Logger GL-260 10 Channel </p>
                 </td>
             </tr>
         </table>
+    </div>
 
-        {{-- <table width="100%" style="text-align: center;">
-            <tr>
-                <td width="50%">
-                    <p><strong>LAYOUT PENEMPATAN SENSOR SEBARAN SUHU 9 TITIK</strong></p>
-                    @php
-                        $path = public_path('storage/image/layout1.jpg');
-                        $type = pathinfo($path, PATHINFO_EXTENSION);
-                        $data = file_get_contents($path);
-                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                    @endphp
-                    <img src="{{ $base64 }}" alt="probe" style="width: 80%;">
-                    <p><em>Gambar 1. Peletakan probe sensor suhu Thermocouple Tipe K untuk persebaran suhu</em></p>
-                </td>
-                <td width="50%">
-                    <p><strong>LAYOUT PENEMPATAN SENSOR CORE TEMPERATURE PRODUK</strong></p>
-                    @php
-                        $path = public_path('storage/image/layout2.jpg');
-                        $type = pathinfo($path, PATHINFO_EXTENSION);
-                        $data = file_get_contents($path);
-                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                    @endphp
-                    <img src="{{ $base64 }}" alt="core" style="width: 80%;">
-                    <p><em>Gambar 2. Peletakan griller yang terisi thermologger</em></p>
-                </td>
-            </tr>
-        </table>         --}}
+    {{-- metode uji --}}
+    <div class="row mb-3">
+        <h3>METODE UJI</h3>
+        <div>
+            <h4>Uji Tanpa Produk</h4>
+            <ul style="margin-bottom: 1rem;">
+                <li>1. Pastikan conveyor dalam keadaan berhenti, dan cover terangkat dengan aman</li>
+                <li>2. Probe dimasukkan ke posisi pengukuran sesuai dengan nomor pada gambar di bawah</li>
+                <li>3. Penutup diturunkan, pastikan probe tercelup dalam minyak dan pada titik yang tepat</li>
+                <li>4. Fryer dinyalakan, dan staf kalibrasi memantau kenaikan suhu minyak hingga dalam kondisi mantap (stabil)</li>
+                <li>5. Perekaman data dimulai, dengan interval pembacaan setiap 1 menit, selama 30 menit </li>
+                <li>6. Apabila sudah selesai, hentikan mesin dan angkat cover penutup</li>
+                <li>7. Probe dirapikan, lalu dilakukan penarikan dan penginterpretasian data</li>
+            </ul>
+
+            <div style="width: 100%; text-align: center; margin-bottom: 2rem;">
+                @php
+                    $path = public_path('storage/image/uji_tanpa_produk.jpg');
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+                    $data = file_get_contents($path);
+                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                @endphp
+                <img src="{{ $base64 }}" alt="midilogger" style="width: 50%; margin: auto;">
+            </div>
+        </div>
+
+        <div>
+            <h4>Uji Dengan Produk</h4>
+            <ul style="margin-bottom: 1rem;">
+                <li>1. Thermologger disiapkan, dinyalakan dengan interval pembacaan setiap 1 detik</li>
+                <li>2. Sensor dimasukkan ke dalam produk, seperti pada gambar di bawah ini</li>
+                <li>3. Produk ditempatkan pada 5 posisi, seperti pada gambar di bawah ini</li>
+                <li>4. Produk yang tertusuk sensor diletakkan pada infeed Fryer, dan biarkan masuk ke dalam minyak</li>
+                <li>5. Tunggu produk keluar di outfeed fryer</li>
+                <li>6. Apabila produk sudah keluar, dilakukan penarikan dan penginterpretasian data</li>
+            </ul>
+
+            <div style="width: 100%; text-align: center; margin-bottom: 1rem;">
+                @php
+                    $path = public_path('storage/image/uji_dengan_produk.jpg');
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+                    $data = file_get_contents($path);
+                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                @endphp
+                <img src="{{ $base64 }}" alt="midilogger" style="width: 55%; margin: auto;">
+            </div>
+        </div>
+        
     </div>
 
     {{-- tabel 1 uji persebaran suhu --}}
     <div class="row mb-3">
-        <h3 style="margin-bottom: 1rem !important;">E. HASIL UJI PERSEBARAN SUHU</h3>
+        <h3 style="margin-bottom: 1rem !important;">HASIL UJI PERSEBARAN SUHU</h3>
 
         <table class="table-bordered" style="width: 80%; margin: auto;">
             <thead>
@@ -412,6 +425,183 @@
         <div>
             {!! $conclusion !!}
         </div>
+    </div>
+
+    {{-- hasil sebaran suhu --}}
+    <div class="row mb-3">
+        <h4>Hasil:</h4>
+        <h4>1. Sebaran Suhu</h4>
+
+        <table class="table-bordered" style="width: 80%; margin: auto; margin-top: 1rem;">
+        <thead>
+            <tr>
+                <th colspan="6">Keseragaman Suhu</th>
+                <th colspan="2">Kinerja Alat</th>
+            </tr>
+            <tr>
+                <th>Set Suhu (°C)</th>
+                <th>Posisi (°C)</th>
+                <th>Pembacaan<br>Alat (°C)</th>
+                <th>Pembacaan<br>Midilogger<br>(°C)</th>
+                <th>Koreksi (°C)</th>
+                <th>Uncertainty<br>(°C)</th>
+                <th>Keseragaman<br>Suhu (°C)</th>
+                <th>Stabilitas<br>Suhu (°C)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                $channelAverages = [];
+                for ($i = 1; $i <= 10; $i++) {
+                    $channelKey = 'ch' . $i;
+                    $channelAverages[$i] = round($suhuData->avg($channelKey), 2);
+                }
+
+                $setSuhu = $dataFryerMarel->setting_suhu_mesin ?? '155';
+                $pembacaanAlat = 155; // nilai tetap
+                $uncertainty = '';
+                $keseragamanSuhu = 85.2;
+                $stabilitasSuhu = 16.15;
+            @endphp
+
+            @for ($i = 1; $i <= 10; $i++)
+                @php
+                    $pembacaanMidilogger = $channelAverages[$i];
+                    $koreksi = round($pembacaanMidilogger - $pembacaanAlat, 2);
+                @endphp
+                <tr>
+                    @if ($i === 1)
+                        <td rowspan="10">{{ $setSuhu }}</td>
+                    @endif
+
+                    <td>{{ $i }}</td>
+
+                    @if ($i === 1)
+                        <td rowspan="10">{{ $pembacaanAlat }}</td>
+                    @endif
+
+                    <td>{{ $pembacaanMidilogger }}</td>
+                    <td>{{ $koreksi >= 0 ? '+' . $koreksi : $koreksi }}</td>
+
+                    @if ($i === 1)
+                        <td rowspan="10">{{ $uncertainty }}</td>
+                        <td rowspan="10">{{ $keseragamanSuhu }}</td>
+                        <td rowspan="10">{{ $stabilitasSuhu }}</td>
+                    @endif
+                </tr>
+            @endfor
+        </tbody>
+        </table>
+
+        <div style="width: 100%; text-align: center; margin-bottom: 1rem; margin-top: 1rem;">
+            @php
+                $path = public_path('storage/image/uji_tanpa_produk.jpg');
+                $type = pathinfo($path, PATHINFO_EXTENSION);
+                $data = file_get_contents($path);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            @endphp
+            <img src="{{ $base64 }}" alt="midilogger" style="width: 50%; margin: auto;">
+        </div>
+
+        <h4>Catatan:</h4>
+        <ul>
+            <li>1. Metode Kalibrasi / Method of Calibration : KAN PD-02.04</li>
+            <li>2.Perhitungan ketidakpastian mengacu ke / Calculation of uncercertainty refer to : JCGM 100-2008 : Evaluation of Measurement Data - Guide to Expression of Uncertainty in Measurement</li>
+            <li>3. Ketidakpastian pengukuran diestimasi pada tingkat kepercayaan 95% dengan faktor cakupan k = 2</li>
+        </ul>
+
+        <table width="100%" style="text-align: left; margin-top: 5rem;">
+            <tr>
+                <td width="50%">
+                    <p>Salatiga, {{ \Carbon\Carbon::now()->translatedFormat('j F Y') }}</p>
+                    <p style="margin-bottom: 4rem;">Disusun Oleh,</p>
+                    <p>Fahbi A Basharo</p>
+                    <p style="font-style: italic">Technician</p>
+                </td>
+                <td width="50%">
+                    <br>
+                    <p style="margin-bottom: 4rem;">Disahkan Oleh,</p>
+                    <p>Anggun N Arifiana</p>
+                    <p style="font-style: italic">Supervisor</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    {{-- data pengukuran --}}
+    <div class="row mb-3" style="page-break-before: always;">
+        <h4>2. Data Pengukuran</h4>
+        <table class="table-bordered" style="width: 100%; margin: auto; margin-top: 1rem;">
+            <thead>
+                <tr>
+                    <th class="tg-0lax">Menit ke-</th>
+                    <th class="tg-0lax">Waktu</th>
+                    @for ($i = 1; $i <= 10; $i++)
+                        <th class="tg-0lax">CH{{ $i }}<br>(&deg;C)</th>
+                    @endfor
+                    <th class="tg-0lax">Display Mesin(&deg;C)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($suhuData as $index => $suhu)
+                    <tr>
+                        <td class="tg-0lax">{{ $index + 1 }}</td>
+                        <td class="tg-0lax">&nbsp;&nbsp;{{ \Carbon\Carbon::parse($suhu->time)->format('H:i:s') }}</td>
+                        @for ($i = 1; $i <= 10; $i++)
+                            <td class="tg-0lax">{{ number_format($suhu->{'ch'.$i}, 2, '.', '.') }}</td>
+                        @endfor
+                        <td class="tg-0lax">{{ $suhu->display_mesin ?? 0 }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="tg-0lax" colspan="2">AVG</td>
+                    @for ($i = 1; $i <= 10; $i++)
+                        <td class="tg-0lax">{{ number_format($avg['ch'.$i], 2, '.', '.') }}</td>
+                    @endfor
+                    <td class="tg-0lax">{{ number_format($avg['display_mesin'], 0, '.', '.') }}</td>
+                </tr>
+                <tr>
+                    <td class="tg-0lax" colspan="2">MAX</td>
+                    @for ($i = 1; $i <= 10; $i++)
+                        <td class="tg-0lax">{{ number_format($max['ch'.$i], 2, '.', '.') }}</td>
+                    @endfor
+                    <td class="tg-0lax">{{ number_format($max['display_mesin'], 0, '.', '.') }}</td>
+                </tr>
+                <tr>
+                    <td class="tg-0lax" colspan="2">MIN</td>
+                    @for ($i = 1; $i <= 10; $i++)
+                        <td class="tg-0lax">{{ number_format($min['ch'.$i], 2, '.', '.') }}</td>
+                    @endfor
+                    <td class="tg-0lax">{{ number_format($min['display_mesin'], 0, '.', '.') }}</td>
+                </tr>
+                <tr>
+                    <td class="tg-0lax" colspan="2" style="background:#bcd4e6">
+                        MAX (Spot)
+                        <td class="tg-0lax" colspan="11" style="background:#bcd4e6">
+                             {{ number_format($maxSpot['value'], 2, '.', '.') }} Titik {{ $maxSpot['channel'] }}
+                        </td>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tg-0lax" colspan="2" style="background:#bcd4e6">
+                        MIN (Spot) 
+                        <td class="tg-0lax" colspan="11" style="background:#bcd4e6">
+                            {{ number_format($minSpot['value'], 2, '.', '.') }} Titik {{ $minSpot['channel'] }}
+                        </td>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tg-0lax" colspan="2" style="background:#bcd4e6">
+                        AVG (All Spot) 
+                        <td class="tg-0lax" colspan="11" style="background:#bcd4e6">
+                            {{ number_format($avgAllSpot, 2, '.', '.') }}
+                        </td>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 </body>
 </html>

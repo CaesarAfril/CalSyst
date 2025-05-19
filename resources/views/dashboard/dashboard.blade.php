@@ -158,6 +158,7 @@
                   <th style="color: #fff">Progress</th>
                   <th style="color: #fff">Status</th>
                   <th style="color: #fff">Reminder</th>
+                  <th style="color: #fff">Aksi</th>
               </tr>
           
           </thead>
@@ -174,6 +175,608 @@
                   <td> {{ $onTrackAssets->asset->latest_external_calibration->progress_status ?? '-' }}</td>
                   <td>{!! $onTrackAssets->status_message !!}</td>
                   <td>{!! $onTrackAssets->asset->reminder_status !!}</td>
+                  <td>
+                      @if($onTrackAssets->latestCalibrationFile)
+                      {{-- PENAWARAN --}}
+                      @if($onTrackAssets->latestCalibrationFile->progress == 'Penawaran')
+                      @if($onTrackAssets->latestCalibrationFile->filename != NULL && $onTrackAssets->latestCalibrationFile->approval == NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">
+                          P
+                      </a>
+                      <button class="btn btn-success btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#approvePenawaran-{{ $onTrackAssets->latestCalibrationFile->uuid }}">
+                          A
+                      </button>
+
+                      <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModal">
+                          <i class="fas fa-exclamation-circle"></i> N
+                      </button>
+
+                      {{-- penawaran --}}
+                      {{-- approve --}}
+                      @if($onTrackAssets->latestCalibrationFile)
+                        <div class="modal fade" id="approvePenawaran-{{ $onTrackAssets->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Apakah anda yakin untuk approve step ini ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <form action="{{ route('external.addApprove', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="addNotesModal" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ route('external.save-notes', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                            @csrf
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label for="notes">Catatan:</label>
+                                                    <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <button type="submit" class="btn btn-warning">Simpan</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                      @endif
+                      @elseif($onTrackAssets->latestCalibrationFile->filename == NULL)
+                      <p>Belum upload file</p>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename != NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                          {{ $onTrackAssets->latestCalibrationFile->filename }}
+                      </a>
+                      @endif
+
+                      {{-- PPBJ --}}
+                      @elseif($onTrackAssets->latestCalibrationFile->progress == 'PPBJ')
+                      @if($onTrackAssets->latestCalibrationFile->filename != NULL && $onTrackAssets->latestCalibrationFile->approval == NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">
+                          P
+                      </a>
+                      <button class="btn btn-success btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#approvePpbj-{{ $onTrackAssets->latestCalibrationFile->uuid }}">
+                          A
+                      </button>
+
+                      <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPpbj">
+                          <i class="fas fa-exclamation-circle"></i> N
+                      </button>
+
+                      {{-- ppbj --}}
+                          {{-- approve --}}
+                          <div class="modal fade" id="approvePpbj-{{ $onTrackAssets->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          Apakah anda yakin untuk approve step ini ?
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                          <form action="{{ route('external.addApprovePpbj', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>  
+                          </div>
+
+                          {{-- notes --}}
+                          <div class="modal fade" id="addNotesModalPpbj" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form action="{{ route('external.save-notes-ppbj', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <div class="row">
+                                                  <div class="form-group">
+                                                      <label for="notes">Catatan:</label>
+                                                      <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                  </div>
+                                              </div>
+                                              <div class="row mt-2">
+                                                  <button type="submit" class="btn btn-warning">Simpan</button>
+                                              </div>
+
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                      
+                      @elseif($onTrackAssets->latestCalibrationFile->filename == NULL)
+                      <p>Belum upload file</p>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename != NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                          {{ $onTrackAssets->latestCalibrationFile->filename }}
+                      </a>
+                      @endif
+
+                      {{-- NEGOSIASI --}}
+                      @elseif($onTrackAssets->latestCalibrationFile->progress == 'Negosiasi')
+                      @if($onTrackAssets->latestCalibrationFile->filename != NULL && $onTrackAssets->latestCalibrationFile->approval == NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">
+                          P
+                      </a>
+                      <button class="btn btn-success btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#approveNegosiasi-{{ $onTrackAssets->latestCalibrationFile->uuid }}">
+                          A
+                      </button>
+
+                      <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalNegosiasi">
+                          <i class="fas fa-exclamation-circle"></i> N
+                      </button>
+                      {{-- negosiasi --}}
+                      
+                          {{-- approve --}}
+                          <div class="modal fade" id="approveNegosiasi-{{ $onTrackAssets->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          Apakah anda yakin untuk approve step ini ?
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                          <form action="{{ route('external.addApproveNegosiasi', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                                        
+                          </div>
+
+                          {{-- notes --}}
+                          <div class="modal fade" id="addNotesModalNegosiasi" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form action="{{ route('external.save-notes-negosiasi', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <div class="row">
+                                                  <div class="form-group">
+                                                      <label for="notes">Catatan:</label>
+                                                      <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                  </div>
+                                              </div>
+                                              <div class="row mt-2">
+                                                  <button type="submit" class="btn btn-warning">Simpan</button>
+                                              </div>
+
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename == NULL)
+                      <p>Belum upload file</p>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename != NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                          {{ $onTrackAssets->latestCalibrationFile->filename }}
+                      </a>
+                      @endif
+
+                      {{-- SPK --}}
+                      @elseif($onTrackAssets->latestCalibrationFile->progress == 'SPK')
+                      @if($onTrackAssets->latestCalibrationFile->filename != NULL && $onTrackAssets->latestCalibrationFile->approval == NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">
+                          P
+                      </a>
+                      <button class="btn btn-success btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#approveSpk-{{ $onTrackAssets->latestCalibrationFile->uuid }}">
+                          A
+                      </button>
+
+                      <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalSpk">
+                          <i class="fas fa-exclamation-circle"></i> N
+                      </button>
+                      {{-- spk --}}
+                      
+                          {{-- approve --}}
+                          <div class="modal fade" id="approveSpk-{{ $onTrackAssets->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          Apakah anda yakin untuk approve step ini ?
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                          <form action="{{ route('external.addApproveSpk', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                                        
+                          </div>
+
+                          {{-- notes --}}
+                          <div class="modal fade" id="addNotesModalSpk" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form action="{{ route('external.save-notes-spk', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <div class="row">
+                                                  <div class="form-group">
+                                                      <label for="notes">Catatan:</label>
+                                                      <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                  </div>
+                                              </div>
+                                              <div class="row mt-2">
+                                                  <button type="submit" class="btn btn-warning">Simpan</button>
+                                              </div>
+
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                      
+
+                      @elseif($onTrackAssets->latestCalibrationFile->filename == NULL)
+                      <p>Belum upload file</p>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename != NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                          {{ $onTrackAssets->latestCalibrationFile->filename }}
+                      </a>
+                      @endif
+
+                      {{-- PELAKSANAAN --}}
+                      @elseif($onTrackAssets->latestCalibrationFile->progress == 'Pelaksanaan')
+                      @if($onTrackAssets->latestCalibrationFile->filename != NULL && $onTrackAssets->latestCalibrationFile->approval == NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">
+                          P
+                      </a>
+                      <button class="btn btn-success btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#approvePelaksanaan-{{ $onTrackAssets->latestCalibrationFile->uuid }}">
+                          A
+                      </button>
+
+                      <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPelaksanaan">
+                          <i class="fas fa-exclamation-circle"></i> N
+                      </button>
+
+                      {{-- pelaksanaan --}}
+                          {{-- approve --}}
+                          <div class="modal fade" id="approvePelaksanaan-{{ $onTrackAssets->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          Apakah anda yakin untuk approve step ini ?
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                          <form action="{{ route('external.addApprovePelaksanaan', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          {{-- notes --}}
+                          <div class="modal fade" id="addNotesModalSpk" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form action="{{ route('external.save-notes-pelaksanaan', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <div class="row">
+                                                  <div class="form-group">
+                                                      <label for="notes">Catatan:</label>
+                                                      <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                  </div>
+                                              </div>
+                                              <div class="row mt-2">
+                                                  <button type="submit" class="btn btn-warning">Simpan</button>
+                                              </div>
+
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+
+                      @elseif($onTrackAssets->latestCalibrationFile->filename == NULL)
+                      <p>Belum upload file</p>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename != NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                          {{ $onTrackAssets->latestCalibrationFile->filename }}
+                      </a>
+                      @endif
+
+                      {{-- BA --}}
+                      @elseif($onTrackAssets->latestCalibrationFile->progress == 'BA')
+                      @if($onTrackAssets->latestCalibrationFile->filename != NULL && $onTrackAssets->latestCalibrationFile->approval == NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">
+                          P
+                      </a>
+                      <button class="btn btn-success btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#approveBa-{{ $onTrackAssets->latestCalibrationFile->uuid }}">
+                          A
+                      </button>
+
+                      <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalBa">
+                          <i class="fas fa-exclamation-circle"></i> N
+                      </button>
+                      {{-- BA --}}
+                      
+                          {{-- approve --}}
+                          <div class="modal fade" id="approveBa-{{ $onTrackAssets->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          Apakah anda yakin untuk approve step ini ?
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                          <form action="{{ route('external.addApproveBa', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                                        
+                          </div>
+
+                          {{-- notes --}}
+                          <div class="modal fade" id="addNotesModalBa" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form action="{{ route('external.save-notes-ba', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <div class="row">
+                                                  <div class="form-group">
+                                                      <label for="notes">Catatan:</label>
+                                                      <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                  </div>
+                                              </div>
+                                              <div class="row mt-2">
+                                                  <button type="submit" class="btn btn-warning">Simpan</button>
+                                              </div>
+
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+
+                      @elseif($onTrackAssets->latestCalibrationFile->filename == NULL)
+                      <p>Belum upload file</p>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename != NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                          {{ $onTrackAssets->latestCalibrationFile->filename }}
+                      </a>
+                      @endif
+
+                      {{-- PEMBAYARAN --}}
+                      @elseif($onTrackAssets->latestCalibrationFile->progress == 'Pembayaran')
+                      @if($onTrackAssets->latestCalibrationFile->filename != NULL && $onTrackAssets->latestCalibrationFile->approval == NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">
+                          P
+                      </a>
+                      <button class="btn btn-success btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#approvePembayaran-{{ $onTrackAssets->latestCalibrationFile->uuid }}">
+                          A
+                      </button>
+
+                      <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalPembayaran">
+                          <i class="fas fa-exclamation-circle"></i> N
+                      </button>
+                      {{-- PEMBAYARAN --}}
+                          {{-- approve --}}
+                          <div class="modal fade" id="approvePembayaran-{{ $onTrackAssets->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          Apakah anda yakin untuk approve step ini ?
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                          <form action="{{ route('external.addApprovePembayaran', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          {{-- notes --}}
+                          <div class="modal fade" id="addNotesModalPembayaran" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form action="{{ route('external.save-notes-pembayaran', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <div class="row">
+                                                  <div class="form-group">
+                                                      <label for="notes">Catatan:</label>
+                                                      <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                  </div>
+                                              </div>
+                                              <div class="row mt-2">
+                                                  <button type="submit" class="btn btn-warning">Simpan</button>
+                                              </div>
+
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename == NULL)
+                      <p>Belum upload file</p>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename != NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                          {{ $onTrackAssets->latestCalibrationFile->filename }}
+                      </a>
+                      @endif
+
+                      {{-- SERTIFIKAT --}}
+                      @elseif($onTrackAssets->latestCalibrationFile->progress == 'Sertifikat')
+                      @if($onTrackAssets->latestCalibrationFile->filename != NULL && $onTrackAssets->latestCalibrationFile->approval == NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm mb-1">
+                          P
+                      </a>
+                      {{-- <button class="btn btn-success btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#approveSertifikat-{{ $onTrackAssets->latestCalibrationFile->uuid }}">
+                          A
+                      </button>
+
+                      <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#addNotesModalSertifikat">
+                          <i class="fas fa-exclamation-circle"></i> N
+                      </button> --}}
+                      {{-- SERTIFIKAT --}}     
+                          {{-- approve --}}
+                          <div class="modal fade" id="approveSertifikat-{{ $onTrackAssets->latestCalibrationFile->uuid }}" tabindex="-1" role="dialog" aria-labelledby="closeProgressModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="closeProgressModalLabel">Confirm Close</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          Apakah anda yakin untuk approve step ini ?
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                          <form action="{{ route('external.addApproveSertifikat', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <button type="submit" class="btn btn-success">Confirm Approve</button>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          {{-- notes --}}
+                          <div class="modal fade" id="addNotesModalSertifikat" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="addNotesModalLabel">Catatan</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form action="{{ route('external.save-notes-sertifikat', $onTrackAssets->latestCalibrationFile->uuid) }}" method="POST">
+                                              @csrf
+                                              <div class="row">
+                                                  <div class="form-group">
+                                                      <label for="notes">Catatan:</label>
+                                                      <textarea name="notes" id="notes" class="form-control" required></textarea>
+                                                  </div>
+                                              </div>
+                                              <div class="row mt-2">
+                                                  <button type="submit" class="btn btn-warning">Simpan</button>
+                                              </div>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+
+                      @elseif($onTrackAssets->latestCalibrationFile->filename == NULL)
+                      <p>Belum upload file</p>
+                      @elseif($onTrackAssets->latestCalibrationFile->filename != NULL)
+                      <a href="{{ asset('storage/' . $onTrackAssets->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
+                          {{ $onTrackAssets->latestCalibrationFile->filename }}
+                      </a>
+                      @endif
+                      @endif
+                      @endif
+                  </td>
               </tr>
               @empty
               <tr>

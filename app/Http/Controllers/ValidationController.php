@@ -457,6 +457,7 @@ class ValidationController extends Controller
                     'ch8' => $this->parseTemperature($row[9] ?? null),
                     'ch9' => $this->parseTemperature($row[10] ?? null),
                     'ch10' => $this->parseTemperature($row[11] ?? null),
+                    'display_mesin' => $this->parseTemperature($row[12] ?? null),
                 ]);
             }
         }
@@ -496,7 +497,7 @@ class ValidationController extends Controller
             : null;
 
         // 1. Ambil input dari DB jika ada, jika tidak gunakan input user
-        $settingFromDB = $dataFryerMarel->setting_suhu_mesin; // Asumsi ada kolom di DB
+        $settingFromDB = $dataFryerMarel->setting_suhu_mesin;
         $inputRange = $request->input('setting_suhu_mesin', $settingFromDB ?? '155-170');
 
         // 2. Parse range dengan lebih robust
@@ -640,6 +641,39 @@ class ValidationController extends Controller
 
         $chartUrlFryerMarel = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartFryerMarel));
 
+        $averagePerChannel = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $channel = "ch{$i}";
+            $values = $suhuData->pluck($channel)->filter(); // buang null/false
+            $averagePerChannel[$channel] = $values->count() > 0 ? round($values->avg(), 2) : null;
+        }
+
+        $channels = collect(range(1, 10));
+
+        // Hitung statistik untuk tiap channel
+        $avg = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->avg('ch' . $ch)]);
+        $max = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->max('ch' . $ch)]);
+        $min = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->min('ch' . $ch)]);
+
+        $avg['display_mesin'] = $suhuData->avg('display_mesin');
+        $max['display_mesin'] = $suhuData->max('display_mesin');
+        $min['display_mesin'] = $suhuData->min('display_mesin');
+
+        // Cari MAX & MIN Spot
+        $spotValues = [];
+        foreach ($suhuData as $row) {
+            foreach ($channels as $ch) {
+                $spotValues[] = [
+                    'channel' => $ch,
+                    'value' => $row->{'ch' . $ch},
+                ];
+            }
+        }
+
+        $maxSpot = collect($spotValues)->sortByDesc('value')->first();
+        $minSpot = collect($spotValues)->sortBy('value')->first();
+        $avgAllSpot = collect($spotValues)->pluck('value')->avg();
+
         $pdf = PDF::loadView('validation.print.print_fryerMarel', [
             'dataFryerMarel' => $dataFryerMarel,
             'suhuAwal' => $suhuAwal,
@@ -650,14 +684,21 @@ class ValidationController extends Controller
             'minSuhu' => $minSuhu,
             'maxSuhu' => $maxSuhu,
             'conclusion' => $conclusion,
-            'duration' => $duration
+            'duration' => $duration,
+            'averagePerChannel' => $averagePerChannel,
+            'avg' => $avg,
+            'max' => $max,
+            'min' => $min,
+            'maxSpot' => $maxSpot,
+            'minSpot' => $minSpot,
+            'avgAllSpot' => $avgAllSpot,
 
         ])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
 
-        return $pdf->stream('laporan-abf-' . $dataFryerMarel->nama_produk . '.pdf');
+        return $pdf->stream('laporan-Fryer-' . $dataFryerMarel->nama_produk . '.pdf');
     }
 
     private function detectTemperatureAnomalies($suhuData, $minSuhu, $maxSuhu)
