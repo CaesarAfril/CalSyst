@@ -502,6 +502,8 @@
                 <li>3. {!! $hasilSelisih !!}</li>
             </ul>
         </div>
+
+        <p>{{ $dataABF ->notes_sebaran }}</p>
     </div>
         
     {{-- Grafik 1. Persebaran suhu --}}
@@ -647,6 +649,8 @@
             Grafik sebaran suhu di atas menunjukkan bahwa pergerakan suhu dari awal ABF dimulai pada jam {{ $suhuAwal->time ?? '-' }} Pada saat ABF dinyalakan, suhu pada setiap
             titiknya berbeda-beda (terpaut perbedaan sebesar {{$selisih_awal_formatted_for_grafik}} &deg;C, mulai dari titik tertinggi di titik {{$max_titik_awal_for_grafik}} sebesar {{$max_suhu_awal_formatted_for_grafik}} &deg;C dan terendah di titik {{$min_titik_awal_for_grafik}} sebesar {{$min_suhu_awal_formatted_for_grafik}} &deg;C). ABF dimatikan keesokan harinya pada jam {{ $suhuAkhir->time ?? '-' }}, dan Thermocouple tipe K mendeteksi di suhu di setiap titiknya berbeda, yakni selisih suhu minimum ke maksimumnya sebesar {{$selisih_akhir_formatted_for_grafik}} &deg;C (({{$min_suhu_akhir_formatted_for_grafik}} &deg;C pada titik {{$min_titik_akhir_for_grafik}}) - ({{$max_suhu_akhir_formatted_for_grafik}} &deg;C pada titik {{$max_titik_akhir_for_grafik}})).
         </p>
+
+        <p>{{ $dataABF ->notes_grafik }}</p>
     </div>
 
     {{-- spike func --}}
@@ -948,6 +952,7 @@
         </table>
         <p style="text-align: center;"> <strong>Tabel 2.</strong> Durasi Keseluruhan Terjadinya Spike</p>
         <p>{!! $narasiSpike1 !!}</p>
+        <p>{{ $dataABF ->notes_durasi_spike }}</p>
         <p>Data terkait peristiwa spike dituangkan dalam tabel berikut ini:</p>
     </div>
 
@@ -1100,6 +1105,8 @@
                 <p>{!! $summaryText !!}</p>
             </div>
         @endforeach
+
+        <p>{{ $dataABF ->notes_spike }}</p>
     </div>
 
     {{-- uji penetrasi suhu --}}
@@ -1235,6 +1242,8 @@
                     dan {{ number_format($maxAkhir, 1) }} &deg;C pada sampel {{ $titikMaxAkhir }}).
                 </li>
             </ul>
+
+            <p>{{ $dataABF ->notes_tabel_penetrasi }}</p>
         </div>
     </div>
 
@@ -1243,6 +1252,8 @@
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut: </p>
         <img src="{{ $chartUrlPenetrasi }}" style="width: 100%; margin: auto;">
         <p style="text-align: center;"> <strong>Grafik 2.</strong> Penetrasi Produk (Griller) Pada ABF</p>
+
+        <p>{{ $dataABF ->notes_grafik_penetrasi }}</p>
 
         <p>Data terkait stagnansi suhu ini dituangkan ke dalam tabel sebagai berikut:</p>
     </div>
@@ -1475,6 +1486,7 @@
         <p>
            {!! $analysisText !!}
         </p>
+        <p>{{ $dataABF ->notes_stagnansi }}</p>
         <p>
             Uji penetrasi suhu ini selain dapat melihat pergerakan suhu dari waktu ke waktu, juga menghasilkan data terkait pencapaian suhu griller pada -18 C sesuai standard yang ditetapkan oleh QC. Data terkait pencapaian suhu griller tersebut dituangkan dalam tabel 8 sebagai berikut:
         </p>
@@ -1648,16 +1660,18 @@
         <p style="text-align: center;"> <strong>Tabel.</strong> Ketercapaian Suhu Produk
         </p>
         <p>{!! $achievementData['narratives']['0c'] !!} {!! $achievementData['narratives']['-18c'] !!} {!! $achievementData['narratives']['penurunan_terlama'] !!}</p>
+        <p>{{ $dataABF ->notes_ketercapaian }}</p>
            
     </div>
 
     {{-- kesimpulan --}}
     <div class="row mb-3">
         <h3 class="mb-3" style="margin-bottom: 1rem;">G. KESIMPULAN</h3>
-        <ul style="list-style-type: none;">
+        {{-- <ul style="list-style-type: none;">
             <li>1. {!!  $hasilPersebaran !!}</li>
             <li>2. {!! $achievementData['narratives']['summary_18c'] ?? '' !!}</li>
-        </ul>
+        </ul> --}}
+        <p>{{ $dataABF ->kesimpulan }}</p>
     </div>
 </body>
 </html>

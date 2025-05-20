@@ -139,6 +139,56 @@
                     </div>
                 </div>
 
+                {{-- textarea --}}
+                <div class="row mb-3">
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_sebaran" class="form-label">Notes Sebaran Suhu</label>
+                            <textarea class="form-control" name="notes_sebaran" id="notes_sebaran" placeholder="Masukkan notes"></textarea>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_grafik" class="form-label">Notes Grafik</label>
+                            <textarea class="form-control" name="notes_grafik" id="notes_grafik" placeholder="Masukkan notes"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_durasi_spike" class="form-label">Notes Durasi Spike</label>
+                            <textarea class="form-control" name="notes_durasi_spike" id="notes_durasi_spike" placeholder="Masukkan notes"></textarea>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_spike" class="form-label">Notes Spike</label>
+                            <textarea class="form-control" name="notes_spike" id="notes_spike" placeholder="Masukkan notes"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_tabel_penetrasi" class="form-label">Notes Tabel Penetrasi</label>
+                            <textarea class="form-control" name="notes_tabel_penetrasi" id="notes_tabel_penetrasi" placeholder="Masukkan notes"></textarea>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_grafik_penetrasi" class="form-label">Notes Grafik Penetrasi</label>
+                            <textarea class="form-control" name="notes_grafik_penetrasi" id="notes_grafik_penetrasi" placeholder="Masukkan notes"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_stagnansi" class="form-label">Notes Durasi Stagnansi Suhu</label>
+                            <textarea class="form-control" name="notes_stagnansi" id="notes_stagnansi" placeholder="Masukkan notes"></textarea>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_ketercapaian" class="form-label">Notes Ketercapaian Suhu</label>
+                            <textarea class="form-control" name="notes_ketercapaian" id="notes_ketercapaian" placeholder="Masukkan notes"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="kesimpulan" class="form-label">Kesimpulan</label>
+                            <textarea class="form-control" name="kesimpulan" id="kesimpulan" placeholder="Masukkan kesimpulan" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="d-flex justify-content-end mt-2">
                     <button type="submit" class="btn btn-success">Submit</button>
                 </div>
