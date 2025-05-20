@@ -18,7 +18,7 @@
         
         <div class="card-body">
             <h3 class="mb-5 mt-4 text-center">Form Hi Cook</h3>
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('validation.storehiCook') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
@@ -131,8 +131,43 @@
                 {{-- import all suhu excel --}}
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
-                        <label for="suhu_fryer_marel" class="form-label">Data sebaran suhu dan suhu pusat produk</label>
-                        <input class="form-control" type="file" name="suhu_fryer_marel" id="suhu_fryer_marel" accept=".xls,.xlsx" required>
+                        <label for="suhu_hi_cook" class="form-label">Data sebaran suhu dan suhu pusat produk</label>
+                        <input class="form-control" type="file" name="suhu_hi_cook" id="suhu_hi_cook" accept=".xls,.xlsx" required>
+                    </div>
+                </div>
+
+                {{-- textarea --}}
+                <div class="row mb-3">
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_sebaran" class="form-label">Notes Sebaran Suhu</label>
+                            <textarea class="form-control" name="notes_sebaran" id="notes_sebaran" placeholder="Masukkan notes"></textarea>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_grafik" class="form-label">Notes Grafik</label>
+                            <textarea class="form-control" name="notes_grafik" id="notes_grafik" placeholder="Masukkan notes"></textarea>
+                        </div>
+                        
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_luar_range" class="form-label">Notes Luar Range</label>
+                            <textarea class="form-control" name="notes_luar_range" id="notes_luar_range" placeholder="Masukkan notes"></textarea>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_keseragaman" class="form-label">Notes Keseragaman Suhu</label>
+                            <textarea class="form-control" name="notes_keseragaman" id="notes_keseragaman" placeholder="Masukkan notes"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3">
+                            <label for="notes_rekaman" class="form-label">Notes Rekaman Suhu</label>
+                            <textarea class="form-control" name="notes_rekaman" id="notes_rekaman" placeholder="Masukkan notes"></textarea>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="kesimpulan" class="form-label">Kesimpulan</label>
+                            <textarea class="form-control" name="kesimpulan" id="kesimpulan" placeholder="Masukkan kesimpulan" required></textarea>
+                        </div>
                     </div>
                 </div>
 

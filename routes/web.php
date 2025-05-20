@@ -185,6 +185,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/validation/fryer2/{id}', [ValidationController::class, 'deleteFryer2'])->name('validation.fryer2.delete');
     Route::get('/validation/fryer2/print/{id}', [ValidationController::class, 'printFryer2'])->name('report.fryer2.print');
 
+    Route::post('/validation/hiCook/store', [ValidationController::class, 'storeHiCook'])->name('validation.storehiCook');
+    Route::delete('/validation/hiCook/{id}', [ValidationController::class, 'deleteHiCook'])->name('validation.hiCook.delete');
+    Route::get('/validation/hiCook/print/{id}', [ValidationController::class, 'printHiCook'])->name('report.hiCook.print');
+
 
 
 
@@ -194,9 +198,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/validation/iqf/print', [ValidationController::class, 'printIQF'])->name('report.iqf.print');
 
     Route::get('/validation/screwchiller/print', [ValidationController::class, 'printScrewChiller'])->name('report.screwchiller.print');
-
-
-    Route::get('/validation/hiCook/print', [ValidationController::class, 'printHicook'])->name('report.hiCook.print');
 
     Route::get('/validation/smokeHouse/print', [ValidationController::class, 'printSmokehouse'])->name('report.smokeHouse.print');
 
