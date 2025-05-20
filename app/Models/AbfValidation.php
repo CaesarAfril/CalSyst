@@ -30,6 +30,15 @@ class AbfValidation extends Model
         'kapasitas_mesin_2',
         'lokasi',
         'alamat',
+        'notes_sebaran',
+        'notes_grafik',
+        'notes_durasi_spike',
+        'notes_spike',
+        'notes_tabel_penetrasi',
+        'notes_grafik_penetrasi',
+        'notes_stagnansi',
+        'notes_ketercapaian',
+        'kesimpulan',
     ];
 
     public function suhuAbfAll()

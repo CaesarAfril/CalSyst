@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FryerMarelValidation extends Model
+class HiCookValidation extends Model
 {
-    protected $table = 'fryer_marel_validation';
+    protected $table = 'hi_cook_validation';
 
     protected $fillable = [
         'nama_produk',
@@ -38,8 +38,8 @@ class FryerMarelValidation extends Model
         'kesimpulan',
     ];
 
-    public function suhuFryerMarel()
+    public function suhuHiCook()
     {
-        return $this->hasMany(SuhuFryerMarel::class);
+        return $this->hasMany(SuhuHiCook::class);
     }
 }

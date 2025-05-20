@@ -375,6 +375,33 @@
                 </tr>
             </tbody>
         </table>
+
+        <p style="text-align: center;"> <strong>Tabel. 1</strong> Perubahan Suhu per Channel pada Kecepatan 5 Hz dari Suhu Awal ke Suhu Akhir</p>
+
+        @php
+            $chRangeAwal = collect(range(1, 10))->map(function ($ch) use ($suhuAwal) {
+                return $suhuAwal?->{'ch' . $ch};
+            })->filter();
+
+            $chRangeAkhir = collect(range(1, 10))->map(function ($ch) use ($suhuAkhir) {
+                return $suhuAkhir?->{'ch' . $ch};
+            })->filter();
+
+            if ($chRangeAwal->count() && $chRangeAkhir->count()) {
+                $minAwal = $chRangeAwal->min();
+                $maxAwal = $chRangeAwal->max();
+                $minAkhir = $chRangeAkhir->min();
+                $maxAkhir = $chRangeAkhir->max();
+            }
+        @endphp
+
+        <p>
+            Pengambilan data suhu berlangsung selama {{ $duration }}, dimulai pada pukul {{ $suhuAwal->time }} dan berakhir pada pukul {{ $suhuAkhir->time }}. 
+            Selama awal pengambilan data, suhu terukur pada berbagai channel menunjukkan kisaran antara {{ $minAwal }} &deg;C hingga {{ $maxAwal }} &deg;C. 
+            Sementara itu, pada akhir periode pengambilan, suhu berada dalam rentang antara {{ $minAkhir }} &deg;C hingga {{ $maxAkhir }} &deg;C.
+        </p>
+
+        <p>{{ $dataFryerMarel ->notes_sebaran }}</p>
     </div>
 
     {{-- Grafik 1. Persebaran suhu --}}
@@ -383,10 +410,28 @@
 
         <img src="{{ $chartUrlFryerMarel }}" style="width: 100%; margin: auto;">
         <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu {{ $dataFryerMarel->nama_mesin }} </p>
+
+        @php
+            $kesimpulanGrafik = '';
+
+            if (isset($avgAllSpot, $maxSpot, $minSpot, $duration)) {
+                $kesimpulanGrafik .= 'Berdasarkan hasil pengamatan terhadap grafik suhu yang ditampilkan, dapat disimpulkan bahwa suhu rata-rata yang tercatat selama periode pemantauan adalah sebesar ' . number_format($avgAllSpot, 2) . '  °C,';
+
+                $kesimpulanGrafik .= 'Suhu tertinggi yang berhasil dicatat mencapai angka ' . $maxSpot['value'] . ' °C, dan hal ini terjadi pada Channel ' . $maxSpot['channel'] . ', ';
+
+                $kesimpulanGrafik .= 'Sebaliknya, suhu terendah yang terdeteksi berada pada angka ' . $minSpot['value'] . ' °C, yang tercatat pada Channel ' . $minSpot['channel'] . ', ';
+
+                $kesimpulanGrafik .= 'Seluruh data suhu ini diperoleh melalui proses pemantauan yang berlangsung selama ' . $duration->format('%H jam %I menit %S detik') . ', ';
+            }
+        @endphp
+
+        <p>{!! $kesimpulanGrafik !!}</p>
+        <p>{{ $dataFryerMarel ->notes_grafik }}</p>
     </div>
 
     {{-- table luar range --}}
-    <div class="row mb-3">
+    <div class="row mb-3" style="page-break-before: always;">
+        <p>Berdasarkan grafik, berikut detail lengkap suhu awal, suhu akhir, dan durasi pemantauan di setiap titik sensor yang berada di luar range setting suhu mesin</p>
         @if(count($anomalies) > 0)
             <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
                 <thead>
@@ -425,6 +470,8 @@
         <div>
             {!! $conclusion !!}
         </div>
+
+        <p>{{ $dataFryerMarel ->notes_luar_range }}</p>
     </div>
 
     {{-- hasil sebaran suhu --}}
@@ -493,6 +540,26 @@
         </tbody>
         </table>
 
+        <p style="text-align: center;"> <strong>Tabel. 3</strong> Analisis Keseragaman dan Kinerja Alat</p>
+
+        @php
+            $kesimpulanTabel = '';
+
+            // Rata-rata pembacaan midilogger seluruh channel
+            $avgMidilogger = collect($channelAverages)->avg();
+
+            // Koreksi rata-rata
+            $avgKoreksi = round($avgMidilogger - $pembacaanAlat, 2);
+
+            $kesimpulanTabel .= "Berdasarkan hasil pengukuran terhadap keseragaman suhu pada alat, ditetapkan bahwa suhu yang diatur (set suhu) adalah sebesar {$setSuhu} °C. ";
+            $kesimpulanTabel .= "Pembacaan suhu yang ditampilkan oleh alat menunjukkan angka sebesar {$pembacaanAlat} °C, sementara nilai rata-rata pembacaan dari seluruh channel midilogger adalah sebesar " . number_format($avgMidilogger, 2) . " °C. ";
+            $kesimpulanTabel .= "Dengan demikian, terdapat koreksi rata-rata sebesar " . ($avgKoreksi >= 0 ? "+{$avgKoreksi}" : $avgKoreksi) . " °C.";
+        @endphp
+
+        <p>{!! $kesimpulanTabel !!}</p>
+
+        <p>{{ $dataFryerMarel ->notes_keseragaman }}</p>
+
         <div style="width: 100%; text-align: center; margin-bottom: 1rem; margin-top: 1rem;">
             @php
                 $path = public_path('storage/image/uji_tanpa_produk.jpg');
@@ -510,7 +577,7 @@
             <li>3. Ketidakpastian pengukuran diestimasi pada tingkat kepercayaan 95% dengan faktor cakupan k = 2</li>
         </ul>
 
-        <table width="100%" style="text-align: left; margin-top: 5rem;">
+        <table width="100%" style="text-align: left; margin-top: 1rem;">
             <tr>
                 <td width="50%">
                     <p>Salatiga, {{ \Carbon\Carbon::now()->translatedFormat('j F Y') }}</p>
@@ -602,6 +669,37 @@
                 </tr>
             </tfoot>
         </table>
+        <p style="text-align: center;"> <strong>Tabel. 4</strong> Rekaman suhu 10 titik sensor</p>
+
+        @php
+            $kesimpulanPerMenit = '';
+
+            // Suhu rata-rata keseluruhan
+            $kesimpulanPerMenit .= 'Selama periode pemantauan, suhu yang tercatat dari 10 channel menunjukkan, ';
+            $kesimpulanPerMenit .= 'Nilai suhu rata-rata keseluruhan dari semua titik pengukuran adalah sebesar ' . number_format($avgAllSpot, 2) . ' °C, ';
+            $kesimpulanPerMenit .= 'dengan titik suhu tertinggi mencapai ' . number_format($maxSpot['value'], 2) . ' °C yang tercatat pada Channel ' . $maxSpot['channel'] . ', ';
+            $kesimpulanPerMenit .= 'dan suhu terendah sebesar ' . number_format($minSpot['value'], 2) . ' °C pada Channel ' . $minSpot['channel'] . '. ';
+
+            // Kinerja display mesin
+            $kesimpulanPerMenit .= 'Display mesin menunjukkan suhu rata-rata sebesar ' . number_format($avg['display_mesin'], 0) . ' °C, ';
+            $kesimpulanPerMenit .= 'dengan nilai maksimum mencapai ' . number_format($max['display_mesin'], 0) . ' °C dan minimum sebesar ' . number_format($min['display_mesin'], 0) . ' °C. ';
+
+            // Perbedaan antar channel
+            $selisihMaxMin = number_format($maxSpot['value'] - $minSpot['value'], 2);
+            $kesimpulanPerMenit .= 'Rentang suhu antara titik tertinggi dan terendah menunjukkan selisih sebesar ' . $selisihMaxMin . ' °C. ';
+
+            // Stabilitas waktu
+            $jumlahMenit = count($suhuData);
+            $kesimpulanPerMenit .= 'Data dicatat secara berkala selama ' . $jumlahMenit . ' menit. ';
+        @endphp
+
+        <p>{!! $kesimpulanPerMenit !!}</p>
+        <p>{{ $dataFryerMarel ->notes_rekaman }}</p>
+    </div>
+
+    <div class="row mb-3">
+        <h3>KESIMPULAN</h3>
+        <p>{{ $dataFryerMarel ->kesimpulan }}</p>
     </div>
 </body>
 </html>

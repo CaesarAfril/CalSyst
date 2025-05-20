@@ -136,6 +136,39 @@
                     </div>
                 </div>
 
+                {{-- textarea --}}
+                <div class="row mb-3">
+                    <div class="col-sm-6 mb-3">
+                        <label for="notes_sebaran" class="form-label">Notes Sebaran Suhu</label>
+                        <textarea class="form-control" name="notes_sebaran" id="notes_sebaran" placeholder="Masukkan notes"></textarea>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="notes_grafik" class="form-label">Notes Grafik</label>
+                        <textarea class="form-control" name="notes_grafik" id="notes_grafik" placeholder="Masukkan notes"></textarea>
+                    </div>
+                    
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-6 mb-3">
+                        <label for="notes_luar_range" class="form-label">Notes Luar Range</label>
+                        <textarea class="form-control" name="notes_luar_range" id="notes_luar_range" placeholder="Masukkan notes"></textarea>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="notes_keseragaman" class="form-label">Notes Keseragaman Suhu</label>
+                        <textarea class="form-control" name="notes_keseragaman" id="notes_keseragaman" placeholder="Masukkan notes"></textarea>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-6 mb-3">
+                        <label for="notes_rekaman" class="form-label">Notes Rekaman Suhu</label>
+                        <textarea class="form-control" name="notes_rekaman" id="notes_rekaman" placeholder="Masukkan notes"></textarea>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="kesimpulan" class="form-label">Kesimpulan</label>
+                        <textarea class="form-control" name="kesimpulan" id="kesimpulan" placeholder="Masukkan kesimpulan" required></textarea>
+                    </div>
+                </div>
+
                 <div class="d-flex justify-content-end mt-2">
                     <button type="submit" class="btn btn-success">Submit</button>
                 </div>
