@@ -181,7 +181,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/validation/fryer1/{id}', [ValidationController::class, 'deleteFryer1'])->name('validation.fryer1.delete');
     Route::get('/validation/fryer1/print/{id}', [ValidationController::class, 'printFryer1'])->name('report.fryer1.print');
 
-    Route::post('/validation/fryer2/store', [ValidationController::class, 'storeFryer2'])->name('validation.storeFryer1');
+    Route::post('/validation/fryer2/store', [ValidationController::class, 'storeFryer2'])->name('validation.storeFryer2');
     Route::delete('/validation/fryer2/{id}', [ValidationController::class, 'deleteFryer2'])->name('validation.fryer2.delete');
     Route::get('/validation/fryer2/print/{id}', [ValidationController::class, 'printFryer2'])->name('report.fryer2.print');
 

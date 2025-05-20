@@ -18,7 +18,7 @@
         
         <div class="card-body">
             <h3 class="mb-5 mt-4 text-center">Form Fryer 2</h3>
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('validation.storeFryer2') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
@@ -131,8 +131,8 @@
                 {{-- import all suhu excel --}}
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
-                        <label for="suhu_fryer_1" class="form-label">Data sebaran suhu dan suhu pusat produk</label>
-                        <input class="form-control" type="file" name="suhu_fryer_1" id="suhu_fryer_1" accept=".xls,.xlsx" required>
+                        <label for="suhu_fryer_2" class="form-label">Data sebaran suhu dan suhu pusat produk</label>
+                        <input class="form-control" type="file" name="suhu_fryer_2" id="suhu_fryer_2" accept=".xls,.xlsx" required>
                     </div>
                 </div>
 
