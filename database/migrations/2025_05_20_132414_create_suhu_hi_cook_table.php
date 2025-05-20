@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('suhu_hi_cook', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hiCook_validation_id')->constrained('hi_cook_validation')->onDelete('cascade');
+            $table->foreignId('hi_cook_validation_id')->constrained('hi_cook_validation')->onDelete('cascade');
             $table->string('time');
             $table->float('speed')->nullable();
             $table->float('ch1')->nullable();

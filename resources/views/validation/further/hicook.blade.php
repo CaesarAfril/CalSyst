@@ -40,7 +40,7 @@
                             <td>{{ $item->speed_conv_mesin_2 }}</td>
                             <td>{{ $item->kapasitas_mesin_2 }}</td>
                             <td class="d-flex justify-content-center">
-                                <a href="" class="btn btn-primary btn-sm me-2" target="_blank">
+                                <a href="{{ route('report.hiCook.print', $item->id) }}" class="btn btn-primary btn-sm me-2" target="_blank">
                                     Cetak PDF
                                 </a>
                                 <form action="{{ route('validation.hiCook.delete', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">

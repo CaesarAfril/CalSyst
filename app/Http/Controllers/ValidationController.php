@@ -1439,7 +1439,7 @@ class ValidationController extends Controller
 
             foreach ($rows as $row) {
                 SuhuHiCook::create([
-                    'hiCook_validation_id' => $hiCook->id,
+                    'hi_cook_validation_id' => $hiCook->id,
                     'time' => $row[0] ?? null, // Kolom A (Date&Time)
                     'speed' => $row[1] ?? null,      // Kolom B (Speed)
                     'ch1' => $this->parseTemperature($row[2] ?? null),
