@@ -509,7 +509,24 @@
     {{-- Grafik 1. Persebaran suhu --}}
     <div class="row mb-3">
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut:</p>
-        <img src="{{ $chartUrl }}" style="width: 100%; margin: auto;">
+        <div style="position: relative; width: 100%; text-align: center;">
+            <div style="position: relative;">
+                <div style="
+                position: absolute;
+                top: 35%;
+                left: -10px;
+                transform: rotate(-90deg) translateY(-50%);
+                transform-origin: left;
+                ">
+                Suhu (&deg;C)
+                </div>
+
+                <img src="{{ $chartUrl }}" style="width: 100%;">
+            </div>
+            <div style="margin-top: 10px;">
+                Waktu
+            </div>
+        </div>
         <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu Ruang {{ $dataABF->nama_mesin }} </p>
 
         @php
@@ -1250,7 +1267,24 @@
     {{-- grafik penetrasi suhu --}}
     <div class="row mb-3">
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut: </p>
-        <img src="{{ $chartUrlPenetrasi }}" style="width: 100%; margin: auto;">
+        <div style="position: relative; width: 100%; text-align: center;">
+            <div style="position: relative;">
+                {{-- <div style="
+                position: absolute;
+                top: 50%;
+                left: -10px;
+                transform: rotate(-90deg) translateY(-50%);
+                transform-origin: left;
+                ">
+                Suhu (&deg;C)
+                </div> --}}
+
+                <img src="{{ $chartUrlPenetrasi }}" style="width: 100%;">
+            </div>
+            <div style="margin-top: 10px;">
+                Waktu
+            </div>
+        </div>
         <p style="text-align: center;"> <strong>Grafik 2.</strong> Penetrasi Produk (Griller) Pada ABF</p>
 
         <p>{{ $dataABF ->notes_grafik_penetrasi }}</p>

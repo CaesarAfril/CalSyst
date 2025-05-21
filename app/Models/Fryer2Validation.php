@@ -9,6 +9,7 @@ class Fryer2Validation extends Model
     protected $table = 'fryer_2_validation';
 
     protected $fillable = [
+        'produk_fryer_2_id',
         'nama_produk',
         'ingredient',
         'kemasan',
@@ -41,5 +42,10 @@ class Fryer2Validation extends Model
     public function suhuFryer2()
     {
         return $this->hasMany(SuhuFryer2::class);
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(ProdukFryer2::class, 'produk_fryer_2_id');
     }
 }

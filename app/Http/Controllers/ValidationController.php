@@ -14,6 +14,9 @@ use App\Models\Fryer2Validation;
 use App\Models\SuhuFryer2;
 use App\Models\HiCookValidation;
 use App\Models\SuhuHiCook;
+use App\Models\ProdukFryer1;
+use App\Models\ProdukFryer2;
+use App\Models\ProdukHiCook;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 \Carbon\Carbon::setLocale('id');
@@ -370,13 +373,15 @@ class ValidationController extends Controller
 
     public function fryer1_addData()
     {
-        return view('validation.store.store_fryer1');
+        $produkList = ProdukFryer1::all();
+
+        return view('validation.store.store_fryer1', compact('produkList'));
     }
 
     public function storeFryer1(Request $request)
     {
         $validated = $request->validate([
-            'nama_produk' => 'nullable|string',
+            'produk_fryer_1_id' => 'required|exists:produk_fryer_1,id',
             'ingredient' => 'nullable|string',
             'kemasan' => 'nullable|string',
             'nama_mesin' => 'nullable|string',
@@ -384,7 +389,6 @@ class ValidationController extends Controller
             'target_suhu' => 'nullable|string',
             'start_pengujian' => 'nullable|date',
             'end_pengujian' => 'nullable|date',
-            'setting_suhu_mesin' => 'nullable|string',
             'waktu_produk_infeed' => 'nullable|string',
             'suhu_awal_inti' => 'nullable|string',
             'suhu_akhir_inti' => 'nullable|string',
@@ -406,14 +410,19 @@ class ValidationController extends Controller
             'kesimpulan' => 'nullable|string',
         ]);
 
+        // Ambil nama produk dari ID
+        $produk = ProdukFryer1::find($validated['produk_fryer_1_id']);
+
+        $validated['nama_produk'] = $produk->nama_produk;
+        if ($produk->min && $produk->max) {
+            $validated['setting_suhu_mesin'] = "{$produk->min}-{$produk->max}";
+        }
+
         // Simpan data utama
         $fryer1 = Fryer1Validation::create($validated);
 
         if ($request->hasFile('suhu_fryer_1')) {
             $file = $request->file('suhu_fryer_1');
-
-            // Simpan file untuk referensi
-            $filePath = $file->store('fryer_1_temps');
 
             // Baca data dari Excel
             $data = Excel::toArray([], $file)[0]; // Ambil sheet pertama
@@ -424,8 +433,8 @@ class ValidationController extends Controller
             foreach ($rows as $row) {
                 SuhuFryer1::create([
                     'fryer1_validation_id' => $fryer1->id,
-                    'time' => $row[0] ?? null, // Kolom A (Date&Time)
-                    'speed' => $row[1] ?? null,      // Kolom B (Speed)
+                    'time' => $row[0] ?? null,
+                    'speed' => $row[1] ?? null,
                     'ch1' => $this->parseTemperature($row[2] ?? null),
                     'ch2' => $this->parseTemperature($row[3] ?? null),
                     'ch3' => $this->parseTemperature($row[4] ?? null),
@@ -592,7 +601,7 @@ class ValidationController extends Controller
                         'max' => 0,
                         'title' => [
                             'display' => true,
-                            'text' => 'Suhu (°C)'
+                            'text' => 'Suhu',
                         ],
                         'ticks' => [
                             'stepSize' => 5
@@ -601,7 +610,7 @@ class ValidationController extends Controller
                     'x' => [
                         'title' => [
                             'display' => true,
-                            'text' => 'Waktu'
+                            'text' => 'Waktu',
                         ]
                     ]
                 ]
@@ -678,13 +687,14 @@ class ValidationController extends Controller
 
     public function fryer2_addData()
     {
-        return view('validation.store.store_fryer2');
+        $produkList = ProdukFryer2::all();
+        return view('validation.store.store_fryer2', compact('produkList'));
     }
 
     public function storeFryer2(Request $request)
     {
         $validated = $request->validate([
-            'nama_produk' => 'nullable|string',
+            'produk_fryer_2_id' => 'required|exists:produk_fryer_2,id',
             'ingredient' => 'nullable|string',
             'kemasan' => 'nullable|string',
             'nama_mesin' => 'nullable|string',
@@ -692,7 +702,6 @@ class ValidationController extends Controller
             'target_suhu' => 'nullable|string',
             'start_pengujian' => 'nullable|date',
             'end_pengujian' => 'nullable|date',
-            'setting_suhu_mesin' => 'nullable|string',
             'waktu_produk_infeed' => 'nullable|string',
             'suhu_awal_inti' => 'nullable|string',
             'suhu_akhir_inti' => 'nullable|string',
@@ -714,14 +723,19 @@ class ValidationController extends Controller
             'kesimpulan' => 'nullable|string',
         ]);
 
+        // Ambil nama produk dari ID
+        $produk = ProdukFryer2::find($validated['produk_fryer_2_id']);
+
+        $validated['nama_produk'] = $produk->nama_produk;
+        if ($produk->min && $produk->max) {
+            $validated['setting_suhu_mesin'] = "{$produk->min}-{$produk->max}";
+        }
+
         // Simpan data utama
         $fryer2 = Fryer2Validation::create($validated);
 
         if ($request->hasFile('suhu_fryer_2')) {
             $file = $request->file('suhu_fryer_2');
-
-            // Simpan file untuk referensi
-            $filePath = $file->store('fryer_2_temps');
 
             // Baca data dari Excel
             $data = Excel::toArray([], $file)[0]; // Ambil sheet pertama
@@ -759,7 +773,6 @@ class ValidationController extends Controller
 
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
-
 
     public function printFryer2($id, Request $request)
     {
@@ -1028,9 +1041,6 @@ class ValidationController extends Controller
 
         if ($request->hasFile('suhu_fryer_marel')) {
             $file = $request->file('suhu_fryer_marel');
-
-            // Simpan file untuk referensi
-            $filePath = $file->store('fryer_marel_temps');
 
             // Baca data dari Excel
             $data = Excel::toArray([], $file)[0]; // Ambil sheet pertama
@@ -1386,13 +1396,14 @@ class ValidationController extends Controller
 
     public function hiCook_addData()
     {
-        return view('validation.store.store_hiCook');
+        $produkList = ProdukHiCook::all();
+        return view('validation.store.store_hiCook', compact('produkList'));
     }
 
     public function storeHiCook(Request $request)
     {
         $validated = $request->validate([
-            'nama_produk' => 'nullable|string',
+            'produk_hi_cook_id' => 'required|exists:produk_hi_cook,id',
             'ingredient' => 'nullable|string',
             'kemasan' => 'nullable|string',
             'nama_mesin' => 'nullable|string',
@@ -1400,7 +1411,6 @@ class ValidationController extends Controller
             'target_suhu' => 'nullable|string',
             'start_pengujian' => 'nullable|date',
             'end_pengujian' => 'nullable|date',
-            'setting_suhu_mesin' => 'nullable|string',
             'waktu_produk_infeed' => 'nullable|string',
             'suhu_awal_inti' => 'nullable|string',
             'suhu_akhir_inti' => 'nullable|string',
@@ -1422,14 +1432,19 @@ class ValidationController extends Controller
             'kesimpulan' => 'nullable|string',
         ]);
 
+        // Ambil nama produk dari ID
+        $produk = ProdukHiCook::find($validated['produk_hi_cook_id']);
+
+        $validated['nama_produk'] = $produk->nama_produk;
+        if ($produk->min && $produk->max) {
+            $validated['setting_suhu_mesin'] = "{$produk->min}-{$produk->max}";
+        }
+
         // Simpan data utama
         $hiCook = HiCookValidation::create($validated);
 
         if ($request->hasFile('suhu_hi_cook')) {
             $file = $request->file('suhu_hi_cook');
-
-            // Simpan file untuk referensi
-            $filePath = $file->store('hi_cook_temps');
 
             // Baca data dari Excel
             $data = Excel::toArray([], $file)[0]; // Ambil sheet pertama

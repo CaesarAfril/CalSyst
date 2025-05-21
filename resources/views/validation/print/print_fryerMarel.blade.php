@@ -408,7 +408,24 @@
     <div class="row mb-3">
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut:</p>
 
-        <img src="{{ $chartUrlFryerMarel }}" style="width: 100%; margin: auto;">
+        <div style="position: relative; width: 100%; text-align: center;">
+            <div style="position: relative;">
+                <div style="
+                position: absolute;
+                top: 35%;
+                left: -10px;
+                transform: rotate(-90deg) translateY(-50%);
+                transform-origin: left;
+                ">
+                Suhu (°C)
+                </div>
+
+                <img src="{{ $chartUrlFryerMarel }}" style="width: 100%;">
+            </div>
+            <div style="margin-top: 10px;">
+                Waktu
+            </div>
+        </div>
         <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu {{ $dataFryerMarel->nama_mesin }} </p>
 
         @php
