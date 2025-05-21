@@ -9,6 +9,7 @@ class HiCookValidation extends Model
     protected $table = 'hi_cook_validation';
 
     protected $fillable = [
+        'produk_hi_cook_id',
         'nama_produk',
         'ingredient',
         'kemasan',
@@ -41,5 +42,10 @@ class HiCookValidation extends Model
     public function suhuHiCook()
     {
         return $this->hasMany(SuhuHiCook::class);
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(ProdukHiCook::class, 'produk_hi_cook_id');
     }
 }

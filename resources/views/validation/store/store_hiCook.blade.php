@@ -23,7 +23,16 @@
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
                         <label for="nama_produk" class="form-label">Nama Produk</label>
-                        <input type="text" name="nama_produk" id="nama_produk" class="form-control" placeholder="Masukkan nama produk" required>
+                        <select name="produk_hi_cook_id" id="produk_hi_cook_id" class="form-control" required>
+                            <option value="">-- Pilih Produk --</option>
+                            @foreach($produkList as $produk)
+                                <option value="{{ $produk->id }}"
+                                        data-min="{{ $produk->min }}"
+                                        data-max="{{ $produk->max }}">
+                                    {{ $produk->nama_produk }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col-sm-6 mb-3">
                         <label for="ingredient" class="form-label">Ingredient</label>
@@ -70,7 +79,7 @@
 
                     <div class="col-sm-6 mb-3">
                         <label for="setting_suhu_mesin" class="form-label">Setting Suhu Mesin</label>
-                        <input type="text" name="setting_suhu_mesin" id="setting_suhu_mesin" class="form-control" placeholder="Masukkan setting suhu mesin" required>
+                        <input type="text" name="setting_suhu_mesin" id="setting_suhu_mesin" class="form-control" required readonly>
                     </div>
                     <div class="col-sm-6 mb-3">
                         <label for="waktu_produk_infeed" class="form-label">Waktu Produk Dari Infeed ke Outfeed</label>
@@ -180,5 +189,18 @@
 </div>
 @endsection
 @section('script')
+<script>
+    document.getElementById('produk_hi_cook_id').addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const min = selectedOption.getAttribute('data-min');
+        const max = selectedOption.getAttribute('data-max');
+        const suhuInput = document.getElementById('setting_suhu_mesin');
 
+        if (min && max) {
+            suhuInput.value = `${min}-${max}`;
+        } else {
+            suhuInput.value = '';
+        }
+    });
+</script>
 @endsection

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Laporan Validasi Fryer 1</title>
+    <title>Laporan Validasi Fryer CFS 1</title>
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -119,7 +119,7 @@
                 </td>
                 <td style="text-align: center; vertical-align: middle;">
                     <h2 style="margin-left: -12rem; text-transform: uppercase;">
-                        LAPORAN HASIL VALIDASI <br> FRYER 1 <br>
+                        LAPORAN HASIL VALIDASI <br> FRYER CFS 1 <br>
                         {{ $dataFryer1->lokasi }}
                     </h2>
                 </td>
@@ -408,7 +408,24 @@
     <div class="row mb-3">
         <p>Data pengukuran persebaran suhu ini dapat digambarkan dalam grafik sebagai berikut:</p>
 
-        <img src="{{ $chartUrlFryer1 }}" style="width: 100%; margin: auto;">
+        <div style="position: relative; width: 100%; text-align: center;">
+            <div style="position: relative;">
+                <div style="
+                position: absolute;
+                top: 35%;
+                left: -10px;
+                transform: rotate(-90deg) translateY(-50%);
+                transform-origin: left;
+                ">
+                Suhu (°C)
+                </div>
+
+                <img src="{{ $chartUrlFryer1 }}" style="width: 100%;">
+            </div>
+            <div style="margin-top: 10px;">
+                Waktu
+            </div>
+        </div>
         <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu {{ $dataFryer1->nama_mesin }} </p>
 
         @php

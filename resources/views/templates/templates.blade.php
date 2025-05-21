@@ -305,12 +305,12 @@
                                             <ul class="menu-sub">
                                                 <li class="menu-item {{ request()->is('validation/further/fryer-1*') ? 'active' : '' }}">
                                                     <a href="{{ route('further-fryer-1') }}" class="menu-link">
-                                                        <div class="custom-sidebar-text" style="font-size: 18px">Fryer 1</div>
+                                                        <div class="custom-sidebar-text" style="font-size: 18px">Fryer CFS 1</div>
                                                     </a>
                                                 </li>
                                                 <li class="menu-item {{ request()->is('validation/further/fryer-2*') ? 'active' : '' }}">
                                                     <a href="{{ route('further-fryer-2') }}" class="menu-link">
-                                                        <div class="custom-sidebar-text" style="font-size: 18px">Fryer 2</div>
+                                                        <div class="custom-sidebar-text" style="font-size: 18px">Fryer CFS 2</div>
                                                     </a>
                                                 </li>
                                                 <li class="menu-item {{ request()->is('validation/further/fryer-marel*') ? 'active' : '' }}">
