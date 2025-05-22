@@ -16,6 +16,7 @@ use App\Models\HiCookValidation;
 use App\Models\SuhuHiCook;
 use App\Models\ProdukFryer1;
 use App\Models\ProdukFryer2;
+use App\Models\ProdukFryerMarel;
 use App\Models\ProdukHiCook;
 use PDF;
 use Illuminate\Support\Facades\Storage;
@@ -1000,13 +1001,14 @@ class ValidationController extends Controller
 
     public function fryerMarel_addData()
     {
-        return view('validation.store.store_fryerMarel');
+        $produkList = ProdukFryerMarel::all();
+        return view('validation.store.store_fryerMarel', compact('produkList'));
     }
 
     public function storeFryerMarel(Request $request)
     {
         $validated = $request->validate([
-            'nama_produk' => 'nullable|string',
+            'produk_fryer_marel_id' => 'required|exists:produk_fryer_marel,id',
             'ingredient' => 'nullable|string',
             'kemasan' => 'nullable|string',
             'nama_mesin' => 'nullable|string',
@@ -1014,7 +1016,6 @@ class ValidationController extends Controller
             'target_suhu' => 'nullable|string',
             'start_pengujian' => 'nullable|date',
             'end_pengujian' => 'nullable|date',
-            'setting_suhu_mesin' => 'nullable|string',
             'waktu_produk_infeed' => 'nullable|string',
             'suhu_awal_inti' => 'nullable|string',
             'suhu_akhir_inti' => 'nullable|string',
@@ -1035,6 +1036,14 @@ class ValidationController extends Controller
             'notes_rekaman' => 'nullable|string',
             'kesimpulan' => 'nullable|string',
         ]);
+
+        // Ambil nama produk dari ID
+        $produk = ProdukFryerMarel::find($validated['produk_fryer_marel_id']);
+
+        $validated['nama_produk'] = $produk->nama_produk;
+        if ($produk->min && $produk->max) {
+            $validated['setting_suhu_mesin'] = "{$produk->min}-{$produk->max}";
+        }
 
         // Simpan data utama
         $fryerMarel = FryerMarelValidation::create($validated);

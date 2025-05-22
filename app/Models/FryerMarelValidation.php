@@ -9,6 +9,7 @@ class FryerMarelValidation extends Model
     protected $table = 'fryer_marel_validation';
 
     protected $fillable = [
+        'produk_fryer_marel_id',
         'nama_produk',
         'ingredient',
         'kemasan',
@@ -41,5 +42,10 @@ class FryerMarelValidation extends Model
     public function suhuFryerMarel()
     {
         return $this->hasMany(SuhuFryerMarel::class);
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(ProdukFryerMarel::class, 'produk_fryer_marel_id');
     }
 }
