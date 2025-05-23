@@ -415,8 +415,8 @@ class ValidationController extends Controller
         $produk = ProdukFryer1::find($validated['produk_fryer_1_id']);
 
         $validated['nama_produk'] = $produk->nama_produk;
-        if ($produk->min && $produk->max) {
-            $validated['setting_suhu_mesin'] = "{$produk->min}-{$produk->max}";
+        if ($produk->setting_min && $produk->setting_max) {
+            $validated['setting_suhu_mesin'] = "{$produk->setting_min}-{$produk->setting_max}";
         }
 
         // Simpan data utama
@@ -728,8 +728,8 @@ class ValidationController extends Controller
         $produk = ProdukFryer2::find($validated['produk_fryer_2_id']);
 
         $validated['nama_produk'] = $produk->nama_produk;
-        if ($produk->min && $produk->max) {
-            $validated['setting_suhu_mesin'] = "{$produk->min}-{$produk->max}";
+        if ($produk->setting_min && $produk->setting_max) {
+            $validated['setting_suhu_mesin'] = "{$produk->setting_min}-{$produk->setting_max}";
         }
 
         // Simpan data utama
@@ -1041,8 +1041,8 @@ class ValidationController extends Controller
         $produk = ProdukFryerMarel::find($validated['produk_fryer_marel_id']);
 
         $validated['nama_produk'] = $produk->nama_produk;
-        if ($produk->min && $produk->max) {
-            $validated['setting_suhu_mesin'] = "{$produk->min}-{$produk->max}";
+        if ($produk->setting_min && $produk->setting_max) {
+            $validated['setting_suhu_mesin'] = "{$produk->setting_min}-{$produk->setting_max}";
         }
 
         // Simpan data utama

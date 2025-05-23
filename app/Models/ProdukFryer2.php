@@ -8,7 +8,7 @@ class ProdukFryer2 extends Model
 {
     protected $table = 'produk_fryer_2';
 
-    protected $fillable = ['nama_produk', 'min', 'max'];
+    protected $fillable = ['nama_produk', 'min', 'max', 'setting_min', 'setting_max'];
 
     public function fryer2Validations()
     {

@@ -27,8 +27,8 @@
                             <option value="">-- Pilih Produk --</option>
                             @foreach($produkList as $produk)
                                 <option value="{{ $produk->id }}"
-                                    data-min="{{ $produk->min }}"
-                                    data-max="{{ $produk->max }}">
+                                    data-min="{{ $produk->setting_min }}"
+                                    data-max="{{ $produk->setting_max }}">
                                     {{ $produk->nama_produk }}
                                 </option>
                             @endforeach
