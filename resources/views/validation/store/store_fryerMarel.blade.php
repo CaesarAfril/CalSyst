@@ -23,13 +23,12 @@
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3">
                         <label for="nama_produk" class="form-label">Nama Produk</label>
-                        {{-- <input type="text" name="nama_produk" id="nama_produk" class="form-control" placeholder="Masukkan nama produk" required> --}}
                         <select name="produk_fryer_marel_id" id="produk_fryer_marel_id" class="form-control" required>
                             <option value="">-- Pilih Produk --</option>
                             @foreach($produkList as $produk)
                                 <option value="{{ $produk->id }}"
-                                    data-min="{{ $produk->min }}"
-                                    data-max="{{ $produk->max }}">
+                                    data-min="{{ $produk->setting_min }}"
+                                    data-max="{{ $produk->setting_max }}">
                                     {{ $produk->nama_produk }}
                                 </option>
                             @endforeach

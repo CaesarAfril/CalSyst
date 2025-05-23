@@ -8,7 +8,7 @@ class ProdukHiCook extends Model
 {
     protected $table = 'produk_hi_cook';
 
-    protected $fillable = ['nama_produk', 'min', 'max'];
+    protected $fillable = ['nama_produk', 'min', 'max', 'setting_min', 'setting_max'];
 
     public function hiCookValidations()
     {

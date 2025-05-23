@@ -29,8 +29,10 @@ class ProdukHiCookSeeder extends Seeder
                 [
                     'min' => $produk[1],
                     'max' => $produk[2],
-                    'created_at' => $produk[3],
-                    'updated_at' => $produk[4]
+                    'setting_min' => $produk[3],
+                    'setting_max' => $produk[4],
+                    'created_at' => $produk[5],
+                    'updated_at' => $produk[6]
                 ]
             );
         }
