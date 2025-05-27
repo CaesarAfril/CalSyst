@@ -32,4 +32,14 @@ class Machine extends Model
     {
         return $this->hasMany(Validation_asset::class, 'machine_uuid');
     }
+
+    public function produkValidations()
+    {
+        return $this->hasMany(ProdukValidation::class, 'machine_uuid', 'uuid');
+    }
+
+    public function machineValidations()
+    {
+        return $this->hasMany(MachineValidation::class, 'machine_uuid', 'uuid');
+    }
 }

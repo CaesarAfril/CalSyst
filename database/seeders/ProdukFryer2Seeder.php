@@ -15,12 +15,12 @@ class ProdukFryer2Seeder extends Seeder
         $now = Carbon::now();
 
         $produkList = [
-            ['Fiesta Nugget', 160, 170, null, null, $now, $now],
-            ['Fiesta Stikie', 160, 170, null, null, $now, $now],
-            ['Fiesta Dino', 160, 170, null, null, $now, $now],
+            ['Fiesta Nugget', 160, 170, 159, 167, $now, $now],
+            ['Fiesta Stikie', 160, 170, 159, 167, $now, $now],
+            ['Fiesta Dino', 160, 170, 159, 167, $now, $now],
             ['Fiesta Pizz ABC', 155, 165, 154, 162, $now, $now],
-            ['Fiesta Crispy Bubble', 160, 170, null, null, $now, $now],
-            ['Fiesta Spicy Nugget', 160, 170, null, null, $now, $now],
+            ['Fiesta Crispy Bubble', 160, 170, 159, 167, $now, $now],
+            ['Fiesta Spicy Nugget', 160, 170, 159, 167, $now, $now],
             ['Champ Nugget', 160, 170, 159, 167, $now, $now],
             ['Champ Stik', 160, 170, 159, 167, $now, $now],
             ['Champ Coin', 160, 170, 159, 167, $now, $now],
@@ -34,7 +34,7 @@ class ProdukFryer2Seeder extends Seeder
             ['Okey Stik', 160, 170, 159, 167, $now, $now],
             ['Asimo Nugget', 160, 170, 159, 167, $now, $now],
             ['Asimo Stik', 140, 150, 139, 147, $now, $now],
-            ['PH Stikie', 155, 165, 159, 167, $now, $now],
+            ['PH Stikie', 155, 165, 154, 162, $now, $now],
             ['Umbul Sidomukti Nugget', 160, 170, 159, 167, $now, $now],
             ['Shake Shake Chicken Nugget', 160, 170, 159, 167, $now, $now]
         ];
