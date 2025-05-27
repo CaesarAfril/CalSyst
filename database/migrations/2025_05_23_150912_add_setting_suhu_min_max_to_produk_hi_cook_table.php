@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('produk_hi_cook', function (Blueprint $table) {
-            $table->float('setting_min')->nullable()->after('max');
-            $table->float('setting_max')->nullable()->after('setting_min');
+            // $table->float('setting_min')->nullable()->after('max');
+            // $table->float('setting_max')->nullable()->after('setting_min');
         });
     }
 

@@ -28,7 +28,15 @@
                             @foreach($produkList as $produk)
                                 <option value="{{ $produk->id }}"
                                         data-min="{{ $produk->min }}"
-                                        data-max="{{ $produk->max }}">
+                                        data-max="{{ $produk->max }}"
+                                        blok1-min="{{ $produk->blok1_min }}"
+                                        blok1-max="{{ $produk->blok1_max }}"
+                                        blok2-min="{{ $produk->blok2_min }}"
+                                        blok2-max="{{ $produk->blok2_max }}"
+                                        blok3-min="{{ $produk->blok3_min }}"
+                                        blok3-max="{{ $produk->blok3_max }}"
+                                        blok4-min="{{ $produk->blok4_min }}"
+                                        blok4-max="{{ $produk->blok4_max }}">
                                     {{ $produk->nama_produk }}
                                 </option>
                             @endforeach

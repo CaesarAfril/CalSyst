@@ -267,7 +267,7 @@
                                     </ul>
                                 </li>
 
-                                <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/slaughterhouse/ABF*') || request()->is('validation/slaughterhouse/IQF*') || request()->is('validation/further/fryer-1*') || request()->is('validation/further/fryer-2*') || request()->is('validation/further/fryer-marel*') || request()->is('validation/further/hi-cook*') || request()->is('validation/sausage/smoke-house*') || request()->is('validation/breadcrumb/aging*') || request()->is('validation/laboratory/autoclave1*') || request()->is('validation/laboratory/autoclave2*') || request()->is('validation/laboratory/ovenmemert1*') || request()->is('validation/laboratory/ovenmemert2*') ? 'open' : '' }}">
+                                {{-- <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/slaughterhouse/ABF*') || request()->is('validation/slaughterhouse/IQF*') || request()->is('validation/further/fryer-1*') || request()->is('validation/further/fryer-2*') || request()->is('validation/further/fryer-marel*') || request()->is('validation/further/hi-cook*') || request()->is('validation/sausage/smoke-house*') || request()->is('validation/breadcrumb/aging*') || request()->is('validation/laboratory/autoclave1*') || request()->is('validation/laboratory/autoclave2*') || request()->is('validation/laboratory/ovenmemert1*') || request()->is('validation/laboratory/ovenmemert2*') ? 'open' : '' }}">
                                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                                         <i class="menu-icon bx bxs-check-shield custom-sidebar-text"></i>
                                         <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Report Validasi</div>
@@ -388,7 +388,7 @@
                                             </ul>
                                         </li>
                                     </ul>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
 
