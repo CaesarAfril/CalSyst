@@ -10,15 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('machine_validation', function (Blueprint $table) {
+        Schema::create('hi_cook_validation', function (Blueprint $table) {
             $table->id();
             $table->uuid('machine_uuid');
             $table->foreign('machine_uuid')
                 ->references('uuid')
-                ->on('machines')
+                ->on('validation_assets')
                 ->onDelete('cascade');
-            $table->foreignId('product_validation_id')
-                ->constrained('product_validation')
+            $table->foreignId('hi_cook_product_id')
+                ->constrained('hi_cook_product')
                 ->onDelete('cascade');
             $table->string('product_name')->nullable();
             $table->string('ingredient')->nullable();
@@ -56,6 +56,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('machine_validation');
+        Schema::dropIfExists('hi_cook_validation');
     }
 };

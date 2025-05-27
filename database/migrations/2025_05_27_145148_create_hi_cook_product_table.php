@@ -10,16 +10,24 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('product_validation', function (Blueprint $table) {
+        Schema::create('hi_cook_product', function (Blueprint $table) {
             $table->id();
             $table->uuid('machine_uuid');
             $table->foreign('machine_uuid')
                 ->references('uuid')
-                ->on('machines')
+                ->on('validation_assets')
                 ->onDelete('cascade');
             $table->string('product_name');
             $table->float('min')->nullable();
             $table->float('max')->nullable();
+            $table->float('blok1_min')->nullable();
+            $table->float('blok1_max')->nullable();
+            $table->float('blok2_min')->nullable();
+            $table->float('blok2_max')->nullable();
+            $table->float('blok3_min')->nullable();
+            $table->float('blok3_max')->nullable();
+            $table->float('blok4_min')->nullable();
+            $table->float('blok4_max')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +37,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_validation');
+        Schema::dropIfExists('hi_cook_product');
     }
 };

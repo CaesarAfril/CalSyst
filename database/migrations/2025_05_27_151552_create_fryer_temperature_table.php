@@ -4,21 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('temperature_validation', function (Blueprint $table) {
+        Schema::create('fryer_temperature', function (Blueprint $table) {
             $table->id();
-            $table->uuid('machine_uuid');
-            $table->foreign('machine_uuid')
-                ->references('uuid')
-                ->on('machines')
-                ->onDelete('cascade');
-            $table->foreignId('machine_validation_id')->constrained('machine_validation')->onDelete('cascade');
+            $table->foreignId('fryer_validation_id')->constrained('fryer_validation')->onDelete('cascade');
             $table->string('time');
             $table->float('speed')->nullable();
             $table->float('ch1')->nullable();
@@ -41,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('temperature_validation');
+        Schema::dropIfExists('fryer_temperature');
     }
 };
