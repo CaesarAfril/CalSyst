@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class MachineValidation extends Model
+class FryerValidation extends Model
 {
     use HasFactory;
 
-    protected $table = 'machine_validation';
+    protected $table = 'fryer_validation';
 
     protected $fillable = [
         'machine_uuid',
-        'product_validation_id',
+        'fryer_product_id',
         'product_name',
         'ingredient',
         'packaging',
@@ -43,14 +43,13 @@ class MachineValidation extends Model
         'conclusion',
     ];
 
-
-    public function machine()
+    public function validationAsset()
     {
-        return $this->belongsTo(Machine::class, 'machine_uuid', 'uuid');
+        return $this->belongsTo(Validation_asset::class, 'machine_uuid', 'uuid');
     }
 
-    public function productValidation()
+    public function fryerProduct()
     {
-        return $this->belongsTo(ProdukValidation::class, 'product_validation_id');
+        return $this->belongsTo(FryerProduct::class);
     }
 }

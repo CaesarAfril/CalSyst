@@ -3,49 +3,53 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class HiCookValidation extends Model
 {
+    use HasFactory;
+
     protected $table = 'hi_cook_validation';
 
     protected $fillable = [
-        'produk_hi_cook_id',
-        'nama_produk',
+        'machine_uuid',
+        'hi_cook_product_id',
+        'product_name',
         'ingredient',
-        'kemasan',
-        'nama_mesin',
-        'dimensi',
-        'target_suhu',
-        'start_pengujian',
-        'end_pengujian',
-        'setting_suhu_mesin',
-        'waktu_produk_infeed',
-        'suhu_awal_inti',
-        'suhu_akhir_inti',
+        'packaging',
+        'machine_name',
+        'dimension',
+        'target_temperature',
+        'start_testing',
+        'end_testing',
+        'setting_machine_temperature',
+        'product_infeed_time',
+        'initial_core_temperature',
+        'final_core_temperature',
         'batch',
-        'waktu_pemasakan',
-        'nama_mesin_2',
-        'merek_mesin_2',
-        'tipe_mesin_2',
-        'speed_conv_mesin_2',
-        'kapasitas_mesin_2',
-        'lokasi',
-        'alamat',
-        'notes_sebaran',
-        'notes_grafik',
-        'notes_luar_range',
-        'notes_keseragaman',
-        'notes_rekaman',
-        'kesimpulan',
+        'cooking_time',
+        'machine_name_2',
+        'machine_brand_2',
+        'machine_type_2',
+        'machine_speed_conv_2',
+        'machine_capacity_2',
+        'location',
+        'address',
+        'distribution_notes',
+        'chart_notes',
+        'out_of_range_notes',
+        'uniformity_notes',
+        'transcription_notes',
+        'conclusion',
     ];
 
-    public function suhuHiCook()
+    public function validationAsset()
     {
-        return $this->hasMany(SuhuHiCook::class);
+        return $this->belongsTo(Validation_asset::class, 'machine_uuid', 'uuid');
     }
 
-    public function produk()
+    public function hiCookProduct()
     {
-        return $this->belongsTo(ProdukHiCook::class, 'produk_hi_cook_id');
+        return $this->belongsTo(HiCookProduct::class);
     }
 }

@@ -46,4 +46,24 @@ class Validation_asset extends Model
     {
         return $this->belongsTo(Machine::class, 'machine_uuid', 'uuid');
     }
+
+    public function fryerProducts()
+    {
+        return $this->hasMany(FryerProduct::class, 'machine_uuid', 'uuid');
+    }
+
+    public function hiCookProducts()
+    {
+        return $this->hasMany(HiCookProduct::class, 'machine_uuid', 'uuid');
+    }
+
+    public function fryerValidations()
+    {
+        return $this->hasMany(FryerValidation::class, 'machine_uuid', 'uuid');
+    }
+
+    public function hiCookValidations()
+    {
+        return $this->hasMany(HiCookValidation::class, 'machine_uuid', 'uuid');
+    }
 }
