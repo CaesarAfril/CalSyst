@@ -66,4 +66,9 @@ class Validation_asset extends Model
     {
         return $this->hasMany(HiCookValidation::class, 'machine_uuid', 'uuid');
     }
+
+    public function AbfValidations()
+    {
+        return $this->hasMany(AbfValidation::class, 'machine_uuid', 'uuid');
+    }
 }

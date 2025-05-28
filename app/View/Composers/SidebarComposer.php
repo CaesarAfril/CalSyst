@@ -10,9 +10,10 @@ class SidebarComposer
 {
     public function compose(View $view): void
     {
-        $departments = Cache::remember('sidebar_departments', 3600, function () {
-            return Department::whereNull('deleted_at')->get();
-        });
+        $departments = Department::with('validation_assets')
+            ->whereHas('validation_assets')
+            ->whereNull('deleted_at')
+            ->get();
 
         $view->with('departments', $departments);
     }

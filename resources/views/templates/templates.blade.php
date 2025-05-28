@@ -278,6 +278,15 @@
                                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                                             <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">{{$department->department}}</div>
                                         </a>
+                                        <ul class="menu-sub">
+                                            @foreach($department->validation_assets as $validation_asset)
+                                            <li class="menu-item">
+                                                <a href="{{$validation_asset->uuid}}" class="menu-link">
+                                                    <div class="custom-sidebar-text" style="font-size: 18px">{{$validation_asset->detail}}</div>
+                                                </a>
+                                            </li>
+                                            @endforeach
+                                        </ul>
                                     </li>
                                     @endforeach
                                     <!-- <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/slaughterhouse/ABF*') || request()->is('validation/slaughterhouse/IQF*')  ? 'open' : '' }}">

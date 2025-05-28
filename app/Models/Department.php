@@ -29,16 +29,16 @@ class Department extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class, 'dept_uuid');
+        return $this->hasMany(User::class, 'dept_uuid', 'uuid');
     }
 
     public function assets()
     {
-        return $this->hasMany(Assets::class, 'dept_uuid');
+        return $this->hasMany(Assets::class, 'dept_uuid', 'uuid');
     }
 
     public function validation_assets()
     {
-        return $this->hasMany(Validation_asset::class, 'dept_uuid');
+        return $this->hasMany(Validation_asset::class, 'dept_uuid', 'uuid');
     }
 }

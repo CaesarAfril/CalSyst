@@ -39,10 +39,16 @@ class AbfValidation extends Model
         'notes_stagnansi',
         'notes_ketercapaian',
         'kesimpulan',
+        'machine_uuid'
     ];
 
     public function suhuAbfAll()
     {
         return $this->hasMany(SuhuAbfAll::class, 'abf_validation_id');
+    }
+
+    public function validation_asset()
+    {
+        return $this->belongsTo(Validation_asset::class, 'machine_uuid');
     }
 }
