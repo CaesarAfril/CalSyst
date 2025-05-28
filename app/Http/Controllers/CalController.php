@@ -178,7 +178,11 @@ class CalController extends Controller
     {
         $validated = $request->validate(['notes' => 'required']);
         $file = external_calibration_file::where('uuid', $uuid)->firstOrFail();
-        $file->update(['notes' => $validated['notes']]);
+        $file->update([
+            'notes' => $validated['notes'],
+            'path' => NULL,
+            'filename' => NULL
+        ]);
 
         return redirect()->back();
     }
