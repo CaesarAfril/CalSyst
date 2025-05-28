@@ -155,6 +155,25 @@ class CalController extends Controller
         return redirect()->back();
     }
 
+    public function updateFile(Request $request, $uuid, $progress)
+    {
+        $calibration = external_calibration_file::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = $file->getClientOriginalName();
+            $folder = "calibration/" . strtolower($progress);
+            $path = $file->storeAs($folder, $filename, 'public');
+
+            $calibration->update([
+                'path' => $path,
+                'filename' => $filename,
+            ]);
+        }
+
+        return redirect()->back();
+    }
+
     public function addNotes(Request $request, $uuid)
     {
         $validated = $request->validate(['notes' => 'required']);
