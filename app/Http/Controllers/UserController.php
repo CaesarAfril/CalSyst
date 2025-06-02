@@ -38,7 +38,7 @@ class UserController extends Controller
             'user_role' => 'required|string|exists:role,uuid'
         ]);
 
-        User::create([
+        $user = User::create([
             'username' => $request->user_username,
             'name' => $request->user_name,
             'email' => $request->user_email,
@@ -47,6 +47,8 @@ class UserController extends Controller
             'dept_uuid' => $request->user_department,
             'password' => Hash::make('cpi12345')
         ]);
+
+        $user->assignRole($request->role);
 
         return redirect()->back();
     }

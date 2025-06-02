@@ -15,6 +15,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Validation_assetController;
 use App\Http\Controllers\WeightController;
 use App\Http\Controllers\ValidationController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 use App\Mail\AssetReminderEmail;
@@ -212,4 +214,27 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/validation/ovenmemert1/print', [ValidationController::class, 'printOvenmemert1'])->name('report.ovenmemert1.print');
 
     Route::get('/validation/ovenmemert2/print', [ValidationController::class, 'printOvenmemert2'])->name('report.ovenmemert2.print');
+
+
+
+
+
+    // ROLE ROUTES
+    Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:role.view')->name('roles.index');
+    Route::get('/roles/create', [RoleController::class, 'create'])->middleware('permission:role.create')->name('roles.create');
+    Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:role.create')->name('roles.store');
+    Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->middleware('permission:role.edit')->name('roles.edit');
+    Route::put('/roles/{id}', [RoleController::class, 'update'])->middleware('permission:role.edit')->name('roles.update');
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->middleware('permission:role.delete')->name('roles.destroy');
+
+    Route::get('/roles/{role}/manage-access', [RoleController::class, 'manageAccess'])->middleware('permission:role.manage.access')->name('roles.manage-access');
+    Route::post('/roles/{role}/manage-access', [RoleController::class, 'updateAccess'])->middleware('permission:role.manage.access')->name('roles.manage-access.update');
+
+    // PERMISSION ROUTES
+    Route::get('/permissions', [PermissionController::class, 'index'])->middleware('permission:permission.view')->name('permissions.index');
+    Route::get('/permissions/create', [PermissionController::class, 'create'])->middleware('permission:permission.create')->name('permissions.create');
+    Route::post('/permissions', [PermissionController::class, 'store'])->middleware('permission:permission.create')->name('permissions.store');
+    Route::get('/permissions/{id}/edit', [PermissionController::class, 'edit'])->middleware('permission:permission.edit')->name('permissions.edit');
+    Route::put('/permissions/{id}', [PermissionController::class, 'update'])->middleware('permission:permissions.edit')->name('permissions.update');
+    Route::delete('/permissions/{id}', [PermissionController::class, 'destroy'])->middleware('permission:permissions.delete')->name('permissions.destroy');
 });

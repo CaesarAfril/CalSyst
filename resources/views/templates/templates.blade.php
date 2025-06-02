@@ -209,6 +209,31 @@
                         </ul>
                     </li>
 
+                    <li class="menu-item mt-2">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon bx bx-desktop custom-sidebar-text"></i>
+                            <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Access Control</div>
+                        </a>
+                        <ul class="menu-sub" style="margin-left: -.1rem;">
+                            <li class="menu-item">
+                                <a href="{{ route('roles.index') }}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Role</div>
+                                </a>
+                            </li>
+
+                            <!--***********************************
+                                ---------- Menu Total Alat Terkalibrasi --------
+                                ************************************-->
+                            <li class="menu-item">
+                                <a href="{{ route('permissions.index') }}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-check-double custom-sidebar-text"></i>
+                                    <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Permission</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li class="menu-item mt-2 {{ request()->is('calibration/late-calibration*') || request()->is('calibration/calibrated-assets*') ? 'open' : '' }}">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon bx bx-desktop custom-sidebar-text"></i>
