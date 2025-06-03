@@ -76,4 +76,19 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role_uuid', 'uuid');
     }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('Admin');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('Admin Plant');
+    }
+
+    public function isCalibrator(): bool
+    {
+        return $this->hasRole('Kalibrator');
+    }
 }

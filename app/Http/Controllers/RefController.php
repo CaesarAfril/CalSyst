@@ -10,7 +10,7 @@ class RefController extends Controller
 {
     public function index()
     {
-        $document = References::all();
+        $document = References::hasArea()->get();
         return view('references.reference', [
             'documents' => $document
         ]);

@@ -1,5 +1,7 @@
 <?php
 
+use App\Exports\MachineExport;
+use App\Exports\UsersExport;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalController;
@@ -22,6 +24,7 @@ use Illuminate\Support\Facades\File;
 use App\Mail\AssetReminderEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Assets;
+use Maatwebsite\Excel\Facades\Excel;
 
 Route::get('/', [AuthController::class, 'loginForm'])->name('login');
 Route::post('actionLogin', [AuthController::class, 'actionLogin'])->name('actionLogin');
@@ -36,6 +39,9 @@ Route::get('/image/{filename}', function ($filename) {
     return response()->file($path);
 });
 
+
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('actionLogout', [AuthController::class, 'actionLogout'])->name('actionLogout');
@@ -43,11 +49,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('change-password', [UserController::class, 'changePassword'])->name('user.changePassword');
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
     Route::delete('/user/{uuid}/delete', [UserController::class, 'destroy'])->name('user.delete');
+    Route::get('/user/{uuid}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user/{uuid}/update', [UserController::class, 'update'])->name('user.update');
     Route::resource('department', DeptController::class);
     Route::resource('plant', PlantController::class);
     Route::resource('category', CategoryController::class);
-    Route::resource('asset', AssetController::class);
+    Route::resource('asset', AssetController::class)->except(['show']);
     Route::post('/asset/upload-csv', [AssetController::class, 'importCsv'])->name('asset.importCsv');
+    Route::get('asset/export-assets', [AssetController::class, 'exportExcelAssets'])->name('asset.exportExcel');
     Route::resource('machine', MachineController::class);
     Route::resource('weight', WeightController::class);
     Route::resource('validation_asset', Validation_assetController::class);
@@ -127,14 +136,14 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/dashboard/toggle/{table}', [DashboardController::class, 'toggleTableVisibility'])->name('dashboard.toggleTable');
+    Route::get('/validation/{machine_uuid}/{uuid}', [ValidationController::class, 'validation'])->name('validation.index');
 
     Route::post('/validation_asset/send-warning', [Validation_assetController::class, 'sendEarlyWarning'])->name('validation_asset.sendWarning');
     Route::post('/validation-asset/early-warning-2', [Validation_assetController::class, 'sendEarlyWarning2'])->name('validation_asset.sendEarlyWarning2');
-
+    Route::get('/export-validation-assets', [Validation_assetController::class, 'exportExcelValidtionAssets'])->name('validationAsset.exportExcel');
     Route::get('/validation/slaughterhouse/screwchiller', [ValidationController::class, 'screwChiller'])->name('slaughterhouse-screwchiller');
     Route::get('/validation/slaughterhouse/ABF', [ValidationController::class, 'ABF'])->name('slaughterhouse-ABF');
     Route::get('/validation/slaughterhouse/IQF', [ValidationController::class, 'IQF'])->name('slaughterhouse-IQF');
-
     Route::get('/validation/further/fryer-1', [ValidationController::class, 'fryer1'])->name('further-fryer-1');
     Route::get('/validation/further/fryer-2', [ValidationController::class, 'fryer2'])->name('further-fryer-2');
     Route::get('/validation/further/fryer-marel', [ValidationController::class, 'fryerMarel'])->name('further-fryer-marel');
@@ -220,21 +229,20 @@ Route::middleware(['auth'])->group(function () {
 
 
     // ROLE ROUTES
-    Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:role.view')->name('roles.index');
-    Route::get('/roles/create', [RoleController::class, 'create'])->middleware('permission:role.create')->name('roles.create');
-    Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:role.create')->name('roles.store');
-    Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->middleware('permission:role.edit')->name('roles.edit');
-    Route::put('/roles/{id}', [RoleController::class, 'update'])->middleware('permission:role.edit')->name('roles.update');
-    Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->middleware('permission:role.delete')->name('roles.destroy');
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
-    Route::get('/roles/{role}/manage-access', [RoleController::class, 'manageAccess'])->middleware('permission:role.manage.access')->name('roles.manage-access');
-    Route::post('/roles/{role}/manage-access', [RoleController::class, 'updateAccess'])->middleware('permission:role.manage.access')->name('roles.manage-access.update');
+    Route::get('/roles/{role}/manage-access', [RoleController::class, 'manageAccess'])->name('roles.manage-access');
+    Route::post('/roles/{role}/manage-access', [RoleController::class, 'updateAccess'])->name('roles.manage-access.update');
 
-    // PERMISSION ROUTES
-    Route::get('/permissions', [PermissionController::class, 'index'])->middleware('permission:permission.view')->name('permissions.index');
-    Route::get('/permissions/create', [PermissionController::class, 'create'])->middleware('permission:permission.create')->name('permissions.create');
-    Route::post('/permissions', [PermissionController::class, 'store'])->middleware('permission:permission.create')->name('permissions.store');
-    Route::get('/permissions/{id}/edit', [PermissionController::class, 'edit'])->middleware('permission:permission.edit')->name('permissions.edit');
-    Route::put('/permissions/{id}', [PermissionController::class, 'update'])->middleware('permission:permissions.edit')->name('permissions.update');
-    Route::delete('/permissions/{id}', [PermissionController::class, 'destroy'])->middleware('permission:permissions.delete')->name('permissions.destroy');
+    Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
+    Route::post('/permissions', [PermissionController::class, 'store'])->name('permissions.store');
+    Route::get('/permissions/{id}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+    Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
+    Route::delete('/permissions/{id}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
 });

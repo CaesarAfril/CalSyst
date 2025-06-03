@@ -15,8 +15,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalAssets = Assets::count();
-        $assets = Assets::with([
+        $totalAssets = Assets::hasArea()->count();
+        $assets = Assets::hasArea()->with([
             'department',
             'plant',
             'category',
@@ -136,7 +136,7 @@ class DashboardController extends Controller
         $search = request()->get('search');
 
         // Query builder
-        $query = Assets::with('category')
+        $query = Assets::hasArea()->with('category')
             ->join('category', 'category.uuid', '=', 'assets.category_uuid')
             ->select('assets.*')
             ->whereNotNull('assets.expired_date')

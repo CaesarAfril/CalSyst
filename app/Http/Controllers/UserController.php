@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Plant;
-use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException as ValidationValidationException;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $user = User::with(['department', 'plant'])->get();
+        $user = User::hasArea()->with(['department', 'plant'])->get();
         $departments = Department::all();
         $plant = Plant::all();
         $role = Role::all();
@@ -35,14 +35,12 @@ class UserController extends Controller
             'user_email' => 'required|email|unique:users,email',
             'user_department' => 'required|string|exists:department,uuid',
             'user_plant' => 'required|string|exists:plant,uuid',
-            'user_role' => 'required|string|exists:role,uuid'
         ]);
 
         $user = User::create([
             'username' => $request->user_username,
             'name' => $request->user_name,
             'email' => $request->user_email,
-            'role_uuid' => $request->user_role,
             'plant_uuid' => $request->user_plant,
             'dept_uuid' => $request->user_department,
             'password' => Hash::make('cpi12345')
@@ -51,6 +49,43 @@ class UserController extends Controller
         $user->assignRole($request->role);
 
         return redirect()->back();
+    }
+
+    public function edit($uuid)
+    {
+        $user = User::firstWhere('uuid', $uuid);
+        $departments = Department::all();
+        $plant = Plant::all();
+        $role = Role::all();
+        return view('user.edit', [
+            'user' => $user,
+            'departments' => $departments,
+            'plants' => $plant,
+            'roles' => $role
+        ]);
+    }
+
+    public function update(Request $request, $uuid)
+    {
+        $user = User::firstWhere('uuid', $uuid);
+        $request->validate([
+            'user_username' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255',
+            'user_email' => 'required|email',
+            'user_department' => 'required|string|exists:department,uuid',
+            'user_plant' => 'required|string|exists:plant,uuid',
+        ]);
+        $user->update([
+            'username' => $request->user_username,
+            'name' => $request->user_name,
+            'email' => $request->user_email,
+            'plant_uuid' => $request->user_plant,
+            'dept_uuid' => $request->user_department,
+        ]);
+
+        $user->syncRoles([$request->user_role]);
+
+        return redirect()->route('user')->with('success', 'User updated successfully');
     }
 
     public function changePassword(Request $request)

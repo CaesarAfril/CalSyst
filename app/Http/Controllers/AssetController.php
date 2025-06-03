@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UsersExport;
 use App\Models\Assets;
 use App\Models\Category;
 use App\Models\Department;
 use App\Models\Plant;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AssetController extends Controller
 {
@@ -16,39 +19,7 @@ class AssetController extends Controller
     {
         $search = $request->input('search');
 
-        $query = Assets::with([
-            'department',
-            'plant',
-            'category',
-            'latest_external_calibration',
-            'latest_temp_calibration',
-            'latest_display_calibration'
-        ]);
-
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('merk', 'like', "%{$search}%")
-                    ->orWhere('type', 'like', "%{$search}%")
-                    ->orWhere('series_number', 'like', "%{$search}%")
-                    ->orWhere('capacity', 'like', "%{$search}%")
-                    ->orWhere('range', 'like', "%{$search}%")
-                    ->orWhere('resolution', 'like', "%{$search}%")
-                    ->orWhere('correction', 'like', "%{$search}%")
-                    ->orWhere('uncertainty', 'like', "%{$search}%")
-                    ->orWhere('standard', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%")
-                    ->orWhere('expired_date', 'like', "%{$search}%");
-            })
-                ->orWhereHas('category', function ($q) use ($search) {
-                    $q->where('category', 'like', "%{$search}%");
-                })
-                ->orWhereHas('department', function ($q) use ($search) {
-                    $q->where('department', 'like', "%{$search}%");
-                })
-                ->orWhereHas('plant', function ($q) use ($search) {
-                    $q->where('plant', 'like', "%{$search}%");
-                });
-        }
+        $query = Assets::fetchData($search);
 
         $assets = $query->paginate(10);
 
@@ -66,8 +37,6 @@ class AssetController extends Controller
         $category = Category::where('uuid', $request->asset_category)->first();
 
         $rules = [
-            'asset_department' => 'required|string|exists:department,uuid',
-            'asset_plant' => 'required|string|exists:plant,uuid',
             'asset_location' => 'required|string|max:255',
             'asset_category' => 'required|string|exists:category,uuid',
             'asset_merk' => 'required|string|max:255',
@@ -89,8 +58,8 @@ class AssetController extends Controller
         $validated = $request->validate($rules);
 
         Assets::create([
-            'plant_uuid' => $validated['asset_plant'],
-            'dept_uuid' => $validated['asset_department'],
+            'plant_uuid' => $validated['asset_plant'] ?? Auth::user()->plant->plant_uuid,
+            'dept_uuid' => $validated['asset_department'] ?? Auth::user()->dept_uuid,
             'location' => $validated['asset_location'],
             'category_uuid' => $validated['asset_category'],
             'merk' => $validated['asset_merk'],
@@ -189,5 +158,10 @@ class AssetController extends Controller
         } catch (\Exception $e) {
             dd($e); // This will dump the error and stop execution
         }
+    }
+
+    public function exportExcelAssets()
+    {
+        return Excel::download(new UsersExport, 'Assets.xlsx');
     }
 }

@@ -63,9 +63,16 @@ class PermissionController extends Controller
         return redirect()->route('permissions.index')->with('success', 'Permission updated successfully.');
     }
 
-    public function destroy(Permission $permission)
+    public function destroy($id)
     {
-        $permission->delete();
-        return redirect()->route('permissions.index')->with('success', 'Permission deleted successfully.');
+        try {
+            $permission = Permission::findOrFail($id);
+            $permission->roles()->detach();
+            $permission->delete();
+
+            return redirect()->back()->with('success', 'Permission deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus permission: ' . $e->getMessage());
+        }
     }
 }

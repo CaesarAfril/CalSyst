@@ -306,7 +306,7 @@
                                         <ul class="menu-sub">
                                             @foreach($department->validation_assets as $validation_asset)
                                             <li class="menu-item">
-                                                <a href="{{$validation_asset->uuid}}" class="menu-link">
+                                                <a href="{{route('validation.index', [$validation_asset->machine_uuid, $validation_asset->uuid])}}" class="menu-link">
                                                     <div class="custom-sidebar-text" style="font-size: 18px">{{$validation_asset->detail}}</div>
                                                 </a>
                                             </li>

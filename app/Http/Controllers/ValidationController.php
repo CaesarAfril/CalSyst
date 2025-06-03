@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,6 +14,7 @@ use App\Models\SuhuFryer1;
 use App\Models\Fryer2Validation;
 use App\Models\SuhuFryer2;
 use App\Models\HiCookValidation;
+use App\Models\Machine;
 use App\Models\SuhuHiCook;
 use App\Models\ProdukFryer1;
 use App\Models\ProdukFryer2;
@@ -20,11 +22,24 @@ use App\Models\ProdukFryerMarel;
 use App\Models\ProdukHiCook;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+
 \Carbon\Carbon::setLocale('id');
+
 use Illuminate\Support\Facades\DB;
 
 class ValidationController extends Controller
 {
+
+    public function validation($machine_uuid, $uuid)
+    {
+        $machine = Machine::firstWhere('uuid', $machine_uuid);
+        if ($machine->machine_name == 'ABF') {
+            $dataABF = AbfValidation::latest()->get();
+            return view('validation.slaughterhouse.ABF', compact('dataABF'));
+        }
+    }
+    // NEW CODE
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     // slaughterhouse
     public function screwChiller()
     {
@@ -38,8 +53,7 @@ class ValidationController extends Controller
 
     public function printScrewChiller()
     {
-        $pdf = PDF::loadView('validation.print.print_screwChiller', [
-        ])->setOptions(['isRemoteEnabled' => true])
+        $pdf = PDF::loadView('validation.print.print_screwChiller', [])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
@@ -356,8 +370,7 @@ class ValidationController extends Controller
 
     public function printIQF()
     {
-        $pdf = PDF::loadView('validation.print.print_IQF', [
-        ])->setOptions(['isRemoteEnabled' => true])
+        $pdf = PDF::loadView('validation.print.print_IQF', [])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
@@ -1723,8 +1736,7 @@ class ValidationController extends Controller
 
     public function printSmokehouse()
     {
-        $pdf = PDF::loadView('validation.print.print_smokeHouse', [
-        ])->setOptions(['isRemoteEnabled' => true])
+        $pdf = PDF::loadView('validation.print.print_smokeHouse', [])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
@@ -1744,8 +1756,7 @@ class ValidationController extends Controller
 
     public function printSmokehouseFessmann()
     {
-        $pdf = PDF::loadView('validation.print.print_smokeHouse_fessmann', [
-        ])->setOptions(['isRemoteEnabled' => true])
+        $pdf = PDF::loadView('validation.print.print_smokeHouse_fessmann', [])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
@@ -1766,8 +1777,7 @@ class ValidationController extends Controller
 
     public function printAging()
     {
-        $pdf = PDF::loadView('validation.print.print_aging', [
-        ])->setOptions(['isRemoteEnabled' => true])
+        $pdf = PDF::loadView('validation.print.print_aging', [])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
@@ -1788,8 +1798,7 @@ class ValidationController extends Controller
 
     public function printAutoclave1()
     {
-        $pdf = PDF::loadView('validation.print.print_autoclave1', [
-        ])->setOptions(['isRemoteEnabled' => true])
+        $pdf = PDF::loadView('validation.print.print_autoclave1', [])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
@@ -1809,8 +1818,7 @@ class ValidationController extends Controller
 
     public function printAutoclave2()
     {
-        $pdf = PDF::loadView('validation.print.print_autoclave2', [
-        ])->setOptions(['isRemoteEnabled' => true])
+        $pdf = PDF::loadView('validation.print.print_autoclave2', [])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
@@ -1830,8 +1838,7 @@ class ValidationController extends Controller
 
     public function printOvenmemert1()
     {
-        $pdf = PDF::loadView('validation.print.print_ovenmemert1', [
-        ])->setOptions(['isRemoteEnabled' => true])
+        $pdf = PDF::loadView('validation.print.print_ovenmemert1', [])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
@@ -1851,8 +1858,7 @@ class ValidationController extends Controller
 
     public function printOvenmemert2()
     {
-        $pdf = PDF::loadView('validation.print.print_ovenmemert2', [
-        ])->setOptions(['isRemoteEnabled' => true])
+        $pdf = PDF::loadView('validation.print.print_ovenmemert2', [])->setOptions(['isRemoteEnabled' => true])
             ->setPaper('F4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);

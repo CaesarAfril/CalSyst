@@ -25,7 +25,7 @@ class ReportController extends Controller
     public function temperature()
     {
         // Ambil semua data dengan approval = 1
-        $report = temp_calibration::with(['actual_temps', 'asset'])->where('approval', null)->get();
+        $report = temp_calibration::hasArea()->with(['actual_temps', 'asset'])->where('approval', null)->get();
 
         return view('report.temperatureData', [
             'reports' => $report
@@ -34,7 +34,7 @@ class ReportController extends Controller
 
     public function temperature_addData()
     {
-        $asset = Assets::with(['department', 'category'])
+        $asset = Assets::hasArea()->with(['department', 'category'])
             ->whereHas('category', function ($query) {
                 $query->where('category', 'Thermometer');
             })->get();
@@ -123,7 +123,7 @@ class ReportController extends Controller
 
     public function display()
     {
-        $report = Display_calibration::with(['actual_displays', 'asset'])->where('approval', null)->get();
+        $report = Display_calibration::hasArea()->with(['actual_displays', 'asset'])->where('approval', null)->get();
 
         return view('report.displayData', [
             'reports' => $report
@@ -217,7 +217,7 @@ class ReportController extends Controller
 
     public function scale()
     {
-        $report = Scale_calibration::with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])->where('approval', null)->get();
+        $report = Scale_calibration::hasArea()->with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])->where('approval', null)->get();
 
         return view('report.scaleData', [
             'reports' => $report

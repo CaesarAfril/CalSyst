@@ -86,7 +86,7 @@
                                 <select name="user_role" id="user_role" class="form-select" required>
                                     <option value="">-- Pilih Role --</option>
                                     @foreach($roles as $role)
-                                    <option value="{{ $role->uuid }}">{{ $role->role }}</option>
+                                    <option value="{{ $role->name }}">{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -135,6 +135,7 @@
                         <td>{{$user->plant->plant}}</td>
                         <td>
                             <div class="d-flex gap-2">
+                                <a href="{{route('user.edit', $user->uuid)}}" class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{route('user.delete', $user->uuid)}}" method="post" onsubmit="return confirm('Apakah anda yakin akan menghapus data pegawai ini ?');">
                                     @csrf
                                     @method('DELETE')

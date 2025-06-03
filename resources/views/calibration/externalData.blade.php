@@ -65,7 +65,7 @@
                         <th style="color: #fff">Departemen</th>
                         <th style="color: #fff">ED Sertifikat</th>
                         <th style="color: #fff">Progress</th>
-                        <th style="color: #fff">Progress</th>
+                        <th style="color: #fff">Notes</th>
                         <th style="color: #fff">Aksi</th>
                     </tr>
                 </thead>

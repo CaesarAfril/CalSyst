@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 class Assets extends Model
 {
     use HasFactory;
-    use SoftDeletes;
+    use SoftDeletes, HasAreaScope;
     protected $table = "assets";
     protected $primaryKey = "id";
     protected $fillable = [
@@ -97,5 +98,42 @@ class Assets extends Model
     public function latest_scale_calibration()
     {
         return $this->hasOne(Scale_calibration::class, 'asset_uuid', 'uuid')->latestOfMany('date');
+    }
+
+    public static function fetchData($search)
+    {
+        return self::hasArea()->with([
+            'department',
+            'plant',
+            'category',
+            'latest_external_calibration',
+            'latest_temp_calibration',
+            'latest_display_calibration'
+        ]);
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('merk', 'like', "%{$search}%")
+                    ->orWhere('type', 'like', "%{$search}%")
+                    ->orWhere('series_number', 'like', "%{$search}%")
+                    ->orWhere('capacity', 'like', "%{$search}%")
+                    ->orWhere('range', 'like', "%{$search}%")
+                    ->orWhere('resolution', 'like', "%{$search}%")
+                    ->orWhere('correction', 'like', "%{$search}%")
+                    ->orWhere('uncertainty', 'like', "%{$search}%")
+                    ->orWhere('standard', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('expired_date', 'like', "%{$search}%");
+            })
+                ->orWhereHas('category', function ($q) use ($search) {
+                    $q->where('category', 'like', "%{$search}%");
+                })
+                ->orWhereHas('department', function ($q) use ($search) {
+                    $q->where('department', 'like', "%{$search}%");
+                })
+                ->orWhereHas('plant', function ($q) use ($search) {
+                    $q->where('plant', 'like', "%{$search}%");
+                });
+        }
     }
 }

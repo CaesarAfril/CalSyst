@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MachineExport;
 use App\Models\Department;
 use App\Models\Machine;
 use App\Models\Plant;
@@ -9,12 +10,13 @@ use App\Models\Validation_asset;
 use Illuminate\Http\Request;
 use App\Mail\EarlyWarningMail;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Validation_assetController extends Controller
 {
     public function index()
     {
-        $assets = Validation_asset::with([
+        $assets = Validation_asset::hasArea()->with([
             'department',
             'plant'
         ])->get();
@@ -130,4 +132,8 @@ class Validation_assetController extends Controller
         }
     }
 
+    public function exportExcelValidtionAssets()
+    {
+        return Excel::download(new MachineExport, 'Validation_Assets.xlsx');
+    }
 }

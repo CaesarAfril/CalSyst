@@ -30,7 +30,7 @@ class CalController extends Controller
 
     public function temperature()
     {
-        $report = temp_calibration::with(['actual_temps', 'asset'])
+        $report = temp_calibration::hasArea()->with(['actual_temps', 'asset'])
             ->where('approval', 1)
             ->get();
 
@@ -52,7 +52,7 @@ class CalController extends Controller
 
     public function display()
     {
-        $report = Display_calibration::with(['actual_displays', 'asset'])
+        $report = Display_calibration::hasArea()->with(['actual_displays', 'asset'])
             ->where('approval', 1)
             ->get();
 
@@ -75,7 +75,7 @@ class CalController extends Controller
 
     public function scale()
     {
-        $report = Scale_calibration::with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])
+        $report = Scale_calibration::hasArea()->with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])
             ->where('approval', 1)
             ->get();
 
@@ -103,7 +103,7 @@ class CalController extends Controller
 
     public function external()
     {
-        $assets = Assets::whereHas('category', function ($query) {
+        $assets = Assets::hasArea()->whereHas('category', function ($query) {
             $query->where('calibration', 'External');
         })->get();
         $report = External_calibration::with(['asset', 'latestCalibrationFile'])

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 class Validation_asset extends Model
 {
     use HasFactory;
-    use SoftDeletes;
+    use SoftDeletes, HasAreaScope;
 
     protected $table = "validation_assets";
     protected $primaryKey = "id";
