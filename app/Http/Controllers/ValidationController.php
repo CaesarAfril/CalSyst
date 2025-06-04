@@ -13,13 +13,20 @@ use App\Models\Fryer1Validation;
 use App\Models\SuhuFryer1;
 use App\Models\Fryer2Validation;
 use App\Models\SuhuFryer2;
-use App\Models\HiCookValidation;
 use App\Models\Machine;
 use App\Models\SuhuHiCook;
 use App\Models\ProdukFryer1;
 use App\Models\ProdukFryer2;
 use App\Models\ProdukFryerMarel;
 use App\Models\ProdukHiCook;
+
+use App\Models\FryerProduct;
+use App\Models\FryerTemperature;
+use App\Models\FryerValidation;
+use App\Models\HiCookProduct;
+use App\Models\HiCookTemperature;
+use App\Models\HiCookValidation;
+
 use PDF;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,6 +46,319 @@ class ValidationController extends Controller
         }
     }
     // NEW CODE
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    public function fryer1()
+    {
+        $dataFryer1 = FryerValidation::latest()->get();
+        return view('validation.further.fryer1', compact('dataFryer1'));
+    }
+
+    public function fryer1_addData()
+    {
+        $produkList = FryerProduct::all();
+        return view('validation.store.store_fryer1', compact('produkList'));
+    }
+
+    public function storeFryer1(Request $request)
+    {
+        $validated = $request->validate([
+            'produk_fryer_1_id' => 'required|exists:produk_fryer_1,id',
+            'ingredient' => 'nullable|string',
+            'kemasan' => 'nullable|string',
+            'nama_mesin' => 'nullable|string',
+            'dimensi' => 'nullable|string',
+            'target_suhu' => 'nullable|string',
+            'start_pengujian' => 'nullable|date',
+            'end_pengujian' => 'nullable|date',
+            'waktu_produk_infeed' => 'nullable|string',
+            'suhu_awal_inti' => 'nullable|string',
+            'suhu_akhir_inti' => 'nullable|string',
+            'batch' => 'nullable|string',
+            'waktu_pemasakan' => 'nullable|string',
+            'nama_mesin_2' => 'nullable|string',
+            'merek_mesin_2' => 'nullable|string',
+            'tipe_mesin_2' => 'nullable|string',
+            'speed_conv_mesin_2' => 'nullable|string',
+            'kapasitas_mesin_2' => 'nullable|string',
+            'lokasi' => 'nullable|string',
+            'alamat' => 'nullable|string',
+            'suhu_fryer_1' => 'required|file|mimes:xls,xlsx',
+            'notes_sebaran' => 'nullable|string',
+            'notes_grafik' => 'nullable|string',
+            'notes_luar_range' => 'nullable|string',
+            'notes_keseragaman' => 'nullable|string',
+            'notes_rekaman' => 'nullable|string',
+            'kesimpulan' => 'nullable|string',
+        ]);
+
+        // Ambil nama produk dari ID
+        $produk = FryerProduct::find($validated['produk_fryer_1_id']);
+
+        $validated['nama_produk'] = $produk->nama_produk;
+        if ($produk->setting_min && $produk->setting_max) {
+            $validated['setting_suhu_mesin'] = "{$produk->setting_min}-{$produk->setting_max}";
+        }
+
+        // Simpan data utama
+        $fryer1 = FryerValidation::create($validated);
+
+        if ($request->hasFile('suhu_fryer_1')) {
+            $file = $request->file('suhu_fryer_1');
+
+            // Baca data dari Excel
+            $data = Excel::toArray([], $file)[0]; // Ambil sheet pertama
+
+            // Lewati header (baris pertama)
+            $rows = array_slice($data, 1);
+
+            foreach ($rows as $row) {
+                FryerTemperature::create([
+                    'fryer1_validation_id' => $fryer1->id,
+                    'time' => $row[0] ?? null,
+                    'speed' => $row[1] ?? null,
+                    'ch1' => $this->parseTemperature($row[2] ?? null),
+                    'ch2' => $this->parseTemperature($row[3] ?? null),
+                    'ch3' => $this->parseTemperature($row[4] ?? null),
+                    'ch4' => $this->parseTemperature($row[5] ?? null),
+                    'ch5' => $this->parseTemperature($row[6] ?? null),
+                    'ch6' => $this->parseTemperature($row[7] ?? null),
+                    'ch7' => $this->parseTemperature($row[8] ?? null),
+                    'ch8' => $this->parseTemperature($row[9] ?? null),
+                    'ch9' => $this->parseTemperature($row[10] ?? null),
+                    'ch10' => $this->parseTemperature($row[11] ?? null),
+                    'display_mesin' => $this->parseTemperature($row[12] ?? null),
+                ]);
+            }
+        }
+
+        return redirect('/validation/further/fryer-1')->with('success', 'Data berhasil disimpan!');
+    }
+
+    public function deleteFryer1($id)
+    {
+        $dataFryer1 = FryerValidation::findOrFail($id);
+        $dataFryer1->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
+    }
+
+    public function printFryer1($id, Request $request)
+    {
+        $dataFryer1 = FryerValidation::with('suhuFryer1')->findOrFail($id);
+
+        $suhuData = $dataFryer1->suhuFryer1;
+        $suhuAwal = $suhuData->first();
+        $suhuAkhir = $suhuData->last();
+
+        // Hitung durasi
+        $duration = $suhuAwal->time && $suhuAkhir->time
+            ? Carbon::parse($suhuAwal->time)->diff(Carbon::parse($suhuAkhir->time))
+            : null;
+
+        // 1. Ambil input dari DB jika ada, jika tidak gunakan input user
+        $settingFromDB = $dataFryer1->setting_suhu_mesin;
+        $inputRange = $request->input('setting_suhu_mesin', $settingFromDB ?? '155-170');
+
+        // 2. Parse range dengan lebih robust
+        $rangeParts = preg_split('/\s*-\s*/', trim($inputRange), 2);
+
+        // 3. Validasi dan konversi
+        $minSuhu = (float) ($rangeParts[0] ?? 155);
+        $maxSuhu = (float) ($rangeParts[1] ?? $minSuhu + 15); // Default range 15° jika hanya 1 nilai
+
+        // Deteksi anomaly dengan range terbaru
+        $anomalies = $this->detectTemperatureAnomalies($suhuData, $minSuhu, $maxSuhu);
+
+        $conclusion = $this->generateAnomalyConclusion($anomalies, $minSuhu, $maxSuhu);
+
+        $chartFryer1 = [
+            'type' => 'line',
+            'data' => [
+                'labels' => $suhuData->map(function ($item) {
+                    return \Carbon\Carbon::parse($item->time)->format('H:i');
+                })->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Titik 1',
+                        'data' => $suhuData->pluck('ch1')->toArray(),
+                        'borderColor' => '#FF6384', // Merah muda
+                        'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 2',
+                        'data' => $suhuData->pluck('ch2')->toArray(),
+                        'borderColor' => '#36A2EB', // Biru
+                        'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 3',
+                        'data' => $suhuData->pluck('ch3')->toArray(),
+                        'borderColor' => '#FFCE56', // Kuning
+                        'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 4',
+                        'data' => $suhuData->pluck('ch4')->toArray(),
+                        'borderColor' => '#4BC0C0', // Cyan
+                        'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 5',
+                        'data' => $suhuData->pluck('ch5')->toArray(),
+                        'borderColor' => '#9966FF', // Ungu
+                        'backgroundColor' => 'rgba(153, 102, 255, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 6',
+                        'data' => $suhuData->pluck('ch6')->toArray(),
+                        'borderColor' => '#FF9F40', // Oranye
+                        'backgroundColor' => 'rgba(255, 159, 64, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 7',
+                        'data' => $suhuData->pluck('ch7')->toArray(),
+                        'borderColor' => '#8AC249', // Hijau muda
+                        'backgroundColor' => 'rgba(138, 194, 73, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 8',
+                        'data' => $suhuData->pluck('ch8')->toArray(),
+                        'borderColor' => '#EA5F89', // Merah muda tua
+                        'backgroundColor' => 'rgba(234, 95, 137, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 9',
+                        'data' => $suhuData->pluck('ch9')->toArray(),
+                        'borderColor' => '#0B4F6C', // Biru tua
+                        'backgroundColor' => 'rgba(11, 79, 108, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 10',
+                        'data' => $suhuData->pluck('ch10')->toArray(),
+                        'borderColor' => '#63C8CD', // Biru hijau
+                        'backgroundColor' => 'rgba(99, 200, 205, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ]
+                ]
+            ],
+            'options' => [
+                'elements' => [
+                    'point' => [
+                        'radius' => 0
+                    ]
+                ],
+                'responsive' => true,
+                'plugins' => [
+                    'title' => [
+                        'display' => true,
+                        'text' => 'Grafik Sebaran Suhu Terhadap Waktu'
+                    ],
+                    'legend' => [
+                        'position' => 'bottom'
+                    ]
+                ],
+                'scales' => [
+                    'y' => [
+                        'min' => 0,
+                        'max' => 0,
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Suhu',
+                        ],
+                        'ticks' => [
+                            'stepSize' => 5
+                        ]
+                    ],
+                    'x' => [
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Waktu',
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $chartUrlFryer1 = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartFryer1));
+
+        $averagePerChannel = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $channel = "ch{$i}";
+            $values = $suhuData->pluck($channel)->filter(); // buang null/false
+            $averagePerChannel[$channel] = $values->count() > 0 ? round($values->avg(), 2) : null;
+        }
+
+        $channels = collect(range(1, 10));
+
+        // Hitung statistik untuk tiap channel
+        $avg = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->avg('ch' . $ch)]);
+        $max = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->max('ch' . $ch)]);
+        $min = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->min('ch' . $ch)]);
+
+        $avg['display_mesin'] = $suhuData->avg('display_mesin');
+        $max['display_mesin'] = $suhuData->max('display_mesin');
+        $min['display_mesin'] = $suhuData->min('display_mesin');
+
+        // Cari MAX & MIN Spot
+        $spotValues = [];
+        foreach ($suhuData as $row) {
+            foreach ($channels as $ch) {
+                $spotValues[] = [
+                    'channel' => $ch,
+                    'value' => $row->{'ch' . $ch},
+                ];
+            }
+        }
+
+        $maxSpot = collect($spotValues)->sortByDesc('value')->first();
+        $minSpot = collect($spotValues)->sortBy('value')->first();
+        $avgAllSpot = collect($spotValues)->pluck('value')->avg();
+
+        $pdf = PDF::loadView('validation.print.print_fryer1', [
+            'dataFryer1' => $dataFryer1,
+            'suhuAwal' => $suhuAwal,
+            'suhuAkhir' => $suhuAkhir,
+            'suhuData' => $suhuData,
+            'chartUrlFryer1' => $chartUrlFryer1,
+            'anomalies' => $anomalies,
+            'minSuhu' => $minSuhu,
+            'maxSuhu' => $maxSuhu,
+            'conclusion' => $conclusion,
+            'duration' => $duration,
+            'averagePerChannel' => $averagePerChannel,
+            'avg' => $avg,
+            'max' => $max,
+            'min' => $min,
+            'maxSpot' => $maxSpot,
+            'minSpot' => $minSpot,
+            'avgAllSpot' => $avgAllSpot,
+
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-Fryer-' . $dataFryer1->nama_produk . '.pdf');
+    }
     // ----------------------------------------------------------------------------------------------------------------------------------------
     // slaughterhouse
     public function screwChiller()
@@ -379,329 +699,17 @@ class ValidationController extends Controller
     }
 
     // further
-    public function fryer1()
-    {
-        $dataFryer1 = Fryer1Validation::latest()->get();
-        return view('validation.further.fryer1', compact('dataFryer1'));
-    }
 
-    public function fryer1_addData()
-    {
-        $produkList = ProdukFryer1::all();
-
-        return view('validation.store.store_fryer1', compact('produkList'));
-    }
-
-    public function storeFryer1(Request $request)
-    {
-        $validated = $request->validate([
-            'produk_fryer_1_id' => 'required|exists:produk_fryer_1,id',
-            'ingredient' => 'nullable|string',
-            'kemasan' => 'nullable|string',
-            'nama_mesin' => 'nullable|string',
-            'dimensi' => 'nullable|string',
-            'target_suhu' => 'nullable|string',
-            'start_pengujian' => 'nullable|date',
-            'end_pengujian' => 'nullable|date',
-            'waktu_produk_infeed' => 'nullable|string',
-            'suhu_awal_inti' => 'nullable|string',
-            'suhu_akhir_inti' => 'nullable|string',
-            'batch' => 'nullable|string',
-            'waktu_pemasakan' => 'nullable|string',
-            'nama_mesin_2' => 'nullable|string',
-            'merek_mesin_2' => 'nullable|string',
-            'tipe_mesin_2' => 'nullable|string',
-            'speed_conv_mesin_2' => 'nullable|string',
-            'kapasitas_mesin_2' => 'nullable|string',
-            'lokasi' => 'nullable|string',
-            'alamat' => 'nullable|string',
-            'suhu_fryer_1' => 'required|file|mimes:xls,xlsx',
-            'notes_sebaran' => 'nullable|string',
-            'notes_grafik' => 'nullable|string',
-            'notes_luar_range' => 'nullable|string',
-            'notes_keseragaman' => 'nullable|string',
-            'notes_rekaman' => 'nullable|string',
-            'kesimpulan' => 'nullable|string',
-        ]);
-
-        // Ambil nama produk dari ID
-        $produk = ProdukFryer1::find($validated['produk_fryer_1_id']);
-
-        $validated['nama_produk'] = $produk->nama_produk;
-        if ($produk->setting_min && $produk->setting_max) {
-            $validated['setting_suhu_mesin'] = "{$produk->setting_min}-{$produk->setting_max}";
-        }
-
-        // Simpan data utama
-        $fryer1 = Fryer1Validation::create($validated);
-
-        if ($request->hasFile('suhu_fryer_1')) {
-            $file = $request->file('suhu_fryer_1');
-
-            // Baca data dari Excel
-            $data = Excel::toArray([], $file)[0]; // Ambil sheet pertama
-
-            // Lewati header (baris pertama)
-            $rows = array_slice($data, 1);
-
-            foreach ($rows as $row) {
-                SuhuFryer1::create([
-                    'fryer1_validation_id' => $fryer1->id,
-                    'time' => $row[0] ?? null,
-                    'speed' => $row[1] ?? null,
-                    'ch1' => $this->parseTemperature($row[2] ?? null),
-                    'ch2' => $this->parseTemperature($row[3] ?? null),
-                    'ch3' => $this->parseTemperature($row[4] ?? null),
-                    'ch4' => $this->parseTemperature($row[5] ?? null),
-                    'ch5' => $this->parseTemperature($row[6] ?? null),
-                    'ch6' => $this->parseTemperature($row[7] ?? null),
-                    'ch7' => $this->parseTemperature($row[8] ?? null),
-                    'ch8' => $this->parseTemperature($row[9] ?? null),
-                    'ch9' => $this->parseTemperature($row[10] ?? null),
-                    'ch10' => $this->parseTemperature($row[11] ?? null),
-                    'display_mesin' => $this->parseTemperature($row[12] ?? null),
-                ]);
-            }
-        }
-
-        return redirect('/validation/further/fryer-1')->with('success', 'Data berhasil disimpan!');
-    }
-
-    public function deleteFryer1($id)
-    {
-        $dataFryer1 = Fryer1Validation::findOrFail($id);
-        $dataFryer1->delete();
-
-        return redirect()->back()->with('success', 'Data berhasil dihapus.');
-    }
-
-    public function printFryer1($id, Request $request)
-    {
-        $dataFryer1 = Fryer1Validation::with('suhuFryer1')->findOrFail($id);
-
-        $suhuData = $dataFryer1->suhuFryer1;
-        $suhuAwal = $suhuData->first();
-        $suhuAkhir = $suhuData->last();
-
-        // Hitung durasi
-        $duration = $suhuAwal->time && $suhuAkhir->time
-            ? Carbon::parse($suhuAwal->time)->diff(Carbon::parse($suhuAkhir->time))
-            : null;
-
-        // 1. Ambil input dari DB jika ada, jika tidak gunakan input user
-        $settingFromDB = $dataFryer1->setting_suhu_mesin;
-        $inputRange = $request->input('setting_suhu_mesin', $settingFromDB ?? '155-170');
-
-        // 2. Parse range dengan lebih robust
-        $rangeParts = preg_split('/\s*-\s*/', trim($inputRange), 2);
-
-        // 3. Validasi dan konversi
-        $minSuhu = (float) ($rangeParts[0] ?? 155);
-        $maxSuhu = (float) ($rangeParts[1] ?? $minSuhu + 15); // Default range 15° jika hanya 1 nilai
-
-        // Deteksi anomaly dengan range terbaru
-        $anomalies = $this->detectTemperatureAnomalies($suhuData, $minSuhu, $maxSuhu);
-
-        $conclusion = $this->generateAnomalyConclusion($anomalies, $minSuhu, $maxSuhu);
-
-        $chartFryer1 = [
-            'type' => 'line',
-            'data' => [
-                'labels' => $suhuData->map(function ($item) {
-                    return \Carbon\Carbon::parse($item->time)->format('H:i');
-                })->toArray(),
-                'datasets' => [
-                    [
-                        'label' => 'Titik 1',
-                        'data' => $suhuData->pluck('ch1')->toArray(),
-                        'borderColor' => '#FF6384', // Merah muda
-                        'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 2',
-                        'data' => $suhuData->pluck('ch2')->toArray(),
-                        'borderColor' => '#36A2EB', // Biru
-                        'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 3',
-                        'data' => $suhuData->pluck('ch3')->toArray(),
-                        'borderColor' => '#FFCE56', // Kuning
-                        'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 4',
-                        'data' => $suhuData->pluck('ch4')->toArray(),
-                        'borderColor' => '#4BC0C0', // Cyan
-                        'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 5',
-                        'data' => $suhuData->pluck('ch5')->toArray(),
-                        'borderColor' => '#9966FF', // Ungu
-                        'backgroundColor' => 'rgba(153, 102, 255, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 6',
-                        'data' => $suhuData->pluck('ch6')->toArray(),
-                        'borderColor' => '#FF9F40', // Oranye
-                        'backgroundColor' => 'rgba(255, 159, 64, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 7',
-                        'data' => $suhuData->pluck('ch7')->toArray(),
-                        'borderColor' => '#8AC249', // Hijau muda
-                        'backgroundColor' => 'rgba(138, 194, 73, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 8',
-                        'data' => $suhuData->pluck('ch8')->toArray(),
-                        'borderColor' => '#EA5F89', // Merah muda tua
-                        'backgroundColor' => 'rgba(234, 95, 137, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 9',
-                        'data' => $suhuData->pluck('ch9')->toArray(),
-                        'borderColor' => '#0B4F6C', // Biru tua
-                        'backgroundColor' => 'rgba(11, 79, 108, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 10',
-                        'data' => $suhuData->pluck('ch10')->toArray(),
-                        'borderColor' => '#63C8CD', // Biru hijau
-                        'backgroundColor' => 'rgba(99, 200, 205, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ]
-                ]
-            ],
-            'options' => [
-                'elements' => [
-                    'point' => [
-                        'radius' => 0
-                    ]
-                ],
-                'responsive' => true,
-                'plugins' => [
-                    'title' => [
-                        'display' => true,
-                        'text' => 'Grafik Sebaran Suhu Terhadap Waktu'
-                    ],
-                    'legend' => [
-                        'position' => 'bottom'
-                    ]
-                ],
-                'scales' => [
-                    'y' => [
-                        'min' => 0,
-                        'max' => 0,
-                        'title' => [
-                            'display' => true,
-                            'text' => 'Suhu',
-                        ],
-                        'ticks' => [
-                            'stepSize' => 5
-                        ]
-                    ],
-                    'x' => [
-                        'title' => [
-                            'display' => true,
-                            'text' => 'Waktu',
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        $chartUrlFryer1 = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartFryer1));
-
-        $averagePerChannel = [];
-        for ($i = 1; $i <= 10; $i++) {
-            $channel = "ch{$i}";
-            $values = $suhuData->pluck($channel)->filter(); // buang null/false
-            $averagePerChannel[$channel] = $values->count() > 0 ? round($values->avg(), 2) : null;
-        }
-
-        $channels = collect(range(1, 10));
-
-        // Hitung statistik untuk tiap channel
-        $avg = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->avg('ch' . $ch)]);
-        $max = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->max('ch' . $ch)]);
-        $min = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->min('ch' . $ch)]);
-
-        $avg['display_mesin'] = $suhuData->avg('display_mesin');
-        $max['display_mesin'] = $suhuData->max('display_mesin');
-        $min['display_mesin'] = $suhuData->min('display_mesin');
-
-        // Cari MAX & MIN Spot
-        $spotValues = [];
-        foreach ($suhuData as $row) {
-            foreach ($channels as $ch) {
-                $spotValues[] = [
-                    'channel' => $ch,
-                    'value' => $row->{'ch' . $ch},
-                ];
-            }
-        }
-
-        $maxSpot = collect($spotValues)->sortByDesc('value')->first();
-        $minSpot = collect($spotValues)->sortBy('value')->first();
-        $avgAllSpot = collect($spotValues)->pluck('value')->avg();
-
-        $pdf = PDF::loadView('validation.print.print_fryer1', [
-            'dataFryer1' => $dataFryer1,
-            'suhuAwal' => $suhuAwal,
-            'suhuAkhir' => $suhuAkhir,
-            'suhuData' => $suhuData,
-            'chartUrlFryer1' => $chartUrlFryer1,
-            'anomalies' => $anomalies,
-            'minSuhu' => $minSuhu,
-            'maxSuhu' => $maxSuhu,
-            'conclusion' => $conclusion,
-            'duration' => $duration,
-            'averagePerChannel' => $averagePerChannel,
-            'avg' => $avg,
-            'max' => $max,
-            'min' => $min,
-            'maxSpot' => $maxSpot,
-            'minSpot' => $minSpot,
-            'avgAllSpot' => $avgAllSpot,
-
-        ])->setOptions(['isRemoteEnabled' => true])
-            ->setPaper('F4', 'portrait')
-            ->setOption('isHtml5ParserEnabled', true)
-            ->setOption('isPhpEnabled', true);
-
-        return $pdf->stream('laporan-Fryer-' . $dataFryer1->nama_produk . '.pdf');
-    }
 
     public function fryer2()
     {
-        $dataFryer2 = Fryer2Validation::latest()->get();
+        $dataFryer2 = FryerValidation::latest()->get();
         return view('validation.further.fryer2', compact('dataFryer2'));
     }
 
     public function fryer2_addData()
     {
-        $produkList = ProdukFryer2::all();
+        $produkList = FryerProduct::all();
         return view('validation.store.store_fryer2', compact('produkList'));
     }
 
@@ -738,7 +746,7 @@ class ValidationController extends Controller
         ]);
 
         // Ambil nama produk dari ID
-        $produk = ProdukFryer2::find($validated['produk_fryer_2_id']);
+        $produk = FryerProduct::find($validated['produk_fryer_2_id']);
 
         $validated['nama_produk'] = $produk->nama_produk;
         if ($produk->setting_min && $produk->setting_max) {
@@ -746,7 +754,7 @@ class ValidationController extends Controller
         }
 
         // Simpan data utama
-        $fryer2 = Fryer2Validation::create($validated);
+        $fryer2 = FryerValidation::create($validated);
 
         if ($request->hasFile('suhu_fryer_2')) {
             $file = $request->file('suhu_fryer_2');
@@ -758,7 +766,7 @@ class ValidationController extends Controller
             $rows = array_slice($data, 1);
 
             foreach ($rows as $row) {
-                SuhuFryer2::create([
+                FryerTemperature::create([
                     'fryer2_validation_id' => $fryer2->id,
                     'time' => $row[0] ?? null, // Kolom A (Date&Time)
                     'speed' => $row[1] ?? null,      // Kolom B (Speed)
@@ -782,7 +790,7 @@ class ValidationController extends Controller
 
     public function deleteFryer2($id)
     {
-        $dataFryer2 = Fryer2Validation::findOrFail($id);
+        $dataFryer2 = FryerValidation::findOrFail($id);
         $dataFryer2->delete();
 
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
@@ -790,7 +798,7 @@ class ValidationController extends Controller
 
     public function printFryer2($id, Request $request)
     {
-        $dataFryer2 = Fryer2Validation::with('suhuFryer2')->findOrFail($id);
+        $dataFryer2 = FryerValidation::with('suhuFryer2')->findOrFail($id);
 
         $suhuData = $dataFryer2->suhuFryer2;
         $suhuAwal = $suhuData->first();
@@ -1008,13 +1016,13 @@ class ValidationController extends Controller
 
     public function fryerMarel()
     {
-        $dataFryerMarel = FryerMarelValidation::latest()->get();
+        $dataFryerMarel = FryerValidation::latest()->get();
         return view('validation.further.fryerMarel', compact('dataFryerMarel'));
     }
 
     public function fryerMarel_addData()
     {
-        $produkList = ProdukFryerMarel::all();
+        $produkList = FryerProduct::all();
         return view('validation.store.store_fryerMarel', compact('produkList'));
     }
 
@@ -1051,7 +1059,7 @@ class ValidationController extends Controller
         ]);
 
         // Ambil nama produk dari ID
-        $produk = ProdukFryerMarel::find($validated['produk_fryer_marel_id']);
+        $produk = FryerProduct::find($validated['produk_fryer_marel_id']);
 
         $validated['nama_produk'] = $produk->nama_produk;
         if ($produk->setting_min && $produk->setting_max) {
@@ -1059,7 +1067,7 @@ class ValidationController extends Controller
         }
 
         // Simpan data utama
-        $fryerMarel = FryerMarelValidation::create($validated);
+        $fryerMarel = FryerValidation::create($validated);
 
         if ($request->hasFile('suhu_fryer_marel')) {
             $file = $request->file('suhu_fryer_marel');
@@ -1071,7 +1079,7 @@ class ValidationController extends Controller
             $rows = array_slice($data, 1);
 
             foreach ($rows as $row) {
-                SuhuFryerMarel::create([
+                FryerTemperature::create([
                     'fryer_marel_validation_id' => $fryerMarel->id,
                     'time' => $row[0] ?? null, // Kolom A (Date&Time)
                     'speed' => $row[1] ?? null,      // Kolom B (Speed)
@@ -1093,19 +1101,9 @@ class ValidationController extends Controller
         return redirect('/validation/further/fryer-marel')->with('success', 'Data berhasil disimpan!');
     }
 
-    private function parseTemperature($value)
-    {
-        if (is_null($value)) {
-            return null;
-        }
-
-        // Ubah koma menjadi titik untuk format desimal
-        return str_replace(',', '.', $value);
-    }
-
     public function deleteFryerMarel($id)
     {
-        $dataFryerMarel = FryerMarelValidation::findOrFail($id);
+        $dataFryerMarel = FryerValidation::findOrFail($id);
         $dataFryerMarel->delete();
 
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
@@ -1113,7 +1111,7 @@ class ValidationController extends Controller
 
     public function printFryerMarel($id, Request $request)
     {
-        $dataFryerMarel = FryerMarelValidation::with('suhuFryerMarel')->findOrFail($id);
+        $dataFryerMarel = FryerValidation::with('suhuFryerMarel')->findOrFail($id);
 
         $suhuData = $dataFryerMarel->suhuFryerMarel;
         $suhuAwal = $suhuData->first();
@@ -1329,87 +1327,6 @@ class ValidationController extends Controller
         return $pdf->stream('laporan-Fryer-' . $dataFryerMarel->nama_produk . '.pdf');
     }
 
-    private function detectTemperatureAnomalies($suhuData, $minSuhu, $maxSuhu)
-    {
-        $anomalies = [];
-        $currentAnomalies = [];
-
-        foreach ($suhuData as $data) {
-            $waktu = \Carbon\Carbon::parse($data->time);
-
-            for ($i = 1; $i <= 10; $i++) {
-                $suhu = $data["ch{$i}"] ?? null;
-                $isAnomaly = $suhu !== null && ($suhu < $minSuhu || $suhu > $maxSuhu);
-
-                if ($isAnomaly) {
-                    if (!isset($currentAnomalies[$i])) {
-                        // Catat suhu awal saat pertama kali anomaly terjadi
-                        $currentAnomalies[$i] = [
-                            'titik' => $i,
-                            'start_time' => $waktu,
-                            'end_time' => $waktu,
-                            'suhu_awal_anomali' => $suhu,
-                            'suhu_terakhir' => $suhu,
-                            'status' => $suhu < $minSuhu ? 'Rendah' : 'Tinggi'
-                        ];
-                    } else {
-                        $currentAnomalies[$i]['end_time'] = $waktu;
-                        $currentAnomalies[$i]['suhu_terakhir'] = $suhu;
-                    }
-                } elseif (isset($currentAnomalies[$i])) {
-                    $currentAnomalies[$i]['duration'] =
-                        $currentAnomalies[$i]['start_time']->diffInMinutes($currentAnomalies[$i]['end_time']);
-                    $anomalies[] = $currentAnomalies[$i];
-                    unset($currentAnomalies[$i]);
-                }
-            }
-        }
-
-        // Tambahkan anomaly yang masih berlangsung
-        foreach ($currentAnomalies as $anomaly) {
-            $anomaly['duration'] = $anomaly['start_time']->diffInMinutes($anomaly['end_time']);
-            $anomalies[] = $anomaly;
-        }
-
-        return $anomalies;
-    }
-
-    private function generateAnomalyConclusion($anomalies)
-    {
-        $totalAnomalies = count($anomalies);
-
-        // Inisialisasi variabel analisis
-        $stats = [
-            'low' => 0,
-            'high' => 0,
-            'points' => [],
-            'durations' => [],
-            'examples' => []
-        ];
-
-        foreach ($anomalies as $anomaly) {
-            $stats[$anomaly['status'] === 'Rendah' ? 'low' : 'high']++;
-            $stats['points'][$anomaly['titik']] = true;
-            $stats['durations'][] = $anomaly['duration'];
-            $stats['examples'][] = "Titik {$anomaly['titik']} ({$anomaly['duration']} menit)";
-        }
-
-        // Hitung statistik
-        $pointList = implode(', ', array_keys($stats['points']));
-        $avgDuration = round(array_sum($stats['durations']) / $totalAnomalies);
-        $minDuration = min($stats['durations']);
-        $maxDuration = max($stats['durations']);
-
-        // Bangun kesimpulan deskriptif
-        $conclusion = "<p class='conclusion'>Hasil analisis menunjukkan ";
-        $conclusion .= "terdiri dari {$stats['low']} anomaly di bawah range dan {$stats['high']} anomaly di atas range. ";
-        $conclusion .= "Penyimpangan terjadi di <strong>$pointList</strong> dengan durasi bervariasi antara $minDuration-$maxDuration menit ";
-        $conclusion .= "(rata-rata $avgDuration detik per kejadian). ";
-        $conclusion .= "Anomali tercepat terjadi selama $minDuration menit, sementara yang terlama mencapai $maxDuration menit. ";
-
-        return $conclusion;
-    }
-
     public function hiCook()
     {
         $dataHiCook = HiCookValidation::latest()->get();
@@ -1418,7 +1335,7 @@ class ValidationController extends Controller
 
     public function hiCook_addData()
     {
-        $produkList = ProdukHiCook::all();
+        $produkList = HiCookProduct::all();
         return view('validation.store.store_hiCook', compact('produkList'));
     }
 
@@ -1455,7 +1372,7 @@ class ValidationController extends Controller
         ]);
 
         // Ambil nama produk dari ID
-        $produk = ProdukHiCook::find($validated['produk_hi_cook_id']);
+        $produk = HiCookProduct::find($validated['produk_hi_cook_id']);
 
         $validated['nama_produk'] = $produk->nama_produk;
         if ($produk->min && $produk->max) {
@@ -1475,7 +1392,7 @@ class ValidationController extends Controller
             $rows = array_slice($data, 1);
 
             foreach ($rows as $row) {
-                SuhuHiCook::create([
+                HiCookTemperature::create([
                     'hi_cook_validation_id' => $hiCook->id,
                     'time' => $row[0] ?? null, // Kolom A (Date&Time)
                     'speed' => $row[1] ?? null,      // Kolom B (Speed)
@@ -1721,6 +1638,97 @@ class ValidationController extends Controller
             ->setOption('isPhpEnabled', true);
 
         return $pdf->stream('laporan-Fryer-' . $dataHiCook->nama_produk . '.pdf');
+    }
+
+    private function parseTemperature($value)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        // Ubah koma menjadi titik untuk format desimal
+        return str_replace(',', '.', $value);
+    }
+
+    private function detectTemperatureAnomalies($suhuData, $minSuhu, $maxSuhu)
+    {
+        $anomalies = [];
+        $currentAnomalies = [];
+
+        foreach ($suhuData as $data) {
+            $waktu = \Carbon\Carbon::parse($data->time);
+
+            for ($i = 1; $i <= 10; $i++) {
+                $suhu = $data["ch{$i}"] ?? null;
+                $isAnomaly = $suhu !== null && ($suhu < $minSuhu || $suhu > $maxSuhu);
+
+                if ($isAnomaly) {
+                    if (!isset($currentAnomalies[$i])) {
+                        // Catat suhu awal saat pertama kali anomaly terjadi
+                        $currentAnomalies[$i] = [
+                            'titik' => $i,
+                            'start_time' => $waktu,
+                            'end_time' => $waktu,
+                            'suhu_awal_anomali' => $suhu,
+                            'suhu_terakhir' => $suhu,
+                            'status' => $suhu < $minSuhu ? 'Rendah' : 'Tinggi'
+                        ];
+                    } else {
+                        $currentAnomalies[$i]['end_time'] = $waktu;
+                        $currentAnomalies[$i]['suhu_terakhir'] = $suhu;
+                    }
+                } elseif (isset($currentAnomalies[$i])) {
+                    $currentAnomalies[$i]['duration'] =
+                        $currentAnomalies[$i]['start_time']->diffInMinutes($currentAnomalies[$i]['end_time']);
+                    $anomalies[] = $currentAnomalies[$i];
+                    unset($currentAnomalies[$i]);
+                }
+            }
+        }
+
+        // Tambahkan anomaly yang masih berlangsung
+        foreach ($currentAnomalies as $anomaly) {
+            $anomaly['duration'] = $anomaly['start_time']->diffInMinutes($anomaly['end_time']);
+            $anomalies[] = $anomaly;
+        }
+
+        return $anomalies;
+    }
+
+    private function generateAnomalyConclusion($anomalies)
+    {
+        $totalAnomalies = count($anomalies);
+
+        // Inisialisasi variabel analisis
+        $stats = [
+            'low' => 0,
+            'high' => 0,
+            'points' => [],
+            'durations' => [],
+            'examples' => []
+        ];
+
+        foreach ($anomalies as $anomaly) {
+            $stats[$anomaly['status'] === 'Rendah' ? 'low' : 'high']++;
+            $stats['points'][$anomaly['titik']] = true;
+            $stats['durations'][] = $anomaly['duration'];
+            $stats['examples'][] = "Titik {$anomaly['titik']} ({$anomaly['duration']} menit)";
+        }
+
+        // Hitung statistik
+        $pointList = implode(', ', array_keys($stats['points']));
+        $avgDuration = round(array_sum($stats['durations']) / $totalAnomalies);
+        $minDuration = min($stats['durations']);
+        $maxDuration = max($stats['durations']);
+
+        // Bangun kesimpulan deskriptif
+        $conclusion = "<p class='conclusion'>Hasil analisis menunjukkan ";
+        $conclusion .= "terdiri dari {$stats['low']} anomaly di bawah range dan {$stats['high']} anomaly di atas range. ";
+        $conclusion .= "Penyimpangan terjadi di <strong>$pointList</strong> dengan durasi bervariasi antara $minDuration-$maxDuration menit ";
+        $conclusion .= "(rata-rata $avgDuration detik per kejadian). ";
+        $conclusion .= "Anomali tercepat terjadi selama $minDuration menit, sementara yang terlama mencapai $maxDuration menit. ";
+
+        return $conclusion;
     }
 
     // sausage
