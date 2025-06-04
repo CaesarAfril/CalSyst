@@ -7,18 +7,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\AbfValidation;
 use App\Models\SuhuAbfAll;
-use App\Models\FryerMarelValidation;
-use App\Models\SuhuFryerMarel;
-use App\Models\Fryer1Validation;
-use App\Models\SuhuFryer1;
-use App\Models\Fryer2Validation;
-use App\Models\SuhuFryer2;
 use App\Models\Machine;
-use App\Models\SuhuHiCook;
-use App\Models\ProdukFryer1;
-use App\Models\ProdukFryer2;
-use App\Models\ProdukFryerMarel;
-use App\Models\ProdukHiCook;
 
 use App\Models\FryerProduct;
 use App\Models\FryerTemperature;
@@ -180,8 +169,8 @@ class ValidationController extends Controller
             : null;
 
         // 1. Ambil input dari DB jika ada, jika tidak gunakan input user
-        $settingFromDB = $dataFryer1->setting_suhu_mesin;
-        $inputRange = $request->input('setting_suhu_mesin', $settingFromDB ?? '155-170');
+        $settingFromDB = $dataFryer1->setting_machine_temperature;
+        $inputRange = $request->input('setting_machine_temperature', $settingFromDB ?? '155-170');
 
         // 2. Parse range dengan lebih robust
         $rangeParts = preg_split('/\s*-\s*/', trim($inputRange), 2);
@@ -338,9 +327,9 @@ class ValidationController extends Controller
         $max = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->max('ch' . $ch)]);
         $min = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->min('ch' . $ch)]);
 
-        $avg['display_mesin'] = $suhuData->avg('display_mesin');
-        $max['display_mesin'] = $suhuData->max('display_mesin');
-        $min['display_mesin'] = $suhuData->min('display_mesin');
+        $avg['display_machine'] = $suhuData->avg('display_machine');
+        $max['display_machine'] = $suhuData->max('display_machine');
+        $min['display_machine'] = $suhuData->min('display_machine');
 
         // Cari MAX & MIN Spot
         $spotValues = [];
@@ -381,7 +370,7 @@ class ValidationController extends Controller
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
 
-        return $pdf->stream('laporan-Fryer-' . $dataFryer1->nama_produk . '.pdf');
+        return $pdf->stream('laporan-Fryer-' . $dataFryer1->product_name . '.pdf');
     }
     // ----------------------------------------------------------------------------------------------------------------------------------------
     // slaughterhouse

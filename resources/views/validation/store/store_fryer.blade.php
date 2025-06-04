@@ -78,8 +78,8 @@
                     </div>
 
                     <div class="col-sm-6 mb-3">
-                        <label for="setting_suhu_mesin" class="form-label">Setting Suhu Mesin</label>
-                        <input type="text" name="setting_suhu_mesin" id="setting_suhu_mesin" class="form-control" required readonly>
+                        <label for="setting_machine_temperature" class="form-label">Setting Suhu Mesin</label>
+                        <input type="text" name="setting_machine_temperature" id="setting_machine_temperature" class="form-control" required readonly>
                     </div>
                     <div class="col-sm-6 mb-3">
                         <label for="product_infeed_time" class="form-label">Waktu Produk Dari Infeed ke Outfeed</label>
