@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,8 +10,7 @@ use Illuminate\Support\Str;
 
 class Display_calibration extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes, HasAreaScope;
     protected $table = "display_calibration_assets";
     protected $primaryKey = "id";
     protected $fillable = [

@@ -26,7 +26,7 @@ use App\Models\FryerValidation;
 use App\Models\HiCookProduct;
 use App\Models\HiCookTemperature;
 use App\Models\HiCookValidation;
-
+use App\Models\Validation_asset;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 
@@ -40,67 +40,81 @@ class ValidationController extends Controller
     public function validation($machine_uuid, $uuid)
     {
         $machine = Machine::firstWhere('uuid', $machine_uuid);
+        $asset = Validation_asset::firstWhere('uuid', $uuid);
         if ($machine->machine_name == 'ABF') {
-            $dataABF = AbfValidation::latest()->get();
-            return view('validation.slaughterhouse.ABF', compact('dataABF'));
+            $dataABF = AbfValidation::where('machine_uuid', $uuid)->latest()->get();
+            return view('validation.slaughterhouse.ABF', [
+                'dataABF' => $dataABF,
+                'asset' => $asset
+            ]);
+        } elseif ($machine->machine_name == 'Fryer') {
+            $dataFryer = FryerValidation::where('machine_uuid', $uuid)->latest()->get();
+            return view('validation.further.fryer', [
+                'asset' => $asset,
+                'dataFryer' => $dataFryer
+            ]);
+        } elseif ($machine->machine_name == 'Hi Cook') {
+            $dataHiCook = HiCookValidation::where('machine_uuid', $uuid)->latest()->get();
+            return view('validation.further.hicook', [
+                'asset' => $asset,
+                'dataHiCook' => $dataHiCook
+            ]);
         }
     }
-    // NEW CODE
-    // ----------------------------------------------------------------------------------------------------------------------------------------
-    public function fryer1()
+
+    public function addFryer($uuid)
     {
-        $dataFryer1 = FryerValidation::latest()->get();
-        return view('validation.further.fryer1', compact('dataFryer1'));
+        $asset = Validation_asset::firstWhere('uuid', $uuid);
+        $product = FryerProduct::where('machine_uuid', $uuid)->get();
+        return view('validation.store.store_fryer', [
+            'asset' => $asset,
+            'product' => $product
+        ]);
     }
 
-    public function fryer1_addData()
+    public function storeFryer(Request $request, $uuid)
     {
-        $produkList = FryerProduct::all();
-        return view('validation.store.store_fryer1', compact('produkList'));
-    }
-
-    public function storeFryer1(Request $request)
-    {
+        $asset = Validation_asset::firstWhere('uuid', $uuid);
         $validated = $request->validate([
-            'produk_fryer_1_id' => 'required|exists:produk_fryer_1,id',
+            'fryer_product_id' => 'required|exists:fryer_product,id',
             'ingredient' => 'nullable|string',
-            'kemasan' => 'nullable|string',
-            'nama_mesin' => 'nullable|string',
-            'dimensi' => 'nullable|string',
-            'target_suhu' => 'nullable|string',
-            'start_pengujian' => 'nullable|date',
-            'end_pengujian' => 'nullable|date',
-            'waktu_produk_infeed' => 'nullable|string',
-            'suhu_awal_inti' => 'nullable|string',
-            'suhu_akhir_inti' => 'nullable|string',
+            'packaging' => 'nullable|string',
+            'machine_name' => 'nullable|string',
+            'dimension' => 'nullable|string',
+            'target_temperature' => 'nullable|string',
+            'start_testing' => 'nullable|date',
+            'end_testing' => 'nullable|date',
+            'product_infeed_time' => 'nullable|string',
+            'initial_core_temperature' => 'nullable|string',
+            'final_core_temperature' => 'nullable|string',
             'batch' => 'nullable|string',
-            'waktu_pemasakan' => 'nullable|string',
-            'nama_mesin_2' => 'nullable|string',
-            'merek_mesin_2' => 'nullable|string',
-            'tipe_mesin_2' => 'nullable|string',
-            'speed_conv_mesin_2' => 'nullable|string',
-            'kapasitas_mesin_2' => 'nullable|string',
-            'lokasi' => 'nullable|string',
-            'alamat' => 'nullable|string',
+            'cooking_time' => 'nullable|string',
+            'machine_name_2' => 'nullable|string',
+            'machine_brand_2' => 'nullable|string',
+            'machine_type_2' => 'nullable|string',
+            'machine_speed_conv_2' => 'nullable|string',
+            'machine_capacity_2' => 'nullable|string',
+            'location' => 'nullable|string',
+            'address' => 'nullable|string',
             'suhu_fryer_1' => 'required|file|mimes:xls,xlsx',
-            'notes_sebaran' => 'nullable|string',
-            'notes_grafik' => 'nullable|string',
-            'notes_luar_range' => 'nullable|string',
-            'notes_keseragaman' => 'nullable|string',
-            'notes_rekaman' => 'nullable|string',
-            'kesimpulan' => 'nullable|string',
+            'distribution_notes' => 'nullable|string',
+            'chart_notes' => 'nullable|string',
+            'out_of_range_notes' => 'nullable|string',
+            'uniformity_notes' => 'nullable|string',
+            'transcription_notes' => 'nullable|string',
+            'conclusion' => 'nullable|string',
         ]);
 
         // Ambil nama produk dari ID
-        $produk = FryerProduct::find($validated['produk_fryer_1_id']);
+        $produk = FryerProduct::find($validated['fryer_product_id']);
 
-        $validated['nama_produk'] = $produk->nama_produk;
+        $validated['product_name'] = $produk->product_name;
         if ($produk->setting_min && $produk->setting_max) {
-            $validated['setting_suhu_mesin'] = "{$produk->setting_min}-{$produk->setting_max}";
+            $validated['setting_machine_temperature'] = "{$produk->setting_min}-{$produk->setting_max}";
         }
-
+        $validated['machine_uuid'] = $uuid;
         // Simpan data utama
-        $fryer1 = FryerValidation::create($validated);
+        $fryer = FryerValidation::create($validated);
 
         if ($request->hasFile('suhu_fryer_1')) {
             $file = $request->file('suhu_fryer_1');
@@ -113,7 +127,7 @@ class ValidationController extends Controller
 
             foreach ($rows as $row) {
                 FryerTemperature::create([
-                    'fryer1_validation_id' => $fryer1->id,
+                    'fryer_validation_id' => $fryer->id,
                     'time' => $row[0] ?? null,
                     'speed' => $row[1] ?? null,
                     'ch1' => $this->parseTemperature($row[2] ?? null),
@@ -126,13 +140,23 @@ class ValidationController extends Controller
                     'ch8' => $this->parseTemperature($row[9] ?? null),
                     'ch9' => $this->parseTemperature($row[10] ?? null),
                     'ch10' => $this->parseTemperature($row[11] ?? null),
-                    'display_mesin' => $this->parseTemperature($row[12] ?? null),
+                    'display_machine' => $this->parseTemperature($row[12] ?? null),
                 ]);
             }
         }
 
-        return redirect('/validation/further/fryer-1')->with('success', 'Data berhasil disimpan!');
+        return redirect('/validation/' . $asset->machine_uuid . '/' . $uuid)->with('success', 'Data berhasil disimpan!');
     }
+    // NEW CODE
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+
+    public function fryer1_addData()
+    {
+        $produkList = FryerProduct::all();
+        return view('validation.store.store_fryer1', compact('produkList'));
+    }
+
+    public function storeFryer1(Request $request) {}
 
     public function deleteFryer1($id)
     {

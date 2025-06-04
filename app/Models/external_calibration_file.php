@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,8 +10,7 @@ use Illuminate\Support\Str;
 
 class external_calibration_file extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes, HasAreaScope;
 
     protected $table = "external_calibration_files";
     protected $primaryKey = "id";
@@ -37,6 +37,4 @@ class external_calibration_file extends Model
     {
         return $this->belongsTo(External_calibration::class, 'calibration_uuid', 'uuid');
     }
-
-   
 }

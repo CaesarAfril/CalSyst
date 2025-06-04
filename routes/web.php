@@ -138,6 +138,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/toggle/{table}', [DashboardController::class, 'toggleTableVisibility'])->name('dashboard.toggleTable');
     Route::get('/validation/{machine_uuid}/{uuid}', [ValidationController::class, 'validation'])->name('validation.index');
 
+    Route::get('/validation/print/fryer/{id}', [ValidationController::class, 'printFryer'])->name('validation.printPDFFryer');
+    Route::get('report/validation/{uuid}/addDataFryer', [ValidationController::class, 'addFryer'])->name('validation.addDataFryer');
+    Route::post('/validation/{uuid}/store', [ValidationController::class, 'storeFryer'])->name('validation.storeDataFryer');
+    Route::delete('/validation/fryer/{id}', [ValidationController::class, 'deleteFryer'])->name('validation.deleteFryerData');
+
     Route::post('/validation_asset/send-warning', [Validation_assetController::class, 'sendEarlyWarning'])->name('validation_asset.sendWarning');
     Route::post('/validation-asset/early-warning-2', [Validation_assetController::class, 'sendEarlyWarning2'])->name('validation_asset.sendEarlyWarning2');
     Route::get('/export-validation-assets', [Validation_assetController::class, 'exportExcelValidtionAssets'])->name('validationAsset.exportExcel');
@@ -188,9 +193,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/validation/fryerMarel/{id}', [ValidationController::class, 'deleteFryerMarel'])->name('validation.fryerMarel.delete');
     Route::get('/validation/fryerMarel/print/{id}', [ValidationController::class, 'printFryerMarel'])->name('report.fryerMarel.print');
 
-    Route::post('/validation/fryer1/store', [ValidationController::class, 'storeFryer1'])->name('validation.storeFryer1');
-    Route::delete('/validation/fryer1/{id}', [ValidationController::class, 'deleteFryer1'])->name('validation.fryer1.delete');
-    Route::get('/validation/fryer1/print/{id}', [ValidationController::class, 'printFryer1'])->name('report.fryer1.print');
+
+
 
     Route::post('/validation/fryer2/store', [ValidationController::class, 'storeFryer2'])->name('validation.storeFryer2');
     Route::delete('/validation/fryer2/{id}', [ValidationController::class, 'deleteFryer2'])->name('validation.fryer2.delete');
