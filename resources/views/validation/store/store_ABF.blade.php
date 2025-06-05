@@ -3,22 +3,22 @@
 <div class="container-xxl flex-grow-1 container-p-y px-0">
     <div class="card">
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         @endif
 
         <div class="card-body">
             <h3 class="mb-5 mt-4 text-center">Form ABF</h3>
-            <form action="{{ route('validation.storeABF') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('validation.storeABF', $asset->uuid) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row mb-3">
                     <div class="d-flex justify-center align-content-center align-items-center mb-3">
@@ -196,7 +196,7 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection
 @section('script')
 
 @endsection

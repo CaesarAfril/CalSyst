@@ -100,65 +100,59 @@ class AssetController extends Controller
 
     public function importCsv(Request $request)
     {
-        try {
-            $request->validate([
-                'csv_file' => 'required|mimes:csv,txt'
-            ]);
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt'
+        ]);
 
-            $file = fopen($request->file('csv_file'), 'r');
-            $header = fgetcsv($file, 0, ';');
+        $file = fopen($request->file('csv_file'), 'r');
+        $header = fgetcsv($file, 0, ';');
 
-            while ($row = fgetcsv($file, 0, ';')) {
-                $data = array_combine($header, $row);
+        while ($row = fgetcsv($file, 0, ';')) {
+            $data = array_combine($header, $row);
 
-                $plant = Plant::where('plant', $data['plant'])->firstOrFail();
-                $department = Department::where('department', $data['departemen'])->firstOrFail();
-                $category = Category::where('category', $data['kategori'])->where('calibration', $data['kalibrasi'])->firstOrFail();
+            // Find related models safely
+            $plant = Plant::where('plant', $data['Plant'])->firstOrFail();
+            $department = Department::where('department', $data['Departemen'])->firstOrFail();
+            $category = Category::where('category', $data['Kategori'])->where('calibration', $data['Pelaksana'])->firstOrFail();
+            $rawDate = $data['Expired'];
+            $formattedDate = $rawDate ?? null;
 
-                $rawDate = $data['expired_date'];
-                $formattedDate = $rawDate ?? null;
-
-                $capacity = mb_convert_encoding($data['kapasitas'], 'UTF-8', 'Windows-1252');
-
-                if (!empty($rawDate) && !Carbon::hasFormat($rawDate, 'Y-m-d')) {
-                    if (Carbon::hasFormat($rawDate, 'Y/m/d')) {
-                        $formattedDate = Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
-                    } elseif (Carbon::hasFormat($rawDate, 'd/m/Y')) {
-                        $formattedDate = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
-                    } else {
-                        $formattedDate = $rawDate;
-                    }
+            if (!empty($rawDate) && !Carbon::hasFormat($rawDate, 'Y-m-d')) {
+                if (Carbon::hasFormat($rawDate, 'Y/m/d')) {
+                    $formattedDate = Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
+                } elseif (Carbon::hasFormat($rawDate, 'd/m/Y')) {
+                    $formattedDate = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
                 }
-
-                $resolution = str_replace(',', '.', $data['resolusi']);
-                $correction = str_replace(',', '.', $data['koreksi']);
-                $uncertainty = str_replace(',', '.', $data['ketidakpastian']);
-                $standard = str_replace(',', '.', $data['standar']);
-                // dd($formattedDate);
-                Assets::create([
-                    'plant_uuid' => $plant->uuid,
-                    'dept_uuid' => $department->uuid,
-                    'location' => $data['lokasi'],
-                    'category_uuid' => $category->uuid,
-                    'merk' => $data['merk'],
-                    'type' => $data['tipe'],
-                    'series_number' => $data['nomor_seri'],
-                    'capacity' => $capacity,
-                    'range' => $data['range'],
-                    'resolution' => floatval($resolution),
-                    'correction' => floatval($correction),
-                    'uncertainty' => floatval($uncertainty),
-                    'standard' => floatval($standard),
-                    'expired_date' => $formattedDate,
-                ]);
             }
 
-            fclose($file);
-            return back()->with('success', 'Import CSV berhasil');
-        } catch (\Exception $e) {
-            dd($e); // This will dump the error and stop execution
+            $capacity = mb_convert_encoding($data['Kapasitas'], 'UTF-8', 'Windows-1252');
+            $resolution = str_replace(',', '.', $data['Resolusi']);
+            $correction = str_replace(',', '.', $data['Koreksi']);
+            $uncertainty = str_replace(',', '.', $data['Ketidakpastian']);
+            $standard = str_replace(',', '.', $data['Standar']);
+
+            Assets::create([
+                'plant_uuid' => $plant->uuid,
+                'dept_uuid' => $department->uuid,
+                'location' => $data['Lokasi'],
+                'category_uuid' => $category->uuid,
+                'merk' => $data['Merk'],
+                'type' => $data['Tipe'],
+                'series_number' => $data['Nomor Seri'],
+                'capacity' => $capacity,
+                'range' => $data['Range'],
+                'resolution' => floatval($resolution),
+                'correction' => floatval($correction),
+                'uncertainty' => floatval($uncertainty),
+                'standard' => floatval($standard),
+                'expired_date' => $formattedDate,
+            ]);
         }
+
+        fclose($file);
+        return redirect()->back()->with('success', 'CSV imported successfully.');
     }
+
 
     public function exportExcelAssets()
     {

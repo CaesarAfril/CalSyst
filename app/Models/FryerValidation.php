@@ -52,4 +52,9 @@ class FryerValidation extends Model
     {
         return $this->belongsTo(FryerProduct::class);
     }
+
+    public function FryerTemperature()
+    {
+        return $this->hasMany(FryerTemperature::class, 'fryer_validation_id', 'id');
+    }
 }

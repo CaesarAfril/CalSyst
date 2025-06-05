@@ -8,7 +8,7 @@
     <div class="card px-5 py-5" style="border-radius: 1rem;">
         <h5 class="card-header d-flex justify-content-between align-items-center p-0 mb-4">
             ABF
-            <a href="{{ route('report.validation.addDataABF') }}" class="btn btn-primary">
+            <a href="{{ route('validation.addDataABF', $asset->uuid) }}" class="btn btn-primary">
                 +
             </a>
         </h5>
@@ -30,30 +30,30 @@
                 </thead>
                 <tbody>
                     @forelse ($dataABF as $item)
-                        <tr>
-                            <th>{{$loop->iteration}}</th>
-                            <td>{{ \Carbon\Carbon::parse($item->start_pengujian)->format('d-m-Y') }}</td>
-                            <td>{{ $item->nama_produk }}</td>
-                            <td>{{ $item->nama_mesin_2 }}</td>
-                            <td>{{ $item->merek_mesin_2 }}</td>
-                            <td>{{ $item->tipe_mesin_2 }}</td>
-                            <td>{{ $item->freon_mesin_2 }}</td>
-                            <td>{{ $item->kapasitas_mesin_2 }}</td>
-                            <td class="d-flex justify-content-center">
-                                <a href="{{ route('report.abf.print', $item->id) }}" class="btn btn-primary btn-sm me-2" target="_blank">
-                                    Cetak PDF
-                                </a>
-                                <form action="{{ route('validation.abf.delete', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm me-2" type="submit">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
+                    <tr>
+                        <th>{{$loop->iteration}}</th>
+                        <td>{{ \Carbon\Carbon::parse($item->start_pengujian)->format('d-m-Y') }}</td>
+                        <td>{{ $item->nama_produk }}</td>
+                        <td>{{ $item->nama_mesin_2 }}</td>
+                        <td>{{ $item->merek_mesin_2 }}</td>
+                        <td>{{ $item->tipe_mesin_2 }}</td>
+                        <td>{{ $item->freon_mesin_2 }}</td>
+                        <td>{{ $item->kapasitas_mesin_2 }}</td>
+                        <td class="d-flex justify-content-center">
+                            <a href="{{ route('report.abf.print', $item->id) }}" class="btn btn-primary btn-sm me-2" target="_blank">
+                                Cetak PDF
+                            </a>
+                            <form action="{{ route('validation.abf.delete', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm me-2" type="submit">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="6" class="text-center">Belum ada data</td>
-                        </tr>
+                    <tr>
+                        <td colspan="6" class="text-center">Belum ada data</td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>

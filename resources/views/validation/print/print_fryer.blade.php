@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Laporan Validasi Fryer CFS 1</title>
+    <title>Laporan Validasi {{$asset->detail}}</title>
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -44,23 +45,49 @@
             font-weight: bold;
         }
 
-        h2, h3, h4, h5 {
+        h2,
+        h3,
+        h4,
+        h5 {
             margin-bottom: unset !important;
             padding-bottom: unset !important;
         }
 
-        ul, ol {
+        ul,
+        ol {
             margin: 0;
             padding: 0;
             list-style: none;
         }
 
-        .tg  {border-collapse:collapse;border-spacing:0;}
-        .tg td{border-color:black;border-style:solid;border-width:1px;
-        overflow:hidden;padding:2px;word-break:normal;}
-        .tg th{border-color:black;border-style:solid;border-width:1px;
-        font-weight:normal;overflow:hidden;padding:2px;word-break:normal;}
-        .tg .tg-0lax{text-align:left;vertical-align:top}
+        .tg {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .tg td {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            padding: 2px;
+            word-break: normal;
+        }
+
+        .tg th {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            font-weight: normal;
+            overflow: hidden;
+            padding: 2px;
+            word-break: normal;
+        }
+
+        .tg .tg-0lax {
+            text-align: left;
+            vertical-align: top
+        }
 
         /* CSS untuk cetak PDF */
         .header {
@@ -69,12 +96,12 @@
             left: 0;
             width: 100%;
         }
-        
+
         .header-table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         @page {
             margin-top: 100px;
             size: 210mm 330mm;
@@ -90,6 +117,7 @@
         }
     </style>
 </head>
+
 <body>
     {{-- header --}}
     <div class="header">
@@ -100,12 +128,12 @@
                         <tr>
                             <td style="vertical-align: middle; width: 50px;">
                                 @php
-                                    $path = public_path('storage/image/logo.png');
-                                    if(file_exists($path)) {
-                                        $type = pathinfo($path, PATHINFO_EXTENSION);
-                                        $data = file_get_contents($path);
-                                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                                    }
+                                $path = public_path('storage/image/logo.png');
+                                if(file_exists($path)) {
+                                $type = pathinfo($path, PATHINFO_EXTENSION);
+                                $data = file_get_contents($path);
+                                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                                }
                                 @endphp
                                 <img src="{{ $base64 ?? '' }}" alt="Logo" style="width: 50px;">
                             </td>
@@ -245,10 +273,10 @@
             <tr>
                 <td width="50%">
                     @php
-                        $path = public_path('storage/image/midilogger.jpg');
-                        $type = pathinfo($path, PATHINFO_EXTENSION);
-                        $data = file_get_contents($path);
-                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                    $path = public_path('storage/image/midilogger.jpg');
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+                    $data = file_get_contents($path);
+                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                     @endphp
                     <img src="{{ $base64 }}" alt="midilogger" style="width: 30%; margin: auto;">
                     <p>Graphtec Midi Logger GL-260 10 Channel </p>
@@ -274,10 +302,10 @@
 
             <div style="width: 100%; text-align: center; margin-bottom: 2rem;">
                 @php
-                    $path = public_path('storage/image/uji_tanpa_produk.jpg');
-                    $type = pathinfo($path, PATHINFO_EXTENSION);
-                    $data = file_get_contents($path);
-                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $path = public_path('storage/image/uji_tanpa_produk.jpg');
+                $type = pathinfo($path, PATHINFO_EXTENSION);
+                $data = file_get_contents($path);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                 @endphp
                 <img src="{{ $base64 }}" alt="midilogger" style="width: 50%; margin: auto;">
             </div>
@@ -296,15 +324,15 @@
 
             <div style="width: 100%; text-align: center; margin-bottom: 1rem;">
                 @php
-                    $path = public_path('storage/image/uji_dengan_produk.jpg');
-                    $type = pathinfo($path, PATHINFO_EXTENSION);
-                    $data = file_get_contents($path);
-                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $path = public_path('storage/image/uji_dengan_produk.jpg');
+                $type = pathinfo($path, PATHINFO_EXTENSION);
+                $data = file_get_contents($path);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                 @endphp
                 <img src="{{ $base64 }}" alt="midilogger" style="width: 55%; margin: auto;">
             </div>
         </div>
-        
+
     </div>
 
     {{-- tabel 1 uji persebaran suhu --}}
@@ -366,10 +394,10 @@
                     <td class="tg-0lax">Durasi</td>
                     <td class="tg-0lax" colspan="10">
                         @if($duration)
-                            {{ $duration->format('%H jam %I menit %S detik') }}
-                            ({{ $suhuAwal->time }} - {{ $suhuAkhir->time }})
+                        {{ $duration->format('%H jam %I menit %S detik') }}
+                        ({{ $suhuAwal->time }} - {{ $suhuAkhir->time }})
                         @else
-                            -
+                        -
                         @endif
                     </td>
                 </tr>
@@ -379,25 +407,25 @@
         <p style="text-align: center;"> <strong>Tabel. 1</strong> Perubahan Suhu per Channel pada Kecepatan 5 Hz dari Suhu Awal ke Suhu Akhir</p>
 
         @php
-            $chRangeAwal = collect(range(1, 10))->map(function ($ch) use ($suhuAwal) {
-                return $suhuAwal?->{'ch' . $ch};
-            })->filter();
+        $chRangeAwal = collect(range(1, 10))->map(function ($ch) use ($suhuAwal) {
+        return $suhuAwal?->{'ch' . $ch};
+        })->filter();
 
-            $chRangeAkhir = collect(range(1, 10))->map(function ($ch) use ($suhuAkhir) {
-                return $suhuAkhir?->{'ch' . $ch};
-            })->filter();
+        $chRangeAkhir = collect(range(1, 10))->map(function ($ch) use ($suhuAkhir) {
+        return $suhuAkhir?->{'ch' . $ch};
+        })->filter();
 
-            if ($chRangeAwal->count() && $chRangeAkhir->count()) {
-                $minAwal = $chRangeAwal->min();
-                $maxAwal = $chRangeAwal->max();
-                $minAkhir = $chRangeAkhir->min();
-                $maxAkhir = $chRangeAkhir->max();
-            }
+        if ($chRangeAwal->count() && $chRangeAkhir->count()) {
+        $minAwal = $chRangeAwal->min();
+        $maxAwal = $chRangeAwal->max();
+        $minAkhir = $chRangeAkhir->min();
+        $maxAkhir = $chRangeAkhir->max();
+        }
         @endphp
 
         <p>
-            Pengambilan data suhu berlangsung selama {{ $duration }}, dimulai pada pukul {{ $suhuAwal->time }} dan berakhir pada pukul {{ $suhuAkhir->time }}. 
-            Selama awal pengambilan data, suhu terukur pada berbagai channel menunjukkan kisaran antara {{ $minAwal }} &deg;C hingga {{ $maxAwal }} &deg;C. 
+            Pengambilan data suhu berlangsung selama {{ $duration }}, dimulai pada pukul {{ $suhuAwal->time }} dan berakhir pada pukul {{ $suhuAkhir->time }}.
+            Selama awal pengambilan data, suhu terukur pada berbagai channel menunjukkan kisaran antara {{ $minAwal }} &deg;C hingga {{ $maxAwal }} &deg;C.
             Sementara itu, pada akhir periode pengambilan, suhu berada dalam rentang antara {{ $minAkhir }} &deg;C hingga {{ $maxAkhir }} &deg;C.
         </p>
 
@@ -417,7 +445,7 @@
                 transform: rotate(-90deg) translateY(-50%);
                 transform-origin: left;
                 ">
-                Suhu (°C)
+                    Suhu (°C)
                 </div>
 
                 <img src="{{ $chartUrlFryer1 }}" style="width: 100%;">
@@ -426,20 +454,20 @@
                 Waktu
             </div>
         </div>
-        <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu {{ $dataFryer1->machine_name }} </p>
+        <p style="text-align: center;"> <strong>Grafik 1.</strong> Persebaran Suhu {{ $dataFryer1->machine_name }} </p>
 
         @php
-            $kesimpulanGrafik = '';
+        $kesimpulanGrafik = '';
 
-            if (isset($avgAllSpot, $maxSpot, $minSpot, $duration)) {
-                $kesimpulanGrafik .= 'Berdasarkan hasil pengamatan terhadap grafik suhu yang ditampilkan, dapat disimpulkan bahwa suhu rata-rata yang tercatat selama periode pemantauan adalah sebesar ' . number_format($avgAllSpot, 2) . '  °C,';
+        if (isset($avgAllSpot, $maxSpot, $minSpot, $duration)) {
+        $kesimpulanGrafik .= 'Berdasarkan hasil pengamatan terhadap grafik suhu yang ditampilkan, dapat disimpulkan bahwa suhu rata-rata yang tercatat selama periode pemantauan adalah sebesar ' . number_format($avgAllSpot, 2) . ' °C,';
 
-                $kesimpulanGrafik .= 'Suhu tertinggi yang berhasil dicatat mencapai angka ' . $maxSpot['value'] . ' °C, dan hal ini terjadi pada Channel ' . $maxSpot['channel'] . ', ';
+        $kesimpulanGrafik .= 'Suhu tertinggi yang berhasil dicatat mencapai angka ' . $maxSpot['value'] . ' °C, dan hal ini terjadi pada Channel ' . $maxSpot['channel'] . ', ';
 
-                $kesimpulanGrafik .= 'Sebaliknya, suhu terendah yang terdeteksi berada pada angka ' . $minSpot['value'] . ' °C, yang tercatat pada Channel ' . $minSpot['channel'] . ', ';
+        $kesimpulanGrafik .= 'Sebaliknya, suhu terendah yang terdeteksi berada pada angka ' . $minSpot['value'] . ' °C, yang tercatat pada Channel ' . $minSpot['channel'] . ', ';
 
-                $kesimpulanGrafik .= 'Seluruh data suhu ini diperoleh melalui proses pemantauan yang berlangsung selama ' . $duration->format('%H jam %I menit %S detik') . ', ';
-            }
+        $kesimpulanGrafik .= 'Seluruh data suhu ini diperoleh melalui proses pemantauan yang berlangsung selama ' . $duration->format('%H jam %I menit %S detik') . ', ';
+        }
         @endphp
 
         <p>{!! $kesimpulanGrafik !!}</p>
@@ -450,36 +478,36 @@
     <div class="row mb-3" style="page-break-before: always;">
         <p>Berdasarkan grafik, berikut detail lengkap suhu awal, suhu akhir, dan durasi pemantauan di setiap titik sensor yang berada di luar range setting suhu mesin</p>
         @if(count($anomalies) > 0)
-            <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
-                <thead>
-                    <tr>
-                        <th>Titik Sensor</th>
-                        <th style="background-color: #E3F2FD">Waktu Mulai</th>
-                        <th style="background-color: #E3F2FD">Suhu Awal</th>
-                        <th style="background-color: #E8F5E9">Waktu Selesai</th>
-                        <th style="background-color: #E8F5E9">Suhu Akhir</th>
-                        <th>Durasi (menit)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($anomalies as $anomaly)
-                    <tr class="{{ strtolower($anomaly['status']) }}">
-                        <td>Titik {{ $anomaly['titik'] }}</td>
-                        <td style="background-color: #E3F2FD">{{ $anomaly['start_time']->format('H:i:s') }}</td>
-                        <td style="background-color: #E3F2FD">
-                            {{ number_format($anomaly['suhu_awal_anomali'], 1) }} °C
-                        </td>
-                        <td style="background-color: #E8F5E9">{{ $anomaly['end_time']->format('H:i:s') }}</td>
-                        <td style="background-color: #E8F5E9">{{ number_format($anomaly['suhu_terakhir'], 1) }} °C</td>
-                        <td>{{ $anomaly['duration'] }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <table class="table-bordered mb-3" style="width: 80%; margin: auto;">
+            <thead>
+                <tr>
+                    <th>Titik Sensor</th>
+                    <th style="background-color: #E3F2FD">Waktu Mulai</th>
+                    <th style="background-color: #E3F2FD">Suhu Awal</th>
+                    <th style="background-color: #E8F5E9">Waktu Selesai</th>
+                    <th style="background-color: #E8F5E9">Suhu Akhir</th>
+                    <th>Durasi (menit)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($anomalies as $anomaly)
+                <tr class="{{ strtolower($anomaly['status']) }}">
+                    <td>Titik {{ $anomaly['titik'] }}</td>
+                    <td style="background-color: #E3F2FD">{{ $anomaly['start_time']->format('H:i:s') }}</td>
+                    <td style="background-color: #E3F2FD">
+                        {{ number_format($anomaly['suhu_awal_anomali'], 1) }} °C
+                    </td>
+                    <td style="background-color: #E8F5E9">{{ $anomaly['end_time']->format('H:i:s') }}</td>
+                    <td style="background-color: #E8F5E9">{{ number_format($anomaly['suhu_terakhir'], 1) }} °C</td>
+                    <td>{{ $anomaly['duration'] }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
         @else
-            <div class="no-anomaly">
-                <p>Tidak ditemukan anomali suhu diluar range normal</p>
-            </div>
+        <div class="no-anomaly">
+            <p>Tidak ditemukan anomali suhu diluar range normal</p>
+        </div>
         @endif
 
         <p style="text-align: center;"> <strong>Tabel. 2</strong> Durasi suhu di luar range setting suhu mesin (spek)</p>
@@ -497,80 +525,80 @@
         <h4>1. Sebaran Suhu</h4>
 
         <table class="table-bordered" style="width: 80%; margin: auto; margin-top: 1rem;">
-        <thead>
-            <tr>
-                <th colspan="6">Keseragaman Suhu</th>
-                <th colspan="2">Kinerja Alat</th>
-            </tr>
-            <tr>
-                <th>Set Suhu (°C)</th>
-                <th>Posisi (°C)</th>
-                <th>Pembacaan<br>Alat (°C)</th>
-                <th>Pembacaan<br>Midilogger<br>(°C)</th>
-                <th>Koreksi (°C)</th>
-                <th>Uncertainty<br>(°C)</th>
-                <th>Keseragaman<br>Suhu (°C)</th>
-                <th>Stabilitas<br>Suhu (°C)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
+            <thead>
+                <tr>
+                    <th colspan="6">Keseragaman Suhu</th>
+                    <th colspan="2">Kinerja Alat</th>
+                </tr>
+                <tr>
+                    <th>Set Suhu (°C)</th>
+                    <th>Posisi (°C)</th>
+                    <th>Pembacaan<br>Alat (°C)</th>
+                    <th>Pembacaan<br>Midilogger<br>(°C)</th>
+                    <th>Koreksi (°C)</th>
+                    <th>Uncertainty<br>(°C)</th>
+                    <th>Keseragaman<br>Suhu (°C)</th>
+                    <th>Stabilitas<br>Suhu (°C)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
                 $channelAverages = [];
                 for ($i = 1; $i <= 10; $i++) {
-                    $channelKey = 'ch' . $i;
-                    $channelAverages[$i] = round($suhuData->avg($channelKey), 2);
-                }
+                    $channelKey='ch' . $i;
+                    $channelAverages[$i]=round($suhuData->avg($channelKey), 2);
+                    }
 
-                $setSuhu = $dataFryer1->setting_machine_temperature ?? '155';
-                $pembacaanAlat = 155; // nilai tetap
-                $uncertainty = '';
-                $keseragamanSuhu = 85.2;
-                $stabilitasSuhu = 16.15;
-            @endphp
+                    $setSuhu = $dataFryer1->setting_machine_temperature ?? '155';
+                    $pembacaanAlat = 155; // nilai tetap
+                    $uncertainty = '';
+                    $keseragamanSuhu = 85.2;
+                    $stabilitasSuhu = 16.15;
+                    @endphp
 
-            @for ($i = 1; $i <= 10; $i++)
-                @php
-                    $pembacaanMidilogger = $channelAverages[$i];
-                    $koreksi = round($pembacaanMidilogger - $pembacaanAlat, 2);
-                @endphp
-                <tr>
-                    @if ($i === 1)
+                    @for ($i = 1; $i <= 10; $i++)
+                        @php
+                        $pembacaanMidilogger=$channelAverages[$i];
+                        $koreksi=round($pembacaanMidilogger - $pembacaanAlat, 2);
+                        @endphp
+                        <tr>
+                        @if ($i === 1)
                         <td rowspan="10">{{ $setSuhu }}</td>
-                    @endif
+                        @endif
 
-                    <td>{{ $i }}</td>
+                        <td>{{ $i }}</td>
 
-                    @if ($i === 1)
+                        @if ($i === 1)
                         <td rowspan="10">{{ $pembacaanAlat }}</td>
-                    @endif
+                        @endif
 
-                    <td>{{ $pembacaanMidilogger }}</td>
-                    <td>{{ $koreksi >= 0 ? '+' . $koreksi : $koreksi }}</td>
+                        <td>{{ $pembacaanMidilogger }}</td>
+                        <td>{{ $koreksi >= 0 ? '+' . $koreksi : $koreksi }}</td>
 
-                    @if ($i === 1)
+                        @if ($i === 1)
                         <td rowspan="10">{{ $uncertainty }}</td>
                         <td rowspan="10">{{ $keseragamanSuhu }}</td>
                         <td rowspan="10">{{ $stabilitasSuhu }}</td>
-                    @endif
-                </tr>
-            @endfor
-        </tbody>
+                        @endif
+                        </tr>
+                        @endfor
+            </tbody>
         </table>
 
         <p style="text-align: center;"> <strong>Tabel. 3</strong> Analisis Keseragaman dan Kinerja Alat</p>
 
         @php
-            $kesimpulanTabel = '';
+        $kesimpulanTabel = '';
 
-            // Rata-rata pembacaan midilogger seluruh channel
-            $avgMidilogger = collect($channelAverages)->avg();
+        // Rata-rata pembacaan midilogger seluruh channel
+        $avgMidilogger = collect($channelAverages)->avg();
 
-            // Koreksi rata-rata
-            $avgKoreksi = round($avgMidilogger - $pembacaanAlat, 2);
+        // Koreksi rata-rata
+        $avgKoreksi = round($avgMidilogger - $pembacaanAlat, 2);
 
-            $kesimpulanTabel .= "Berdasarkan hasil pengukuran terhadap keseragaman suhu pada alat, ditetapkan bahwa suhu yang diatur (set suhu) adalah sebesar {$setSuhu} °C. ";
-            $kesimpulanTabel .= "Pembacaan suhu yang ditampilkan oleh alat menunjukkan angka sebesar {$pembacaanAlat} °C, sementara nilai rata-rata pembacaan dari seluruh channel midilogger adalah sebesar " . number_format($avgMidilogger, 2) . " °C. ";
-            $kesimpulanTabel .= "Dengan demikian, terdapat koreksi rata-rata sebesar " . ($avgKoreksi >= 0 ? "+{$avgKoreksi}" : $avgKoreksi) . " °C.";
+        $kesimpulanTabel .= "Berdasarkan hasil pengukuran terhadap keseragaman suhu pada alat, ditetapkan bahwa suhu yang diatur (set suhu) adalah sebesar {$setSuhu} °C. ";
+        $kesimpulanTabel .= "Pembacaan suhu yang ditampilkan oleh alat menunjukkan angka sebesar {$pembacaanAlat} °C, sementara nilai rata-rata pembacaan dari seluruh channel midilogger adalah sebesar " . number_format($avgMidilogger, 2) . " °C. ";
+        $kesimpulanTabel .= "Dengan demikian, terdapat koreksi rata-rata sebesar " . ($avgKoreksi >= 0 ? "+{$avgKoreksi}" : $avgKoreksi) . " °C.";
         @endphp
 
         <p>{!! $kesimpulanTabel !!}</p>
@@ -579,10 +607,10 @@
 
         <div style="width: 100%; text-align: center; margin-bottom: 1rem; margin-top: 1rem;">
             @php
-                $path = public_path('storage/image/uji_tanpa_produk.jpg');
-                $type = pathinfo($path, PATHINFO_EXTENSION);
-                $data = file_get_contents($path);
-                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            $path = public_path('storage/image/uji_tanpa_produk.jpg');
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
             @endphp
             <img src="{{ $base64 }}" alt="midilogger" style="width: 50%; margin: auto;">
         </div>
@@ -622,20 +650,20 @@
                     <th class="tg-0lax">Waktu</th>
                     @for ($i = 1; $i <= 10; $i++)
                         <th class="tg-0lax">CH{{ $i }}<br>(&deg;C)</th>
-                    @endfor
-                    <th class="tg-0lax">Display Mesin(&deg;C)</th>
+                        @endfor
+                        <th class="tg-0lax">Display Mesin(&deg;C)</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($suhuData as $index => $suhu)
-                    <tr>
-                        <td class="tg-0lax">{{ $index + 1 }}</td>
-                        <td class="tg-0lax">&nbsp;&nbsp;{{ \Carbon\Carbon::parse($suhu->time)->format('H:i:s') }}</td>
-                        @for ($i = 1; $i <= 10; $i++)
-                            <td class="tg-0lax">{{ number_format($suhu->{'ch'.$i}, 2, '.', '.') }}</td>
+                <tr>
+                    <td class="tg-0lax">{{ $index + 1 }}</td>
+                    <td class="tg-0lax">&nbsp;&nbsp;{{ \Carbon\Carbon::parse($suhu->time)->format('H:i:s') }}</td>
+                    @for ($i = 1; $i <= 10; $i++)
+                        <td class="tg-0lax">{{ number_format($suhu->{'ch'.$i}, 2, '.', '.') }}</td>
                         @endfor
                         <td class="tg-0lax">{{ $suhu->display_machine ?? 0 }}</td>
-                    </tr>
+                </tr>
                 @endforeach
             </tbody>
             <tfoot>
@@ -643,45 +671,45 @@
                     <td class="tg-0lax" colspan="2">AVG</td>
                     @for ($i = 1; $i <= 10; $i++)
                         <td class="tg-0lax">{{ number_format($avg['ch'.$i], 2, '.', '.') }}</td>
-                    @endfor
-                    <td class="tg-0lax">{{ number_format($avg['display_machine'], 0, '.', '.') }}</td>
+                        @endfor
+                        <td class="tg-0lax">{{ number_format($avg['display_machine'], 0, '.', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="tg-0lax" colspan="2">MAX</td>
                     @for ($i = 1; $i <= 10; $i++)
                         <td class="tg-0lax">{{ number_format($max['ch'.$i], 2, '.', '.') }}</td>
-                    @endfor
-                    <td class="tg-0lax">{{ number_format($max['display_machine'], 0, '.', '.') }}</td>
+                        @endfor
+                        <td class="tg-0lax">{{ number_format($max['display_machine'], 0, '.', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="tg-0lax" colspan="2">MIN</td>
                     @for ($i = 1; $i <= 10; $i++)
                         <td class="tg-0lax">{{ number_format($min['ch'.$i], 2, '.', '.') }}</td>
-                    @endfor
-                    <td class="tg-0lax">{{ number_format($min['display_machine'], 0, '.', '.') }}</td>
+                        @endfor
+                        <td class="tg-0lax">{{ number_format($min['display_machine'], 0, '.', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="tg-0lax" colspan="2" style="background:#bcd4e6">
                         MAX (Spot)
-                        <td class="tg-0lax" colspan="11" style="background:#bcd4e6">
-                             {{ number_format($maxSpot['value'], 2, '.', '.') }} Titik {{ $maxSpot['channel'] }}
-                        </td>
+                    <td class="tg-0lax" colspan="11" style="background:#bcd4e6">
+                        {{ number_format($maxSpot['value'], 2, '.', '.') }} Titik {{ $maxSpot['channel'] }}
+                    </td>
                     </td>
                 </tr>
                 <tr>
                     <td class="tg-0lax" colspan="2" style="background:#bcd4e6">
-                        MIN (Spot) 
-                        <td class="tg-0lax" colspan="11" style="background:#bcd4e6">
-                            {{ number_format($minSpot['value'], 2, '.', '.') }} Titik {{ $minSpot['channel'] }}
-                        </td>
+                        MIN (Spot)
+                    <td class="tg-0lax" colspan="11" style="background:#bcd4e6">
+                        {{ number_format($minSpot['value'], 2, '.', '.') }} Titik {{ $minSpot['channel'] }}
+                    </td>
                     </td>
                 </tr>
                 <tr>
                     <td class="tg-0lax" colspan="2" style="background:#bcd4e6">
-                        AVG (All Spot) 
-                        <td class="tg-0lax" colspan="11" style="background:#bcd4e6">
-                            {{ number_format($avgAllSpot, 2, '.', '.') }}
-                        </td>
+                        AVG (All Spot)
+                    <td class="tg-0lax" colspan="11" style="background:#bcd4e6">
+                        {{ number_format($avgAllSpot, 2, '.', '.') }}
+                    </td>
                     </td>
                 </tr>
             </tfoot>
@@ -689,25 +717,25 @@
         <p style="text-align: center;"> <strong>Tabel. 4</strong> Rekaman suhu 10 titik sensor</p>
 
         @php
-            $kesimpulanPerMenit = '';
+        $kesimpulanPerMenit = '';
 
-            // Suhu rata-rata keseluruhan
-            $kesimpulanPerMenit .= 'Selama periode pemantauan, suhu yang tercatat dari 10 channel menunjukkan, ';
-            $kesimpulanPerMenit .= 'Nilai suhu rata-rata keseluruhan dari semua titik pengukuran adalah sebesar ' . number_format($avgAllSpot, 2) . ' °C, ';
-            $kesimpulanPerMenit .= 'dengan titik suhu tertinggi mencapai ' . number_format($maxSpot['value'], 2) . ' °C yang tercatat pada Channel ' . $maxSpot['channel'] . ', ';
-            $kesimpulanPerMenit .= 'dan suhu terendah sebesar ' . number_format($minSpot['value'], 2) . ' °C pada Channel ' . $minSpot['channel'] . '. ';
+        // Suhu rata-rata keseluruhan
+        $kesimpulanPerMenit .= 'Selama periode pemantauan, suhu yang tercatat dari 10 channel menunjukkan, ';
+        $kesimpulanPerMenit .= 'Nilai suhu rata-rata keseluruhan dari semua titik pengukuran adalah sebesar ' . number_format($avgAllSpot, 2) . ' °C, ';
+        $kesimpulanPerMenit .= 'dengan titik suhu tertinggi mencapai ' . number_format($maxSpot['value'], 2) . ' °C yang tercatat pada Channel ' . $maxSpot['channel'] . ', ';
+        $kesimpulanPerMenit .= 'dan suhu terendah sebesar ' . number_format($minSpot['value'], 2) . ' °C pada Channel ' . $minSpot['channel'] . '. ';
 
-            // Kinerja display mesin
-            $kesimpulanPerMenit .= 'Display mesin menunjukkan suhu rata-rata sebesar ' . number_format($avg['display_machine'], 0) . ' °C, ';
-            $kesimpulanPerMenit .= 'dengan nilai maksimum mencapai ' . number_format($max['display_machine'], 0) . ' °C dan minimum sebesar ' . number_format($min['display_machine'], 0) . ' °C. ';
+        // Kinerja display mesin
+        $kesimpulanPerMenit .= 'Display mesin menunjukkan suhu rata-rata sebesar ' . number_format($avg['display_machine'], 0) . ' °C, ';
+        $kesimpulanPerMenit .= 'dengan nilai maksimum mencapai ' . number_format($max['display_machine'], 0) . ' °C dan minimum sebesar ' . number_format($min['display_machine'], 0) . ' °C. ';
 
-            // Perbedaan antar channel
-            $selisihMaxMin = number_format($maxSpot['value'] - $minSpot['value'], 2);
-            $kesimpulanPerMenit .= 'Rentang suhu antara titik tertinggi dan terendah menunjukkan selisih sebesar ' . $selisihMaxMin . ' °C. ';
+        // Perbedaan antar channel
+        $selisihMaxMin = number_format($maxSpot['value'] - $minSpot['value'], 2);
+        $kesimpulanPerMenit .= 'Rentang suhu antara titik tertinggi dan terendah menunjukkan selisih sebesar ' . $selisihMaxMin . ' °C. ';
 
-            // Stabilitas waktu
-            $jumlahMenit = count($suhuData);
-            $kesimpulanPerMenit .= 'Data dicatat secara berkala selama ' . $jumlahMenit . ' menit. ';
+        // Stabilitas waktu
+        $jumlahMenit = count($suhuData);
+        $kesimpulanPerMenit .= 'Data dicatat secara berkala selama ' . $jumlahMenit . ' menit. ';
         @endphp
 
         <p>{!! $kesimpulanPerMenit !!}</p>
@@ -719,4 +747,5 @@
         <p>{{ $dataFryer1 ->conclusion }}</p>
     </div>
 </body>
+
 </html>

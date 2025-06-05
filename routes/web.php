@@ -140,14 +140,21 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/validation/print/fryer/{id}', [ValidationController::class, 'printFryer'])->name('validation.printPDFFryer');
     Route::get('report/validation/{uuid}/addDataFryer', [ValidationController::class, 'addFryer'])->name('validation.addDataFryer');
-    Route::post('/validation/{uuid}/store', [ValidationController::class, 'storeFryer'])->name('validation.storeDataFryer');
+    Route::post('/validation/fryer/{uuid}/store', [ValidationController::class, 'storeFryer'])->name('validation.storeDataFryer');
     Route::delete('/validation/fryer/{id}', [ValidationController::class, 'deleteFryer'])->name('validation.deleteFryerData');
+
+    Route::get('report/validation/{uuid}/addDataABF', [ValidationController::class, 'ABF_addData'])->name('validation.addDataABF');
+    Route::post('/validation/abf/{uuid}/store', [ValidationController::class, 'storeABF'])->name('validation.storeABF');
+
+    Route::get('report/validation/{uuid}/addDatahiCook', [ValidationController::class, 'addHiCook'])->name('validation.addDatahiCook');
+    Route::post('/validation/hiCook/{uuid}/store', [ValidationController::class, 'storeHiCook'])->name('validation.storehiCook');
+
 
     Route::post('/validation_asset/send-warning', [Validation_assetController::class, 'sendEarlyWarning'])->name('validation_asset.sendWarning');
     Route::post('/validation-asset/early-warning-2', [Validation_assetController::class, 'sendEarlyWarning2'])->name('validation_asset.sendEarlyWarning2');
     Route::get('/export-validation-assets', [Validation_assetController::class, 'exportExcelValidtionAssets'])->name('validationAsset.exportExcel');
-    Route::get('/validation/slaughterhouse/screwchiller', [ValidationController::class, 'screwChiller'])->name('slaughterhouse-screwchiller');
     Route::get('/validation/slaughterhouse/ABF', [ValidationController::class, 'ABF'])->name('slaughterhouse-ABF');
+    Route::get('/validation/slaughterhouse/screwchiller', [ValidationController::class, 'screwChiller'])->name('slaughterhouse-screwchiller');
     Route::get('/validation/slaughterhouse/IQF', [ValidationController::class, 'IQF'])->name('slaughterhouse-IQF');
     Route::get('/validation/further/fryer-1', [ValidationController::class, 'fryer1'])->name('further-fryer-1');
     Route::get('/validation/further/fryer-2', [ValidationController::class, 'fryer2'])->name('further-fryer-2');
@@ -171,12 +178,12 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('report/validation/addDataScrewchiller', [ValidationController::class, 'screwChiller_addData'])->name('report.validation.addDataScrewchiller');
-    Route::get('report/validation/addDataABF', [ValidationController::class, 'ABF_addData'])->name('report.validation.addDataABF');
+
     Route::get('report/validation/addDataIQF', [ValidationController::class, 'IQF_addData'])->name('report.validation.addDataIQF');
     Route::get('report/validation/addDataFryer1', [ValidationController::class, 'fryer1_addData'])->name('report.validation.addDataFryer1');
     Route::get('report/validation/addDataFryer2', [ValidationController::class, 'fryer2_addData'])->name('report.validation.addDataFryer2');
     Route::get('report/validation/addDataFryerMarel', [ValidationController::class, 'fryerMarel_addData'])->name('report.validation.addDataFryerMarel');
-    Route::get('report/validation/addDatahiCook', [ValidationController::class, 'hiCook_addData'])->name('report.validation.addDatahiCook');
+
     Route::get('report/validation/addDataSmokeHouse', [ValidationController::class, 'smokeHouse_addData'])->name('report.validation.addDataSmokeHouse');
     Route::get('report/validation/addDataSmokeHouseFessmann', [ValidationController::class, 'smokeHouseFessmann_addData'])->name('report.validation.addDataSmokeHouseFessmann');
     Route::get('report/validation/addDataAging', [ValidationController::class, 'aging_addData'])->name('report.validation.addDataAging');
@@ -185,7 +192,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('report/validation/addDataOvenmemert1', [ValidationController::class, 'ovenMemert1_addData'])->name('report.validation.addDataOvenmemert1');
     Route::get('report/validation/addDataOvenmemert2', [ValidationController::class, 'ovenMemert2_addData'])->name('report.validation.addDataOvenmemert2');
 
-    Route::post('/validation/abf/store', [ValidationController::class, 'storeABF'])->name('validation.storeABF');
+
     Route::delete('/validation/abf/{id}', [ValidationController::class, 'deleteABF'])->name('validation.abf.delete');
     Route::get('/validation/abf/print/{id}', [ValidationController::class, 'printABF'])->name('report.abf.print');
 
@@ -200,7 +207,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/validation/fryer2/{id}', [ValidationController::class, 'deleteFryer2'])->name('validation.fryer2.delete');
     Route::get('/validation/fryer2/print/{id}', [ValidationController::class, 'printFryer2'])->name('report.fryer2.print');
 
-    Route::post('/validation/hiCook/store', [ValidationController::class, 'storeHiCook'])->name('validation.storehiCook');
+
     Route::delete('/validation/hiCook/{id}', [ValidationController::class, 'deleteHiCook'])->name('validation.hiCook.delete');
     Route::get('/validation/hiCook/print/{id}', [ValidationController::class, 'printHiCook'])->name('report.hiCook.print');
 

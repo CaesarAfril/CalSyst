@@ -136,30 +136,12 @@ class ValidationController extends Controller
 
         return redirect('/validation/' . $asset->machine_uuid . '/' . $uuid)->with('success', 'Data berhasil disimpan!');
     }
-    // NEW CODE
-    // ----------------------------------------------------------------------------------------------------------------------------------------
 
-    public function fryer1_addData()
+    public function printFryer($id, Request $request)
     {
-        $produkList = FryerProduct::all();
-        return view('validation.store.store_fryer1', compact('produkList'));
-    }
-
-    public function storeFryer1(Request $request) {}
-
-    public function deleteFryer1($id)
-    {
-        $dataFryer1 = FryerValidation::findOrFail($id);
-        $dataFryer1->delete();
-
-        return redirect()->back()->with('success', 'Data berhasil dihapus.');
-    }
-
-    public function printFryer1($id, Request $request)
-    {
-        $dataFryer1 = FryerValidation::with('suhuFryer1')->findOrFail($id);
-
-        $suhuData = $dataFryer1->suhuFryer1;
+        $dataFryer1 = FryerValidation::with('FryerTemperature')->findOrFail($id);
+        $asset = Validation_asset::firstWhere('uuid', $dataFryer1->machine_uuid);
+        $suhuData = $dataFryer1->FryerTemperature;
         $suhuAwal = $suhuData->first();
         $suhuAkhir = $suhuData->last();
 
@@ -346,7 +328,8 @@ class ValidationController extends Controller
         $minSpot = collect($spotValues)->sortBy('value')->first();
         $avgAllSpot = collect($spotValues)->pluck('value')->avg();
 
-        $pdf = PDF::loadView('validation.print.print_fryer1', [
+        $pdf = PDF::loadView('validation.print.print_fryer', [
+            'asset' => $asset,
             'dataFryer1' => $dataFryer1,
             'suhuAwal' => $suhuAwal,
             'suhuAkhir' => $suhuAkhir,
@@ -372,41 +355,26 @@ class ValidationController extends Controller
 
         return $pdf->stream('laporan-Fryer-' . $dataFryer1->product_name . '.pdf');
     }
-    // ----------------------------------------------------------------------------------------------------------------------------------------
-    // slaughterhouse
-    public function screwChiller()
+
+    public function deleteFryer($id)
     {
-        return view('validation.slaughterhouse.screwchiller');
+        $dataFryer1 = FryerValidation::findOrFail($id);
+        $dataFryer1->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 
-    public function screwChiller_addData()
+    public function ABF_addData($uuid)
     {
-        return view('validation.store.store_screwchiller');
+        $asset = Validation_asset::firstWhere('uuid', $uuid);
+        return view('validation.store.store_ABF', [
+            'asset' => $asset
+        ]);
     }
 
-    public function printScrewChiller()
+    public function storeABF(Request $request, $uuid)
     {
-        $pdf = PDF::loadView('validation.print.print_screwChiller', [])->setOptions(['isRemoteEnabled' => true])
-            ->setPaper('F4', 'portrait')
-            ->setOption('isHtml5ParserEnabled', true)
-            ->setOption('isPhpEnabled', true);
-
-        return $pdf->stream('laporan-screwchiller.pdf');
-    }
-
-    public function ABF()
-    {
-        $dataABF = AbfValidation::latest()->get();
-        return view('validation.slaughterhouse.ABF', compact('dataABF'));
-    }
-
-    public function ABF_addData()
-    {
-        return view('validation.store.store_ABF');
-    }
-
-    public function storeABF(Request $request)
-    {
+        $asset = Validation_asset::firstWhere('uuid', $uuid);
         $validated = $request->validate([
             'start_pengujian' => 'required|date',
             'end_pengujian' => 'required|date',
@@ -440,7 +408,7 @@ class ValidationController extends Controller
             'notes_ketercapaian' => 'nullable|string',
             'kesimpulan' => 'nullable|string',
         ]);
-
+        $validated['machine_uuid'] = $uuid;
         $abf = AbfValidation::create(array_merge($validated, []));
 
         $path = $request->file('all_suhu')->getRealPath();
@@ -480,7 +448,7 @@ class ValidationController extends Controller
             }
 
             DB::commit();
-            return redirect('/validation/slaughterhouse/ABF')->with('success', 'Data suhu berhasil diunggah');
+            return redirect('/validation/' . $asset->machine_uuid . '/' . $uuid)->with('success', 'Data berhasil disimpan!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => $e->getMessage()]);
@@ -690,6 +658,350 @@ class ValidationController extends Controller
 
         return $pdf->stream('laporan-abf-' . $dataABF->nama_produk . '.pdf');
     }
+
+    public function addHiCook($uuid)
+    {
+        $asset = Validation_asset::firstWhere('uuid', $uuid);
+        $product = HiCookProduct::where('machine_uuid', $uuid)->get();
+        return view('validation.store.store_hiCook', [
+            'asset' => $asset,
+            'product' => $product
+        ]);
+    }
+
+    public function storeHiCook(Request $request, $uuid)
+    {
+        $asset = Validation_asset::firstWhere('uuid', $uuid);
+        $validated = $request->validate([
+            'hi_cook_product_id' => 'required|exists:hi_cook_product,id',
+            'ingredient' => 'nullable|string',
+            'packaging' => 'nullable|string',
+            'machine_name' => 'nullable|string',
+            'dimension' => 'nullable|string',
+            'target_temperature' => 'nullable|string',
+            'start_testing' => 'nullable|date',
+            'end_testing' => 'nullable|date',
+            'product_infeed_time' => 'nullable|string',
+            'initial_core_temperature' => 'nullable|string',
+            'final_core_temperature' => 'nullable|string',
+            'batch' => 'nullable|string',
+            'cooking_time' => 'nullable|string',
+            'machine_name_2' => 'nullable|string',
+            'machine_brand_2' => 'nullable|string',
+            'machine_type_2' => 'nullable|string',
+            'machine_speed_conv_2' => 'nullable|string',
+            'machine_capacity_2' => 'nullable|string',
+            'location' => 'nullable|string',
+            'address' => 'nullable|string',
+            'suhu_hi_cook' => 'required|file|mimes:xls,xlsx',
+            'distribution_notes' => 'nullable|string',
+            'chart_notes' => 'nullable|string',
+            'out_of_range_notes' => 'nullable|string',
+            'uniformity_notes' => 'nullable|string',
+            'transcription_notes' => 'nullable|string',
+            'conclusion' => 'nullable|string',
+        ]);
+
+        // Ambil nama produk dari ID
+        $produk = HiCookProduct::find($validated['hi_cook_product_id']);
+        $validated['machine_uuid'] = $uuid;
+        $validated['product_name'] = $produk->product_name;
+        if ($produk->min && $produk->max) {
+            $validated['setting_machine_temperature'] = "{$produk->min}-{$produk->max}";
+        }
+
+        // Simpan data utama
+        $hiCook = HiCookValidation::create($validated);
+
+        if ($request->hasFile('suhu_hi_cook')) {
+            $file = $request->file('suhu_hi_cook');
+
+            // Baca data dari Excel
+            $data = Excel::toArray([], $file)[0]; // Ambil sheet pertama
+
+            // Lewati header (baris pertama)
+            $rows = array_slice($data, 1);
+
+            foreach ($rows as $row) {
+                HiCookTemperature::create([
+                    'hi_cook_validation_id' => $hiCook->id,
+                    'time' => $row[0] ?? null, // Kolom A (Date&Time)
+                    'speed' => $row[1] ?? null,      // Kolom B (Speed)
+                    'ch1' => $this->parseTemperature($row[2] ?? null),
+                    'ch2' => $this->parseTemperature($row[3] ?? null),
+                    'ch3' => $this->parseTemperature($row[4] ?? null),
+                    'ch4' => $this->parseTemperature($row[5] ?? null),
+                    'ch5' => $this->parseTemperature($row[6] ?? null),
+                    'ch6' => $this->parseTemperature($row[7] ?? null),
+                    'ch7' => $this->parseTemperature($row[8] ?? null),
+                    'ch8' => $this->parseTemperature($row[9] ?? null),
+                    'ch9' => $this->parseTemperature($row[10] ?? null),
+                    'ch10' => $this->parseTemperature($row[11] ?? null),
+                    'display_machine' => $this->parseTemperature($row[12] ?? null),
+                ]);
+            }
+        }
+
+        return redirect('/validation/' . $asset->machine_uuid . '/' . $uuid)->with('success', 'Data berhasil disimpan!');
+    }
+
+    public function deleteHiCook($id)
+    {
+        $dataHiCook = HiCookValidation::findOrFail($id);
+        $dataHiCook->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
+    }
+
+    public function printHiCook($id, Request $request)
+    {
+        $dataHiCook = HiCookValidation::with('suhuHiCook')->findOrFail($id);
+
+        $suhuData = $dataHiCook->suhuHiCook;
+        $suhuAwal = $suhuData->first();
+        $suhuAkhir = $suhuData->last();
+
+        // Hitung durasi
+        $duration = $suhuAwal->time && $suhuAkhir->time
+            ? Carbon::parse($suhuAwal->time)->diff(Carbon::parse($suhuAkhir->time))
+            : null;
+
+        // 1. Ambil input dari DB jika ada, jika tidak gunakan input user
+        $settingFromDB = $dataHiCook->setting_suhu_mesin;
+        $inputRange = $request->input('setting_suhu_mesin', $settingFromDB ?? '155-170');
+
+        // 2. Parse range dengan lebih robust
+        $rangeParts = preg_split('/\s*-\s*/', trim($inputRange), 2);
+
+        // 3. Validasi dan konversi
+        $minSuhu = (float) ($rangeParts[0] ?? 155);
+        $maxSuhu = (float) ($rangeParts[1] ?? $minSuhu + 15); // Default range 15° jika hanya 1 nilai
+
+        // Deteksi anomaly dengan range terbaru
+        $anomalies = $this->detectTemperatureAnomalies($suhuData, $minSuhu, $maxSuhu);
+
+        $conclusion = $this->generateAnomalyConclusion($anomalies, $minSuhu, $maxSuhu);
+
+        $chartHiCook = [
+            'type' => 'line',
+            'data' => [
+                'labels' => $suhuData->map(function ($item) {
+                    return \Carbon\Carbon::parse($item->time)->format('H:i');
+                })->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Titik 1',
+                        'data' => $suhuData->pluck('ch1')->toArray(),
+                        'borderColor' => '#FF6384', // Merah muda
+                        'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 2',
+                        'data' => $suhuData->pluck('ch2')->toArray(),
+                        'borderColor' => '#36A2EB', // Biru
+                        'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 3',
+                        'data' => $suhuData->pluck('ch3')->toArray(),
+                        'borderColor' => '#FFCE56', // Kuning
+                        'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 4',
+                        'data' => $suhuData->pluck('ch4')->toArray(),
+                        'borderColor' => '#4BC0C0', // Cyan
+                        'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 5',
+                        'data' => $suhuData->pluck('ch5')->toArray(),
+                        'borderColor' => '#9966FF', // Ungu
+                        'backgroundColor' => 'rgba(153, 102, 255, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 6',
+                        'data' => $suhuData->pluck('ch6')->toArray(),
+                        'borderColor' => '#FF9F40', // Oranye
+                        'backgroundColor' => 'rgba(255, 159, 64, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 7',
+                        'data' => $suhuData->pluck('ch7')->toArray(),
+                        'borderColor' => '#8AC249', // Hijau muda
+                        'backgroundColor' => 'rgba(138, 194, 73, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 8',
+                        'data' => $suhuData->pluck('ch8')->toArray(),
+                        'borderColor' => '#EA5F89', // Merah muda tua
+                        'backgroundColor' => 'rgba(234, 95, 137, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 9',
+                        'data' => $suhuData->pluck('ch9')->toArray(),
+                        'borderColor' => '#0B4F6C', // Biru tua
+                        'backgroundColor' => 'rgba(11, 79, 108, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ],
+                    [
+                        'label' => 'Titik 10',
+                        'data' => $suhuData->pluck('ch10')->toArray(),
+                        'borderColor' => '#63C8CD', // Biru hijau
+                        'backgroundColor' => 'rgba(99, 200, 205, 0.2)',
+                        'borderWidth' => 2,
+                        'fill' => false
+                    ]
+                ]
+            ],
+            'options' => [
+                'elements' => [
+                    'point' => [
+                        'radius' => 0
+                    ]
+                ],
+                'responsive' => true,
+                'plugins' => [
+                    'title' => [
+                        'display' => true,
+                        'text' => 'Grafik Sebaran Suhu Terhadap Waktu'
+                    ],
+                    'legend' => [
+                        'position' => 'bottom'
+                    ]
+                ],
+                'scales' => [
+                    'y' => [
+                        'min' => 0,
+                        'max' => 0,
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Suhu (°C)'
+                        ],
+                        'ticks' => [
+                            'stepSize' => 5
+                        ]
+                    ],
+                    'x' => [
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Waktu'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $chartUrlHiCook = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartHiCook));
+
+        $averagePerChannel = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $channel = "ch{$i}";
+            $values = $suhuData->pluck($channel)->filter(); // buang null/false
+            $averagePerChannel[$channel] = $values->count() > 0 ? round($values->avg(), 2) : null;
+        }
+
+        $channels = collect(range(1, 10));
+
+        // Hitung statistik untuk tiap channel
+        $avg = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->avg('ch' . $ch)]);
+        $max = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->max('ch' . $ch)]);
+        $min = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->min('ch' . $ch)]);
+
+        $avg['display_mesin'] = $suhuData->avg('display_mesin');
+        $max['display_mesin'] = $suhuData->max('display_mesin');
+        $min['display_mesin'] = $suhuData->min('display_mesin');
+
+        // Cari MAX & MIN Spot
+        $spotValues = [];
+        foreach ($suhuData as $row) {
+            foreach ($channels as $ch) {
+                $spotValues[] = [
+                    'channel' => $ch,
+                    'value' => $row->{'ch' . $ch},
+                ];
+            }
+        }
+
+        $maxSpot = collect($spotValues)->sortByDesc('value')->first();
+        $minSpot = collect($spotValues)->sortBy('value')->first();
+        $avgAllSpot = collect($spotValues)->pluck('value')->avg();
+
+        $pdf = PDF::loadView('validation.print.print_HiCook', [
+            'dataHiCook' => $dataHiCook,
+            'suhuAwal' => $suhuAwal,
+            'suhuAkhir' => $suhuAkhir,
+            'suhuData' => $suhuData,
+            'chartUrlHiCook' => $chartUrlHiCook,
+            'anomalies' => $anomalies,
+            'minSuhu' => $minSuhu,
+            'maxSuhu' => $maxSuhu,
+            'conclusion' => $conclusion,
+            'duration' => $duration,
+            'averagePerChannel' => $averagePerChannel,
+            'avg' => $avg,
+            'max' => $max,
+            'min' => $min,
+            'maxSpot' => $maxSpot,
+            'minSpot' => $minSpot,
+            'avgAllSpot' => $avgAllSpot,
+
+        ])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-Fryer-' . $dataHiCook->nama_produk . '.pdf');
+    }
+    // NEW CODE
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    // slaughterhouse
+    public function screwChiller()
+    {
+        return view('validation.slaughterhouse.screwchiller');
+    }
+
+    public function screwChiller_addData()
+    {
+        return view('validation.store.store_screwchiller');
+    }
+
+    public function printScrewChiller()
+    {
+        $pdf = PDF::loadView('validation.print.print_screwChiller', [])->setOptions(['isRemoteEnabled' => true])
+            ->setPaper('F4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        return $pdf->stream('laporan-screwchiller.pdf');
+    }
+
+    public function ABF()
+    {
+        $dataABF = AbfValidation::latest()->get();
+        return view('validation.slaughterhouse.ABF', compact('dataABF'));
+    }
+
+
 
     public function IQF()
     {
@@ -1344,313 +1656,6 @@ class ValidationController extends Controller
     {
         $dataHiCook = HiCookValidation::latest()->get();
         return view('validation.further.hicook', compact('dataHiCook'));
-    }
-
-    public function hiCook_addData()
-    {
-        $produkList = HiCookProduct::all();
-        return view('validation.store.store_hiCook', compact('produkList'));
-    }
-
-    public function storeHiCook(Request $request)
-    {
-        $validated = $request->validate([
-            'produk_hi_cook_id' => 'required|exists:produk_hi_cook,id',
-            'ingredient' => 'nullable|string',
-            'kemasan' => 'nullable|string',
-            'nama_mesin' => 'nullable|string',
-            'dimensi' => 'nullable|string',
-            'target_suhu' => 'nullable|string',
-            'start_pengujian' => 'nullable|date',
-            'end_pengujian' => 'nullable|date',
-            'waktu_produk_infeed' => 'nullable|string',
-            'suhu_awal_inti' => 'nullable|string',
-            'suhu_akhir_inti' => 'nullable|string',
-            'batch' => 'nullable|string',
-            'waktu_pemasakan' => 'nullable|string',
-            'nama_mesin_2' => 'nullable|string',
-            'merek_mesin_2' => 'nullable|string',
-            'tipe_mesin_2' => 'nullable|string',
-            'speed_conv_mesin_2' => 'nullable|string',
-            'kapasitas_mesin_2' => 'nullable|string',
-            'lokasi' => 'nullable|string',
-            'alamat' => 'nullable|string',
-            'suhu_hi_cook' => 'required|file|mimes:xls,xlsx',
-            'notes_sebaran' => 'nullable|string',
-            'notes_grafik' => 'nullable|string',
-            'notes_luar_range' => 'nullable|string',
-            'notes_keseragaman' => 'nullable|string',
-            'notes_rekaman' => 'nullable|string',
-            'kesimpulan' => 'nullable|string',
-        ]);
-
-        // Ambil nama produk dari ID
-        $produk = HiCookProduct::find($validated['produk_hi_cook_id']);
-
-        $validated['nama_produk'] = $produk->nama_produk;
-        if ($produk->min && $produk->max) {
-            $validated['setting_suhu_mesin'] = "{$produk->min}-{$produk->max}";
-        }
-
-        // Simpan data utama
-        $hiCook = HiCookValidation::create($validated);
-
-        if ($request->hasFile('suhu_hi_cook')) {
-            $file = $request->file('suhu_hi_cook');
-
-            // Baca data dari Excel
-            $data = Excel::toArray([], $file)[0]; // Ambil sheet pertama
-
-            // Lewati header (baris pertama)
-            $rows = array_slice($data, 1);
-
-            foreach ($rows as $row) {
-                HiCookTemperature::create([
-                    'hi_cook_validation_id' => $hiCook->id,
-                    'time' => $row[0] ?? null, // Kolom A (Date&Time)
-                    'speed' => $row[1] ?? null,      // Kolom B (Speed)
-                    'ch1' => $this->parseTemperature($row[2] ?? null),
-                    'ch2' => $this->parseTemperature($row[3] ?? null),
-                    'ch3' => $this->parseTemperature($row[4] ?? null),
-                    'ch4' => $this->parseTemperature($row[5] ?? null),
-                    'ch5' => $this->parseTemperature($row[6] ?? null),
-                    'ch6' => $this->parseTemperature($row[7] ?? null),
-                    'ch7' => $this->parseTemperature($row[8] ?? null),
-                    'ch8' => $this->parseTemperature($row[9] ?? null),
-                    'ch9' => $this->parseTemperature($row[10] ?? null),
-                    'ch10' => $this->parseTemperature($row[11] ?? null),
-                    'display_mesin' => $this->parseTemperature($row[12] ?? null),
-                ]);
-            }
-        }
-
-        return redirect('/validation/further/hi-cook')->with('success', 'Data berhasil disimpan!');
-    }
-
-    public function deleteHiCook($id)
-    {
-        $dataHiCook = HiCookValidation::findOrFail($id);
-        $dataHiCook->delete();
-
-        return redirect()->back()->with('success', 'Data berhasil dihapus.');
-    }
-
-    public function printHiCook($id, Request $request)
-    {
-        $dataHiCook = HiCookValidation::with('suhuHiCook')->findOrFail($id);
-
-        $suhuData = $dataHiCook->suhuHiCook;
-        $suhuAwal = $suhuData->first();
-        $suhuAkhir = $suhuData->last();
-
-        // Hitung durasi
-        $duration = $suhuAwal->time && $suhuAkhir->time
-            ? Carbon::parse($suhuAwal->time)->diff(Carbon::parse($suhuAkhir->time))
-            : null;
-
-        // 1. Ambil input dari DB jika ada, jika tidak gunakan input user
-        $settingFromDB = $dataHiCook->setting_suhu_mesin;
-        $inputRange = $request->input('setting_suhu_mesin', $settingFromDB ?? '155-170');
-
-        // 2. Parse range dengan lebih robust
-        $rangeParts = preg_split('/\s*-\s*/', trim($inputRange), 2);
-
-        // 3. Validasi dan konversi
-        $minSuhu = (float) ($rangeParts[0] ?? 155);
-        $maxSuhu = (float) ($rangeParts[1] ?? $minSuhu + 15); // Default range 15° jika hanya 1 nilai
-
-        // Deteksi anomaly dengan range terbaru
-        $anomalies = $this->detectTemperatureAnomalies($suhuData, $minSuhu, $maxSuhu);
-
-        $conclusion = $this->generateAnomalyConclusion($anomalies, $minSuhu, $maxSuhu);
-
-        $chartHiCook = [
-            'type' => 'line',
-            'data' => [
-                'labels' => $suhuData->map(function ($item) {
-                    return \Carbon\Carbon::parse($item->time)->format('H:i');
-                })->toArray(),
-                'datasets' => [
-                    [
-                        'label' => 'Titik 1',
-                        'data' => $suhuData->pluck('ch1')->toArray(),
-                        'borderColor' => '#FF6384', // Merah muda
-                        'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 2',
-                        'data' => $suhuData->pluck('ch2')->toArray(),
-                        'borderColor' => '#36A2EB', // Biru
-                        'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 3',
-                        'data' => $suhuData->pluck('ch3')->toArray(),
-                        'borderColor' => '#FFCE56', // Kuning
-                        'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 4',
-                        'data' => $suhuData->pluck('ch4')->toArray(),
-                        'borderColor' => '#4BC0C0', // Cyan
-                        'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 5',
-                        'data' => $suhuData->pluck('ch5')->toArray(),
-                        'borderColor' => '#9966FF', // Ungu
-                        'backgroundColor' => 'rgba(153, 102, 255, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 6',
-                        'data' => $suhuData->pluck('ch6')->toArray(),
-                        'borderColor' => '#FF9F40', // Oranye
-                        'backgroundColor' => 'rgba(255, 159, 64, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 7',
-                        'data' => $suhuData->pluck('ch7')->toArray(),
-                        'borderColor' => '#8AC249', // Hijau muda
-                        'backgroundColor' => 'rgba(138, 194, 73, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 8',
-                        'data' => $suhuData->pluck('ch8')->toArray(),
-                        'borderColor' => '#EA5F89', // Merah muda tua
-                        'backgroundColor' => 'rgba(234, 95, 137, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 9',
-                        'data' => $suhuData->pluck('ch9')->toArray(),
-                        'borderColor' => '#0B4F6C', // Biru tua
-                        'backgroundColor' => 'rgba(11, 79, 108, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ],
-                    [
-                        'label' => 'Titik 10',
-                        'data' => $suhuData->pluck('ch10')->toArray(),
-                        'borderColor' => '#63C8CD', // Biru hijau
-                        'backgroundColor' => 'rgba(99, 200, 205, 0.2)',
-                        'borderWidth' => 2,
-                        'fill' => false
-                    ]
-                ]
-            ],
-            'options' => [
-                'elements' => [
-                    'point' => [
-                        'radius' => 0
-                    ]
-                ],
-                'responsive' => true,
-                'plugins' => [
-                    'title' => [
-                        'display' => true,
-                        'text' => 'Grafik Sebaran Suhu Terhadap Waktu'
-                    ],
-                    'legend' => [
-                        'position' => 'bottom'
-                    ]
-                ],
-                'scales' => [
-                    'y' => [
-                        'min' => 0,
-                        'max' => 0,
-                        'title' => [
-                            'display' => true,
-                            'text' => 'Suhu (°C)'
-                        ],
-                        'ticks' => [
-                            'stepSize' => 5
-                        ]
-                    ],
-                    'x' => [
-                        'title' => [
-                            'display' => true,
-                            'text' => 'Waktu'
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        $chartUrlHiCook = 'https://quickchart.io/chart?width=800&height=400&c=' . urlencode(json_encode($chartHiCook));
-
-        $averagePerChannel = [];
-        for ($i = 1; $i <= 10; $i++) {
-            $channel = "ch{$i}";
-            $values = $suhuData->pluck($channel)->filter(); // buang null/false
-            $averagePerChannel[$channel] = $values->count() > 0 ? round($values->avg(), 2) : null;
-        }
-
-        $channels = collect(range(1, 10));
-
-        // Hitung statistik untuk tiap channel
-        $avg = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->avg('ch' . $ch)]);
-        $max = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->max('ch' . $ch)]);
-        $min = $channels->mapWithKeys(fn($ch) => ['ch' . $ch => $suhuData->min('ch' . $ch)]);
-
-        $avg['display_mesin'] = $suhuData->avg('display_mesin');
-        $max['display_mesin'] = $suhuData->max('display_mesin');
-        $min['display_mesin'] = $suhuData->min('display_mesin');
-
-        // Cari MAX & MIN Spot
-        $spotValues = [];
-        foreach ($suhuData as $row) {
-            foreach ($channels as $ch) {
-                $spotValues[] = [
-                    'channel' => $ch,
-                    'value' => $row->{'ch' . $ch},
-                ];
-            }
-        }
-
-        $maxSpot = collect($spotValues)->sortByDesc('value')->first();
-        $minSpot = collect($spotValues)->sortBy('value')->first();
-        $avgAllSpot = collect($spotValues)->pluck('value')->avg();
-
-        $pdf = PDF::loadView('validation.print.print_HiCook', [
-            'dataHiCook' => $dataHiCook,
-            'suhuAwal' => $suhuAwal,
-            'suhuAkhir' => $suhuAkhir,
-            'suhuData' => $suhuData,
-            'chartUrlHiCook' => $chartUrlHiCook,
-            'anomalies' => $anomalies,
-            'minSuhu' => $minSuhu,
-            'maxSuhu' => $maxSuhu,
-            'conclusion' => $conclusion,
-            'duration' => $duration,
-            'averagePerChannel' => $averagePerChannel,
-            'avg' => $avg,
-            'max' => $max,
-            'min' => $min,
-            'maxSpot' => $maxSpot,
-            'minSpot' => $minSpot,
-            'avgAllSpot' => $avgAllSpot,
-
-        ])->setOptions(['isRemoteEnabled' => true])
-            ->setPaper('F4', 'portrait')
-            ->setOption('isHtml5ParserEnabled', true)
-            ->setOption('isPhpEnabled', true);
-
-        return $pdf->stream('laporan-Fryer-' . $dataHiCook->nama_produk . '.pdf');
     }
 
     private function parseTemperature($value)
