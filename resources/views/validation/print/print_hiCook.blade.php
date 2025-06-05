@@ -120,7 +120,7 @@
                 <td style="text-align: center; vertical-align: middle;">
                     <h2 style="margin-left: -12rem; text-transform: uppercase;">
                         LAPORAN HASIL VALIDASI <br> HI COOK <br>
-                        {{ $dataHiCook->lokasi }}
+                        {{ $dataHiCook->location }}
                     </h2>
                 </td>
             </tr>
@@ -131,29 +131,29 @@
     <table class="table-bordered mb-3" style="width: 40%;">
         <tr>
             <td style="padding: 1px;">Waktu Mulai Pengujian</td>
-            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataHiCook->start_pengujian)->translatedFormat('d F Y') }}</td>
-            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataHiCook->start_pengujian)->format('H:i') }}</td>
+            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataHiCook->start_testing)->translatedFormat('d F Y') }}</td>
+            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataHiCook->start_testing)->format('H:i') }}</td>
         </tr>
         <tr>
             <td style="padding: 1px;">Waktu Akhir Pengujian</td>
-            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataHiCook->end_pengujian)->translatedFormat('d F Y') }}</td>
-            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataHiCook->end_pengujian)->format('H:i') }}</td>
+            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataHiCook->end_testing)->translatedFormat('d F Y') }}</td>
+            <td style="padding: 1px;">{{ \Carbon\Carbon::parse($dataHiCook->end_testing)->format('H:i') }}</td>
         </tr>
         <tr>
             <td style="padding: 1px;">Setting Suhu Mesin (Spek)</td>
-            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->setting_suhu_mesin }} &deg;C</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->setting_machine_temperature }} &deg;C</td>
         </tr>
         <tr>
             <td style="padding: 1px;">Waktu Produk Infeed ke Outfeed</td>
-            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->waktu_produk_infeed }}</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->product_infeed_time }}</td>
         </tr>
         <tr>
             <td style="padding: 1px;">Suhu Awal Inti Produk</td>
-            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->suhu_awal_inti }} &deg;C (Thermo QC)</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->initial_core_temperature }} &deg;C (Thermo QC)</td>
         </tr>
         <tr>
             <td style="padding: 1px;">Suhu Akhir Inti Produk</td>
-            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->suhu_akhir_inti }} &deg;C (Thermo QC)</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->final_core_temperature }} &deg;C (Thermo QC)</td>
         </tr>
         <tr>
             <td style="padding: 1px;">Batck ke-</td>
@@ -161,14 +161,14 @@
         </tr>
         <tr>
             <td style="padding: 1px;">Waktu Pemasakan</td>
-            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->waktu_pemasakan }}</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->cooking_time }}</td>
         </tr>
     </table>
 
     <table class="table-bordered mb-3" style="width: 50%;">
         <tr>
             <td style="padding: 1px;">Nama Produk</td>
-            <td style="padding: 1px;">{{ $dataHiCook ->nama_produk }}</td>
+            <td style="padding: 1px;">{{ $dataHiCook ->product_name }}</td>
         </tr>
     </table>
 
@@ -183,41 +183,41 @@
             </td>
             <td style="width: 70%; border: 1px solid black; vertical-align: top; padding: 2px;">
                 {{ $dataHiCook ->ingredient }} <br>
-                {{ $dataHiCook ->kemasan }} <br>
-                {{ $dataHiCook ->nama_mesin }} <br>
-                {{ $dataHiCook ->dimensi }} <br>
-                {{ $dataHiCook ->target_suhu }}
+                {{ $dataHiCook ->packaging }} <br>
+                {{ $dataHiCook ->machine_name }} <br>
+                {{ $dataHiCook ->dimension }} <br>
+                {{ $dataHiCook ->target_temperature }}
             </td>
         </tr>
     </table>
 
     <h3 style="margin-top: 1rem;">Nama Mesin</h3>
     <ul>
-        <li>{{ $dataHiCook ->nama_mesin_2 }}</li>
+        <li>{{ $dataHiCook ->machine_name_2 }}</li>
     </ul>
     <table class="table-bordered mb-3" style="width: 40%;">
         <tr>
             <td style="padding: 1px;">Merek</td>
-            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->merek_mesin_2 }}</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->machine_brand_2 }}</td>
         </tr>
         <tr>
             <td style="padding: 1px;">Tipe</td>
-            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->tipe_mesin_2 }}</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->machine_type_2 }}</td>
         </tr>
         <tr>
             <td style="padding: 1px;">Speed Conv</td>
-            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->speed_conv_mesin_2 }}</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->machine_speed_conv_2 }}</td>
         </tr>
         <tr>
             <td style="padding: 1px;">Kapasitas</td>
-            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->kapasitas_mesin_2 }}</td>
+            <td colspan="2" style="padding: 1px;">{{ $dataHiCook ->machine_capacity_2 }}</td>
         </tr>
     </table>
 
     <h3 style="margin-top: 1rem; margin-bottom: unset;">Lokasi</h3>
     <ul>
-        <li>{{ $dataHiCook ->lokasi }}</li>
-        <li>{{ $dataHiCook ->alamat }}</li>
+        <li>{{ $dataHiCook ->location }}</li>
+        <li>{{ $dataHiCook ->address }}</li>
     </ul>
 
     {{-- identifikasi --}}
@@ -401,7 +401,7 @@
             Sementara itu, pada akhir periode pengambilan, suhu berada dalam rentang antara {{ $minAkhir }} &deg;C hingga {{ $maxAkhir }} &deg;C.
         </p>
 
-        <p>{{ $dataHiCook ->notes_sebaran }}</p>
+        <p>{{ $dataHiCook ->distribution_notes }}</p>
     </div>
 
     {{-- Grafik 1. Persebaran suhu --}}
@@ -426,7 +426,7 @@
                 Waktu
             </div>
         </div>
-        <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu {{ $dataHiCook->nama_mesin }} </p>
+        <p style="text-align: center;"> <strong>Grafik 1.</strong>  Persebaran Suhu {{ $dataHiCook->machine_name }} </p>
 
         @php
             $kesimpulanGrafik = '';
@@ -443,7 +443,7 @@
         @endphp
 
         <p>{!! $kesimpulanGrafik !!}</p>
-        <p>{{ $dataHiCook ->notes_grafik }}</p>
+        <p>{{ $dataHiCook ->chart_notes }}</p>
     </div>
 
     {{-- table luar range --}}
@@ -488,7 +488,7 @@
             {!! $conclusion !!}
         </div>
 
-        <p>{{ $dataHiCook ->notes_luar_range }}</p>
+        <p>{{ $dataHiCook ->out_of_range_notes }}</p>
     </div>
 
     {{-- hasil sebaran suhu --}}
@@ -521,7 +521,7 @@
                     $channelAverages[$i] = round($suhuData->avg($channelKey), 2);
                 }
 
-                $setSuhu = $dataHiCook->setting_suhu_mesin ?? '155';
+                $setSuhu = $dataHiCook->setting_machine_temperature ?? '155';
                 $pembacaanAlat = 155; // nilai tetap
                 $uncertainty = '';
                 $keseragamanSuhu = 85.2;
@@ -575,7 +575,7 @@
 
         <p>{!! $kesimpulanTabel !!}</p>
 
-        <p>{{ $dataHiCook ->notes_keseragaman }}</p>
+        <p>{{ $dataHiCook ->uniformity_notes }}</p>
 
         <div style="width: 100%; text-align: center; margin-bottom: 1rem; margin-top: 1rem;">
             @php
@@ -634,7 +634,7 @@
                         @for ($i = 1; $i <= 10; $i++)
                             <td class="tg-0lax">{{ number_format($suhu->{'ch'.$i}, 2, '.', '.') }}</td>
                         @endfor
-                        <td class="tg-0lax">{{ $suhu->display_mesin ?? 0 }}</td>
+                        <td class="tg-0lax">{{ $suhu->display_machine ?? 0 }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -644,21 +644,21 @@
                     @for ($i = 1; $i <= 10; $i++)
                         <td class="tg-0lax">{{ number_format($avg['ch'.$i], 2, '.', '.') }}</td>
                     @endfor
-                    <td class="tg-0lax">{{ number_format($avg['display_mesin'], 0, '.', '.') }}</td>
+                    <td class="tg-0lax">{{ number_format($avg['display_machine'], 0, '.', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="tg-0lax" colspan="2">MAX</td>
                     @for ($i = 1; $i <= 10; $i++)
                         <td class="tg-0lax">{{ number_format($max['ch'.$i], 2, '.', '.') }}</td>
                     @endfor
-                    <td class="tg-0lax">{{ number_format($max['display_mesin'], 0, '.', '.') }}</td>
+                    <td class="tg-0lax">{{ number_format($max['display_machine'], 0, '.', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="tg-0lax" colspan="2">MIN</td>
                     @for ($i = 1; $i <= 10; $i++)
                         <td class="tg-0lax">{{ number_format($min['ch'.$i], 2, '.', '.') }}</td>
                     @endfor
-                    <td class="tg-0lax">{{ number_format($min['display_mesin'], 0, '.', '.') }}</td>
+                    <td class="tg-0lax">{{ number_format($min['display_machine'], 0, '.', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="tg-0lax" colspan="2" style="background:#bcd4e6">
@@ -698,8 +698,8 @@
             $kesimpulanPerMenit .= 'dan suhu terendah sebesar ' . number_format($minSpot['value'], 2) . ' °C pada Channel ' . $minSpot['channel'] . '. ';
 
             // Kinerja display mesin
-            $kesimpulanPerMenit .= 'Display mesin menunjukkan suhu rata-rata sebesar ' . number_format($avg['display_mesin'], 0) . ' °C, ';
-            $kesimpulanPerMenit .= 'dengan nilai maksimum mencapai ' . number_format($max['display_mesin'], 0) . ' °C dan minimum sebesar ' . number_format($min['display_mesin'], 0) . ' °C. ';
+            $kesimpulanPerMenit .= 'Display mesin menunjukkan suhu rata-rata sebesar ' . number_format($avg['display_machine'], 0) . ' °C, ';
+            $kesimpulanPerMenit .= 'dengan nilai maksimum mencapai ' . number_format($max['display_machine'], 0) . ' °C dan minimum sebesar ' . number_format($min['display_machine'], 0) . ' °C. ';
 
             // Perbedaan antar channel
             $selisihMaxMin = number_format($maxSpot['value'] - $minSpot['value'], 2);
@@ -711,12 +711,12 @@
         @endphp
 
         <p>{!! $kesimpulanPerMenit !!}</p>
-        <p>{{ $dataHiCook ->notes_rekaman }}</p>
+        <p>{{ $dataHiCook ->transcription_notes }}</p>
     </div>
 
     <div class="row mb-3">
         <h3>KESIMPULAN</h3>
-        <p>{{ $dataHiCook ->kesimpulan }}</p>
+        <p>{{ $dataHiCook ->conclusion }}</p>
     </div>
 </body>
 </html>
