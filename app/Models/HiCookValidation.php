@@ -52,4 +52,9 @@ class HiCookValidation extends Model
     {
         return $this->belongsTo(HiCookProduct::class);
     }
+
+    public function HiCookTemperature()
+    {
+        return $this->hasMany(HiCookTemperature::class, 'fryer_validation_id', 'id');
+    }
 }
