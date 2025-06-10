@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('abf_validation', function (Blueprint $table) {
-            $table->uuid('machine_uuid');
+            $table->uuid('machine_uuid')->nullable();
             $table->foreign('machine_uuid')->references('uuid')->on('validation_assets');
         });
     }

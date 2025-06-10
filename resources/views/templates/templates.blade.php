@@ -406,49 +406,51 @@
                         </a>
                     </div>
 
-                    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-                        <div class="navbar-nav align-items-center">
-                            <div class="nav-item d-flex align-items-center">
-                                <div> Hai, {{Auth::user()->name}}! You are logged in.
-                                </div>
-                            </div>
+                    <div class="navbar-nav-right d-flex align-items-center justify-content-between w-100" id="navbar-collapse">
+                        <!-- Bagian kiri (ucapan hai) -->
+                        <div class="nav-item d-flex align-items-center">
+                            <div>Hai, {{ Auth::user()->name }}! You are logged in.</div>
                         </div>
 
-                        <div class="navbar-nav flex-row align-items-center ms-auto" style="width:150px">
-                            <div class="btn-group dropleft">
-                                <div class="d-flex" style="gap: 1rem;">
-                                    @can('choose plant')
-                                    <form action="{{ url()->current() }}" method="get" id="filterForm" class="d-inline-block mx-2">
-                                        @foreach(request()->except('area') as $key => $value)
-                                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                                        @endforeach
+                        <!-- Bagian kanan -->
+                        <div class="d-flex align-items-center" style="gap: 1rem;">
+                            @can('choose plant')
+                            <form action="{{ url()->current() }}" method="get" id="filterForm" class="d-inline-block">
+                                @foreach(request()->except('area') as $key => $value)
+                                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                                @endforeach
 
-                                        <select name="area" id="area" class="form-control d-inline-block w-auto" onchange="document.getElementById('filterForm').submit()">
-                                            <option value="">--Plant--</option>
-                                            @foreach($plants as $plant)
-                                            <option value="{{ $plant->uuid }}" {{ request('area') == $plant->uuid ? 'selected' : '' }}>
-                                                {{ $plant->plant }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </form>
-                                    @endcan
-                                    <button type="button" class="btn btn-primary dropdown-toggle hide-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                        Logout
-                                    </button>
-                                </div>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                                        <span class="align-middle">Ganti Password</span>
-                                    </a>
-                                    <a href="{{ route('actionLogout') }}" class="dropdown-item" type="submit">Logout</a>
-                                    <!-- <button class="dropdown-item" href="/sesi/logout" name="submit" type="submit">Logout</button> -->
-                                </div>
+                                <select name="area" id="area" class="form-control form-select w-auto mt-3"
+                                    onchange="document.getElementById('filterForm').submit()">
+                                    <option value="">--Plant--</option>
+                                    @foreach($plants as $plant)
+                                    <option value="{{ $plant->uuid }}" {{ request('area') == $plant->uuid ? 'selected' : '' }}>
+                                        {{ $plant->plant }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                            @endcan
+
+                            <!-- Dropdown Logout -->
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-primary dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical-rounded"></i> Logout
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                            Ganti Password
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('actionLogout') }}" class="dropdown-item">Logout</a>
+                                    </li>
+                                </ul>
                             </div>
-                            </a>
                         </div>
                     </div>
+
                 </nav>
                 <!-- / Navbar -->
 
