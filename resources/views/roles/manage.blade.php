@@ -36,7 +36,7 @@
                         <a href="{{ route('roles.index') }}" class="btn btn-secondary mt-3">Back</a>
                     </div>
                 </div>
-                
+
             </form>
         </div>
     </div>

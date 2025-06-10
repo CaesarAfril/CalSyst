@@ -106,9 +106,7 @@ class CalController extends Controller
         $assets = Assets::hasArea()->whereHas('category', function ($query) {
             $query->where('calibration', 'External');
         })->get();
-        $report = External_calibration::with(['asset', 'latestCalibrationFile'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $report = External_calibration::fetchExternalData();
 
         return view('calibration.externalData', [
             'assets' => $assets,

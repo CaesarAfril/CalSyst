@@ -248,7 +248,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
     Route::get('/roles/{role}/manage-access', [RoleController::class, 'manageAccess'])->name('roles.manage-access');
-    Route::post('/roles/{role}/manage-access', [RoleController::class, 'updateAccess'])->name('roles.manage-access.update');
+    Route::put('/roles/{role}/manage-access/update', [RoleController::class, 'updateAccess'])->name('roles.manage-access.update');
 
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');

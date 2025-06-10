@@ -55,6 +55,6 @@ class HiCookValidation extends Model
 
     public function HiCookTemperature()
     {
-        return $this->hasMany(HiCookTemperature::class, 'fryer_validation_id', 'id');
+        return $this->hasMany(HiCookTemperature::class, 'hi_cook_validation_id', 'id');
     }
 }

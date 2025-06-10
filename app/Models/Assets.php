@@ -6,6 +6,7 @@ use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
 class Assets extends Model
@@ -100,9 +101,10 @@ class Assets extends Model
         return $this->hasOne(Scale_calibration::class, 'asset_uuid', 'uuid')->latestOfMany('date');
     }
 
-    public static function fetchData($search)
+    public static function fetchData($search, ?string $plantUuid = null)
     {
-        return self::hasArea()->with([
+
+        $query = self::hasArea()->with([
             'department',
             'plant',
             'category',
@@ -110,6 +112,10 @@ class Assets extends Model
             'latest_temp_calibration',
             'latest_display_calibration'
         ]);
+
+        if ($plantUuid) {
+            $query->where('plant_uuid', $plantUuid);
+        }
 
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
@@ -135,5 +141,74 @@ class Assets extends Model
                     $q->where('plant', 'like', "%{$search}%");
                 });
         }
+
+        return $query;
+    }
+
+    public static function fetchTotalAsset(?string $plantUuid = null)
+    {
+        $query = self::hasArea();
+
+        if ($plantUuid) {
+            $query->where('plant_uuid', $plantUuid);
+        }
+
+        return $query->count();
+    }
+
+    public static function fetchDataDashboard(?string $plantUuid = null)
+    {
+        $query = self::hasArea()->with([
+            'department',
+            'plant',
+            'category',
+            'latest_external_calibration',
+            'latest_temp_calibration',
+            'latest_display_calibration',
+            'latest_scale_calibration',
+        ]);
+
+        if ($plantUuid) {
+            $query->where('plant_uuid', $plantUuid);
+        }
+
+        return $query->get();
+    }
+
+    public static function getExpiringAssets(?string $plantUuid = null, $threeMonthsLater, $sixMonthsLater, $search = null, $sortColumn = 'expired_date', $sortDirection = 'asc'): LengthAwarePaginator
+    {
+        $query = self::hasArea()
+            ->with('category')
+            ->join('category', 'category.uuid', '=', 'assets.category_uuid')
+            ->select('assets.*')
+            ->whereNotNull('assets.expired_date')
+            ->whereBetween('assets.expired_date', [$threeMonthsLater, $sixMonthsLater]);
+
+        if ($plantUuid) {
+            $query->where('plant_uuid', $plantUuid);
+        }
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('merk', 'like', "%{$search}%")
+                    ->orWhere('type', 'like', "%{$search}%")
+                    ->orWhere('series_number', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('expired_date', 'like', "%{$search}%");
+            })
+                ->orWhereHas('category', function ($q) use ($search) {
+                    $q->where('category', 'like', "%{$search}%");
+                })
+                ->orWhereHas('department', function ($q) use ($search) {
+                    $q->where('department', 'like', "%{$search}%");
+                })
+                ->orWhereHas('plant', function ($q) use ($search) {
+                    $q->where('plant', 'like', "%{$search}%");
+                });
+        }
+
+
+
+        return $query->orderBy($sortColumn, $sortDirection)->paginate(10);
     }
 }

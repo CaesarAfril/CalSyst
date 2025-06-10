@@ -72,4 +72,18 @@ class Validation_asset extends Model
     {
         return $this->hasMany(AbfValidation::class, 'machine_uuid', 'uuid');
     }
+
+    public static function fetchDataAsset(?string $plantUuid = null)
+    {
+        $query = self::hasArea()->with([
+            'department',
+            'plant'
+        ]);
+
+        if ($plantUuid) {
+            $query->where('plant_uuid', $plantUuid);
+        }
+
+        return $query->get();
+    }
 }

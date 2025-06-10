@@ -134,60 +134,73 @@
                             <!--***********************************
                                 ---------- Menu Data User -------
                                 ************************************-->
+                            @can('access user')
                             <li class="menu-item {{ request()->is('user*') ? 'active' : '' }}">
                                 <a href="{{ route('user') }}" class="menu-link">
                                     <i class="menu-icon bx bxs-bot custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Data User</div>
                                 </a>
                             </li>
+                            @endcan
 
                             <!--***********************************
                                 ---------- Menu Data Plant -------
                                 ************************************-->
+                            @can('access plant')
                             <li class="menu-item {{ request()->is('plant*') ? 'active' : '' }}">
                                 <a href="{{ route('plant.index') }}" class="menu-link">
                                     <i class="menu-icon bx bxs-institution custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Data Plant</div>
                                 </a>
                             </li>
+                            @endcan
 
                             <!--***********************************
                                 ---------- Menu Data Department -------
                                 ************************************-->
+                            @can('access department')
                             <li class="menu-item {{ request()->is('department*') ? 'active' : '' }}">
                                 <a href="{{ route('department.index') }}" class="menu-link">
                                     <i class="menu-icon bx bxs-home custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Data Department</div>
                                 </a>
                             </li>
+                            @endcan
 
                             <!--***********************************
                                 ---------- Menu Data Category -------
                                 ************************************-->
+                            @can('access category')
                             <li class="menu-item {{ request()->is('category*') ? 'active' : '' }}">
                                 <a href="{{ route('category.index') }}" class="menu-link">
                                     <i class="menu-icon bx bx-category custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Kategori Alat Ukur</div>
                                 </a>
                             </li>
+                            @endcan
 
+                            @can('access machine')
                             <li class="menu-item {{ request()->is('machine*') ? 'active' : '' }}">
                                 <a href="{{ route('machine.index') }}" class="menu-link">
                                     <i class="menu-icon bx bx-dish custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Mesin</div>
                                 </a>
                             </li>
+                            @endcan
 
+                            @can('access weight')
                             <li class="menu-item {{ request()->is('weight*') ? 'active' : '' }}">
                                 <a href="{{ route('weight.index') }}" class="menu-link">
                                     <i class="menu-icon bx bx-layer custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Anak Timbang</div>
                                 </a>
                             </li>
+                            @endcan
 
                             <!--***********************************
                                 ---------- Menu Aset Alat Ukur --------
                                 ************************************-->
+                            @can('access asset')
                             <li class="menu-item {{ request()->is('asset*') || request()->is('validation_asset*') ? 'open' : '' }}">
                                 <a href="javascript:void(0)" class="menu-link menu-toggle">
                                     <i class="menu-icon tf-icons bx bxs-cog custom-sidebar-text"></i>
@@ -206,9 +219,11 @@
                                     </li>
                                 </ul>
                             </li>
+                            @endcan
                         </ul>
                     </li>
 
+                    @can('access permission')
                     <li class="menu-item mt-2">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon bx bx-desktop custom-sidebar-text"></i>
@@ -233,7 +248,9 @@
                             </li>
                         </ul>
                     </li>
+                    @endcan
 
+                    @can('access monitoring')
                     <li class="menu-item mt-2 {{ request()->is('calibration/late-calibration*') || request()->is('calibration/calibrated-assets*') ? 'open' : '' }}">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon bx bx-desktop custom-sidebar-text"></i>
@@ -261,7 +278,9 @@
                             </li>
                         </ul>
                     </li>
+                    @endcan
 
+                    @can('access report')
                     <li class="menu-item mt-2 {{ request()->is('report/temperature*') || request()->is('report/display*') || request()->is('report/scale*') || request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/slaughterhouse/ABF*') || request()->is('validation/slaughterhouse/IQF*') || request()->is('validation/further/fryer-1*') || request()->is('validation/further/fryer-2*') || request()->is('validation/further/fryer-marel*') || request()->is('validation/further/hi-cook*') || request()->is('validation/sausage/smoke-house*') || request()->is('validation/breadcrumb/aging*') || request()->is('validation/laboratory/autoclave1*') || request()->is('validation/laboratory/autoclave2*') || request()->is('validation/laboratory/ovenmemert1*') || request()->is('validation/laboratory/ovenmemert2*') ? 'open' : '' }}">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon bx bxs-report custom-sidebar-text"></i>
@@ -314,124 +333,11 @@
                                         </ul>
                                     </li>
                                     @endforeach
-                                    <!-- <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') || request()->is('validation/slaughterhouse/ABF*') || request()->is('validation/slaughterhouse/IQF*')  ? 'open' : '' }}">
-                                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                                            <i class="menu-icon bx bxs-home custom-sidebar-text"></i>
-                                            <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Slaughterhouse</div>
-                                        </a>
-                                        <ul class="menu-sub">
-                                            <li class="menu-item {{ request()->is('validation/slaughterhouse/screwchiller*') ? 'active' : '' }}">
-                                                <a href="{{ route('slaughterhouse-screwchiller') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Screwchiller</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item {{ request()->is('validation/slaughterhouse/ABF*') ? 'active' : '' }}">
-                                                <a href="{{ route('slaughterhouse-ABF') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">ABF</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item {{ request()->is('validation/slaughterhouse/IQF*') ? 'active' : '' }}">
-                                                <a href="{{ route('slaughterhouse-IQF') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">IQF</div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    
-
-                                    <li class="menu-item {{ request()->is('validation/further/fryer-1*') || request()->is('validation/further/fryer-2*') || request()->is('validation/further/fryer-marel*') || request()->is('validation/further/hi-cook*') ? 'open' : '' }}">
-                                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                                            <i class="menu-icon bx bxs-brain custom-sidebar-text"></i>
-                                            <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Further</div>
-                                        </a>
-                                        <ul class="menu-sub">
-                                            <li class="menu-item {{ request()->is('validation/further/fryer-1*') ? 'active' : '' }}">
-                                                <a href="{{ route('further-fryer-1') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Fryer CFS 1</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item {{ request()->is('validation/further/fryer-2*') ? 'active' : '' }}">
-                                                <a href="{{ route('further-fryer-2') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Fryer CFS 2</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item {{ request()->is('validation/further/fryer-marel*') ? 'active' : '' }}">
-                                                <a href="{{ route('further-fryer-marel') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Fryer Marel</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item {{ request()->is('validation/further/hi-cook*') ? 'active' : '' }}">
-                                                <a href="{{ route('further-hi-cook') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Hi Cook</div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="menu-item {{ request()->is('validation/sausage/smoke-house*') || request()->is('validation/sausage/smoke-house-fessmann*') ? 'open' : '' }}">
-                                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                                            <i class="menu-icon bx bxs-baguette custom-sidebar-text"></i>
-                                            <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Sausage</div>
-                                        </a>
-                                        <ul class="menu-sub">
-                                            <li class="menu-item {{ request()->is('validation/sausage/smoke-house*') ? 'active' : '' }}">
-                                                <a href="{{ route('sausage-smoke-house') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Smokehouse Maurer Atmos</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item {{ request()->is('validation/sausage/smoke-house-fessmann*') ? 'active' : '' }}">
-                                                <a href="{{ route('sausage-smoke-house-fessmann') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Smokehouse Fessmann</div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="menu-item {{ request()->is('validation/breadcrumb/aging*') ? 'open' : '' }}">
-                                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                                            <i class="menu-icon bx bxs-brain custom-sidebar-text"></i>
-                                            <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Breadcrumb</div>
-                                        </a>
-                                        <ul class="menu-sub { request()->is('validation/breadcrumb/aging*') ? 'active' : '' }}">
-                                            <li class="menu-item">
-                                                <a href="{{ route('breadcrumb-aging') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Aging</div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="menu-item {{ request()->is('validation/laboratory/autoclave1*') || request()->is('validation/laboratory/autoclave2*') || request()->is('validation/laboratory/ovenmemert1*') || request()->is('validation/laboratory/ovenmemert2*') ? 'open' : '' }}">
-                                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                                            <i class="menu-icon bx bx-atom custom-sidebar-text"></i>
-                                            <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Laboratory</div>
-                                        </a>
-                                        <ul class="menu-sub">
-                                            <li class="menu-item {{ request()->is('validation/laboratory/autoclave1*') ? 'active' : '' }}">
-                                                <a href="{{ route('laboratory-autoclave1') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Autoclave HL-36-AE</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item {{ request()->is('validation/laboratory/autoclave2*') ? 'active' : '' }}">
-                                                <a href="{{ route('laboratory-autoclave2') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Autoclave HVE-50</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item {{ request()->is('validation/laboratory/ovenmemert1*') ? 'active' : '' }}">
-                                                <a href="{{ route('laboratory-ovenmemert1') }}" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Oven Memert 1</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item {{ request()->is('validation/laboratory/ovenmemert2*') ? 'active' : '' }}">
-                                                <a href="ovenmemert2" class="menu-link">
-                                                    <div class="custom-sidebar-text" style="font-size: 18px">Oven Memert 2</div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li> -->
                                 </ul>
                             </li>
                         </ul>
                     </li>
+                    @endcan
 
                     <li class="menu-item mt-2 {{ request()->is('internal*') || request()->is('sertifikat/eksternal*') || request()->is('referensi*') || request()->is('sertifikat/internal/temperature*') || request()->is('sertifikat/internal/display*') || request()->is('sertifikat/internal/scale*') ? 'open' : '' }}">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -510,10 +416,28 @@
 
                         <div class="navbar-nav flex-row align-items-center ms-auto" style="width:150px">
                             <div class="btn-group dropleft">
-                                <button type="button" class="btn btn-primary dropdown-toggle hide-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                    Logout
-                                </button>
+                                <div class="d-flex" style="gap: 1rem;">
+                                    @can('choose plant')
+                                    <form action="{{ url()->current() }}" method="get" id="filterForm" class="d-inline-block mx-2">
+                                        @foreach(request()->except('area') as $key => $value)
+                                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                                        @endforeach
+
+                                        <select name="area" id="area" class="form-control d-inline-block w-auto" onchange="document.getElementById('filterForm').submit()">
+                                            <option value="">--Plant--</option>
+                                            @foreach($plants as $plant)
+                                            <option value="{{ $plant->uuid }}" {{ request('area') == $plant->uuid ? 'selected' : '' }}>
+                                                {{ $plant->plant }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </form>
+                                    @endcan
+                                    <button type="button" class="btn btn-primary dropdown-toggle hide-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                        Logout
+                                    </button>
+                                </div>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                                         <span class="align-middle">Ganti Password</span>

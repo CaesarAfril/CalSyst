@@ -18,8 +18,9 @@ class AssetController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $plant = $request->input('area');
 
-        $query = Assets::fetchData($search);
+        $query = Assets::fetchData($search, $plant);
 
         $assets = $query->paginate(10);
 

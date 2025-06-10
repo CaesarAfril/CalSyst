@@ -758,7 +758,7 @@ class ValidationController extends Controller
         $dataHiCook = HiCookValidation::with('HiCookTemperature')->findOrFail($id);
         $asset = Validation_asset::firstWhere('uuid', $dataHiCook->machine_uuid);
 
-        $suhuData = $dataHiCook->suhuHiCook;
+        $suhuData = $dataHiCook->HiCookTemperature;
         $suhuAwal = $suhuData->first();
         $suhuAkhir = $suhuData->last();
 

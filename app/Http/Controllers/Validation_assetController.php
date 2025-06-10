@@ -14,12 +14,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class Validation_assetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $assets = Validation_asset::hasArea()->with([
-            'department',
-            'plant'
-        ])->get();
+        $plant = $request->input('area');
+        $assets = Validation_asset::fetchDataAsset($plant);
 
         $machine = Machine::all();
 

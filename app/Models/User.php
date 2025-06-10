@@ -92,4 +92,15 @@ class User extends Authenticatable
     {
         return $this->hasRole('Kalibrator');
     }
+
+    public static function fetchDataUser(?string $plantUuid = null)
+    {
+        $query = self::hasArea()->with(['department', 'plant']);
+
+        if ($plantUuid) {
+            $query->where('plant_uuid', $plantUuid);
+        }
+
+        return $query->get();
+    }
 }

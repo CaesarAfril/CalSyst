@@ -27,6 +27,15 @@ trait HasAreaScope
 
             return $query->where($query->getModel()->getTable() . '.plant_uuid', $plant);
         } else {
+            if ($user->department->department == 'Engineering') {
+                if ($relation) {
+                    return $query->whereHas($relation, function (Builder $q) use ($plant) {
+                        $q->where('plant_uuid', $plant);
+                    });
+                }
+
+                return $query->where($query->getModel()->getTable() . '.plant_uuid', $plant);
+            }
             if ($relation) {
                 return $query->where($query->getModel()->getTable() . '.dept_uuid', $department)->whereHas($relation, function (Builder $q) use ($plant) {
                     $q->where('plant_uuid', $plant);

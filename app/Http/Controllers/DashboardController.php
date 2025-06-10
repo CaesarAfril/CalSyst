@@ -13,20 +13,13 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $totalAssets = Assets::hasArea()->count();
-        $assets = Assets::hasArea()->with([
-            'department',
-            'plant',
-            'category',
-            'latest_external_calibration',
-            'latest_temp_calibration',
-            'latest_display_calibration',
-            'latest_scale_calibration',
-        ])->get();
+        $plant = $request->input('area');
+        $totalAssets = Assets::fetchTotalAsset($plant);
+        $assets = Assets::fetchDataDashboard($plant);
 
-        $onTrackAsset = External_calibration::with(['asset', 'latestCalibrationFile'])->where('status', NULL)->get();
+        $onTrackAsset = External_calibration::fetchExternalCalibrationDashboard($plant);
 
         $progressTimeline = [
             'Persiapan Pengajuan' => 0,
@@ -136,32 +129,7 @@ class DashboardController extends Controller
         $search = request()->get('search');
 
         // Query builder
-        $query = Assets::hasArea()->with('category')
-            ->join('category', 'category.uuid', '=', 'assets.category_uuid')
-            ->select('assets.*')
-            ->whereNotNull('assets.expired_date')
-            ->whereBetween('assets.expired_date', [$threeMonthsLater, $sixMonthsLater]);
-
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('merk', 'like', "%{$search}%")
-                    ->orWhere('type', 'like', "%{$search}%")
-                    ->orWhere('series_number', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%")
-                    ->orWhere('expired_date', 'like', "%{$search}%");
-            })
-                ->orWhereHas('category', function ($q) use ($search) {
-                    $q->where('category', 'like', "%{$search}%");
-                })
-                ->orWhereHas('department', function ($q) use ($search) {
-                    $q->where('department', 'like', "%{$search}%");
-                })
-                ->orWhereHas('plant', function ($q) use ($search) {
-                    $q->where('plant', 'like', "%{$search}%");
-                });
-        }
-
-        $expiringAssets = $query->orderBy($sortColumn, $sortDirection)->paginate(10);
+        $expiringAssets = Assets::getExpiringAssets($plant, $threeMonthsLater, $sixMonthsLater, $search, $sortColumn, $sortDirection);
         $expiringCount = $expiringAssets->count();
         $approachingEDCount = $expiringAssets->total();
 
