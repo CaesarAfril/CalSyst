@@ -416,11 +416,7 @@
                         <div class="d-flex align-items-center" style="gap: 1rem;">
                             @can('choose plant')
                             <form action="{{ url()->current() }}" method="get" id="filterForm" class="d-inline-block">
-                                @foreach(request()->except('area') as $key => $value)
-                                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                                @endforeach
-
-                                <select name="area" id="area" class="form-control form-select w-auto mt-3"
+                                <select name="area" id="area" class="form-control w-auto mt-3"
                                     onchange="document.getElementById('filterForm').submit()">
                                     <option value="">--Plant--</option>
                                     @foreach($plants as $plant)

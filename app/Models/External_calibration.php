@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\FilterByPlant;
 use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
 
 class External_calibration extends Model
 {
-    use HasFactory, SoftDeletes, HasAreaScope;
+    use HasFactory, SoftDeletes, HasAreaScope, FilterByPlant;
 
     protected $table = "external_calibrations";
     protected $primaryKey = "id";
@@ -49,32 +50,31 @@ class External_calibration extends Model
         return $this->hasOne(external_calibration_file::class, 'calibration_uuid', 'uuid')->latestOfMany('id');
     }
 
-    public static function fetchExternalData()
+    protected static function defaultRelations(): array
+    {
+        return [
+            'asset',
+            'latestCalibrationFile'
+        ];
+    }
+
+    public static function fetchExternalData(?string $plantUuid = null)
     {
         $user = Auth::user();
+        $query = self::hasArea('asset')->FilterByPlant($plantUuid, 'asset')->with(self::defaultRelations())
+            ->orderBy('created_at', 'desc');
         if ($user->hasAnyRole(['Admin Plant', 'User'])) {
-            return self::HasArea('asset')->with(['asset', 'latestCalibrationFile'])
-                ->where('status', 1)
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+            $query->where('status', 1);
         }
 
-        return self::with(['asset', 'latestCalibrationFile'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        return $query;
     }
 
     public static function fetchExternalCalibrationDashboard(?string $plantUuid = null)
     {
-        $query = self::hasArea('asset')
-            ->with(['asset', 'latestCalibrationFile'])
+        $query = self::hasArea('asset')->FilterByPlant($plantUuid, 'asset')
+            ->with(self::defaultRelations())
             ->where('status', NULL);
-
-        if ($plantUuid) {
-            $query->whereHas('asset', function ($q) use ($plantUuid) {
-                $q->where('plant_uuid', $plantUuid);
-            });
-        }
 
         return $query->get();
     }

@@ -28,11 +28,10 @@ class CalController extends Controller
         ]);
     }
 
-    public function temperature()
+    public function temperature(Request $request)
     {
-        $report = temp_calibration::hasArea('asset')->with(['actual_temps', 'asset'])
-            ->where('approval', 1)
-            ->get();
+        $plant = $request->input('area');
+        $report = temp_calibration::getTemperature($plant, 1);
 
         return view('calibration.temperatureData', [
             'reports' => $report
@@ -50,11 +49,10 @@ class CalController extends Controller
         return $pdf->stream('Temperature.pdf');
     }
 
-    public function display()
+    public function display(Request $request)
     {
-        $report = Display_calibration::hasArea('asset')->with(['actual_displays', 'asset'])
-            ->where('approval', 1)
-            ->get();
+        $plant = $request->input('area');
+        $report = Display_calibration::getDisplay($plant, 1);
 
         return view('calibration.displayData', [
             'reports' => $report
@@ -73,11 +71,10 @@ class CalController extends Controller
         return $pdf->stream('Display.pdf');
     }
 
-    public function scale()
+    public function scale(Request $request)
     {
-        $report = Scale_calibration::hasArea('asset')->with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])
-            ->where('approval', 1)
-            ->get();
+        $plant = $request->input('area');
+        $report = Scale_calibration::getScale($plant, 1);
 
         return view('calibration.scaleData', [
             'reports' => $report
@@ -101,12 +98,11 @@ class CalController extends Controller
         return $pdf->stream('Scale.pdf');
     }
 
-    public function external()
+    public function external(Request $request)
     {
-        $assets = Assets::hasArea()->whereHas('category', function ($query) {
-            $query->where('calibration', 'External');
-        })->get();
-        $report = External_calibration::fetchExternalData();
+        $plant = $request->input('area');
+        $assets = Assets::getExternalAssetDropdown($plant)->get();
+        $report = External_calibration::fetchExternalData($plant)->paginate(10);
 
         return view('calibration.externalData', [
             'assets' => $assets,
@@ -287,37 +283,14 @@ class CalController extends Controller
     public function lateCalibration(Request $request)
     {
         $search = $request->input('search');
+        $plant = $request->input('area');
         $today = now();
 
-        $query = Assets::with(['department', 'plant', 'category'])
-            ->whereNotNull('expired_date')
-            ->whereDate('expired_date', '<=', $today);
-
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('merk', 'like', "%{$search}%")
-                    ->orWhere('type', 'like', "%{$search}%")
-                    ->orWhere('series_number', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%")
-                    ->orWhere('expired_date', 'like', "%{$search}%");
-            })
-                ->orWhereHas('category', function ($q) use ($search) {
-                    $q->where('category', 'like', "%{$search}%");
-                })
-                ->orWhereHas('department', function ($q) use ($search) {
-                    $q->where('department', 'like', "%{$search}%");
-                })
-                ->orWhereHas('plant', function ($q) use ($search) {
-                    $q->where('plant', 'like', "%{$search}%");
-                });
-        }
-
-        // Clone the query to get the correct count
-        $countQuery = clone $query;
+        $query = Assets::getExpiredAssets($plant, $today, $search);
 
         $expiredAssets = $query->paginate(10);
         $totalAssets = Assets::count();
-        $expiredCount = $countQuery->count();
+        $expiredCount = $query->count();
 
         return view('calibration.lateCalibration', [
             'totalAssets' => $totalAssets,
@@ -327,19 +300,11 @@ class CalController extends Controller
         ]);
     }
 
-    public function calibratedAssets()
+    public function calibratedAssets(Request $request)
     {
+        $plant = $request->input('area');
         $nextYear = now()->addYear()->year;
-        $assets = Assets::with([
-            'department',
-            'plant',
-            'category',
-            'latest_external_calibration',
-            'latest_external_calibration.latestCalibrationFile',
-            'latest_temp_calibration',
-            'latest_display_calibration',
-            'latest_scale_calibration',
-        ])->get();
+        $assets = Assets::getCalibratedAsset($plant);
 
         $missingCalibratedAssets = [];
         $calibratedAssets = [];

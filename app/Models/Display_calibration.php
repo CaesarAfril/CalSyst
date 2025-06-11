@@ -57,4 +57,25 @@ class Display_calibration extends Model
     {
         return $this->belongsTo(Assets::class, 'asset_uuid', 'uuid');
     }
+
+    protected static function defaultRelations(): array
+    {
+        return [
+            'actual_displays',
+            'asset'
+        ];
+    }
+
+    public static function getDisplay(?string $plantUuid = null, ?string $approval = null)
+    {
+        $query = self::hasArea('asset')->with(self::defaultRelations())->where('approval', $approval);
+
+        if ($plantUuid) {
+            $query->whereHas('asset', function ($q) use ($plantUuid) {
+                $q->where('plant_uuid', $plantUuid);
+            });
+        }
+
+        return $query->get();
+    }
 }

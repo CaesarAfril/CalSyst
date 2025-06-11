@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\FilterByPlant;
 use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 
 class Department extends Model
 {
-    use HasFactory, SoftDeletes, HasAreaScope;
+    use HasFactory, FilterByPlant, SoftDeletes, HasAreaScope;
     protected $table = "department";
     protected $primaryKey = "id";
     protected $fillable = [
@@ -44,15 +45,9 @@ class Department extends Model
 
     public static function fetchdataSidebar(?string $plantUuid = null)
     {
-        $query = self::with('validation_assets')->hasArea('validation_assets')
+        $query = self::with('validation_assets')->hasArea('validation_assets')->FilterByPlant($plantUuid, 'validation_assets')
             ->whereHas('validation_assets')
             ->whereNull('deleted_at');
-
-        if ($plantUuid) {
-            $query->whereHas('validation_assets', function ($q) use ($plantUuid) {
-                $q->where('plant_uuid', $plantUuid);
-            });
-        }
 
         return $query->get();
     }

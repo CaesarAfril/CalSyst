@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\FilterByPlant;
 use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 
 class temp_calibration extends Model
 {
-    use HasFactory, SoftDeletes, HasAreaScope;
+    use HasFactory, SoftDeletes, HasAreaScope, FilterByPlant;
     protected $table = "temperature_calibration_assets";
     protected $primaryKey = "id";
     protected $fillable = [
@@ -56,5 +57,20 @@ class temp_calibration extends Model
     public function asset()
     {
         return $this->belongsTo(Assets::class, 'asset_uuid', 'uuid');
+    }
+
+    protected static function defaultRelations(): array
+    {
+        return [
+            'actual_temps',
+            'asset'
+        ];
+    }
+
+    public static function getTemperature(?string $plantUuid = null, ?string $approval = null)
+    {
+        $query = self::with(self::defaultRelations())->hasArea('asset')->FilterByPlant($plantUuid, 'asset')->where('approval', $approval);
+
+        return $query->get();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\FilterByPlant;
 use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,8 +12,7 @@ use Illuminate\Support\Str;
 
 class Assets extends Model
 {
-    use HasFactory;
-    use SoftDeletes, HasAreaScope;
+    use HasFactory, FilterByPlant, SoftDeletes, HasAreaScope;
     protected $table = "assets";
     protected $primaryKey = "id";
     protected $fillable = [
@@ -101,64 +101,9 @@ class Assets extends Model
         return $this->hasOne(Scale_calibration::class, 'asset_uuid', 'uuid')->latestOfMany('date');
     }
 
-    public static function fetchData($search, ?string $plantUuid = null)
+    protected static function defaultRelations(): array
     {
-
-        $query = self::hasArea()->with([
-            'department',
-            'plant',
-            'category',
-            'latest_external_calibration',
-            'latest_temp_calibration',
-            'latest_display_calibration'
-        ]);
-
-        if ($plantUuid) {
-            $query->where('plant_uuid', $plantUuid);
-        }
-
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('merk', 'like', "%{$search}%")
-                    ->orWhere('type', 'like', "%{$search}%")
-                    ->orWhere('series_number', 'like', "%{$search}%")
-                    ->orWhere('capacity', 'like', "%{$search}%")
-                    ->orWhere('range', 'like', "%{$search}%")
-                    ->orWhere('resolution', 'like', "%{$search}%")
-                    ->orWhere('correction', 'like', "%{$search}%")
-                    ->orWhere('uncertainty', 'like', "%{$search}%")
-                    ->orWhere('standard', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%")
-                    ->orWhere('expired_date', 'like', "%{$search}%");
-            })
-                ->orWhereHas('category', function ($q) use ($search) {
-                    $q->where('category', 'like', "%{$search}%");
-                })
-                ->orWhereHas('department', function ($q) use ($search) {
-                    $q->where('department', 'like', "%{$search}%");
-                })
-                ->orWhereHas('plant', function ($q) use ($search) {
-                    $q->where('plant', 'like', "%{$search}%");
-                });
-        }
-
-        return $query;
-    }
-
-    public static function fetchTotalAsset(?string $plantUuid = null)
-    {
-        $query = self::hasArea();
-
-        if ($plantUuid) {
-            $query->where('plant_uuid', $plantUuid);
-        }
-
-        return $query->count();
-    }
-
-    public static function fetchDataDashboard(?string $plantUuid = null)
-    {
-        $query = self::hasArea()->with([
+        return [
             'department',
             'plant',
             'category',
@@ -166,49 +111,105 @@ class Assets extends Model
             'latest_temp_calibration',
             'latest_display_calibration',
             'latest_scale_calibration',
-        ]);
+        ];
+    }
 
-        if ($plantUuid) {
-            $query->where('plant_uuid', $plantUuid);
+    protected static function applySearch($query, $search)
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('merk', 'like', "%{$search}%")
+                ->orWhere('type', 'like', "%{$search}%")
+                ->orWhere('series_number', 'like', "%{$search}%")
+                ->orWhere('capacity', 'like', "%{$search}%")
+                ->orWhere('range', 'like', "%{$search}%")
+                ->orWhere('resolution', 'like', "%{$search}%")
+                ->orWhere('correction', 'like', "%{$search}%")
+                ->orWhere('uncertainty', 'like', "%{$search}%")
+                ->orWhere('standard', 'like', "%{$search}%")
+                ->orWhere('location', 'like', "%{$search}%")
+                ->orWhere('expired_date', 'like', "%{$search}%");
+        })->orWhereHas('category', function ($q) use ($search) {
+            $q->where('category', 'like', "%{$search}%");
+        })->orWhereHas('department', function ($q) use ($search) {
+            $q->where('department', 'like', "%{$search}%");
+        })->orWhereHas('plant', function ($q) use ($search) {
+            $q->where('plant', 'like', "%{$search}%");
+        });
+    }
+
+    protected static function filterByPlantUuid($query, ?string $plantUuid)
+    {
+        return $query->where('plant_uuid', $plantUuid);
+    }
+
+    public static function fetchData($search, ?string $plantUuid = null)
+    {
+
+        $query = self::hasArea()->FilterByPlant($plantUuid)->with(self::defaultRelations());
+
+        if (!empty($search)) {
+            self::applySearch($query, $search);
         }
+
+        return $query;
+    }
+
+    public static function fetchTotalAsset(?string $plantUuid = null)
+    {
+        $query = self::hasArea()->FilterByPlant($plantUuid);
+
+        return $query->count();
+    }
+
+    public static function fetchDataDashboard(?string $plantUuid = null)
+    {
+        $query = self::hasArea()->FilterByPlant($plantUuid)->with(self::defaultRelations());
 
         return $query->get();
     }
 
     public static function getExpiringAssets(?string $plantUuid = null, $threeMonthsLater, $sixMonthsLater, $search = null, $sortColumn = 'expired_date', $sortDirection = 'asc'): LengthAwarePaginator
     {
-        $query = self::hasArea()
+        $query = self::hasArea()->FilterByPlant($plantUuid)
             ->with('category')
             ->join('category', 'category.uuid', '=', 'assets.category_uuid')
             ->select('assets.*')
             ->whereNotNull('assets.expired_date')
             ->whereBetween('assets.expired_date', [$threeMonthsLater, $sixMonthsLater]);
 
-        if ($plantUuid) {
-            $query->where('plant_uuid', $plantUuid);
-        }
-
         if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('merk', 'like', "%{$search}%")
-                    ->orWhere('type', 'like', "%{$search}%")
-                    ->orWhere('series_number', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%")
-                    ->orWhere('expired_date', 'like', "%{$search}%");
-            })
-                ->orWhereHas('category', function ($q) use ($search) {
-                    $q->where('category', 'like', "%{$search}%");
-                })
-                ->orWhereHas('department', function ($q) use ($search) {
-                    $q->where('department', 'like', "%{$search}%");
-                })
-                ->orWhereHas('plant', function ($q) use ($search) {
-                    $q->where('plant', 'like', "%{$search}%");
-                });
+            self::applySearch($query, $search);
         }
-
-
 
         return $query->orderBy($sortColumn, $sortDirection)->paginate(10);
+    }
+
+    public static function getExpiredAssets(?string $plantUuid = null, $today, $search = null)
+    {
+        $query = self::hasArea()->FilterByPlant($plantUuid)->with(self::defaultRelations())
+            ->whereNotNull('expired_date')
+            ->whereDate('expired_date', '<=', $today);
+
+        if (!empty($search)) {
+            self::applySearch($query, $search);
+        }
+
+        return $query;
+    }
+
+    public static function getCalibratedAsset(?string $plantUuid = null)
+    {
+        $query = self::hasArea()->FilterByPlant($plantUuid)->with(self::defaultRelations());
+
+        return $query->get();
+    }
+
+    public static function getExternalAssetDropdown(?string $plantUuid = null)
+    {
+        $query = self::hasArea()->FilterByPlant($plantUuid)->whereHas('category', function ($query) {
+            $query->where('calibration', 'External');
+        });
+
+        return $query;
     }
 }

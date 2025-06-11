@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\FilterByPlant;
 use App\Traits\HasAreaScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 
 class Scale_calibration extends Model
 {
-    use HasFactory, SoftDeletes, HasAreaScope;
+    use HasFactory, SoftDeletes, FilterByPlant, HasAreaScope;
 
     protected $table = "scale_calibration_assets";
     protected $primaryKey = "id";
@@ -71,5 +72,22 @@ class Scale_calibration extends Model
     public function eccentricity_scale_calibration()
     {
         return $this->hasOne(Eccentricity_scale_calibration::class, 'calibration_uuid', 'uuid');
+    }
+
+    protected static function defaultRelations()
+    {
+        return [
+            'asset',
+            'weighing_performances',
+            'repeatability_scale_calibrations',
+            'eccentricity_scale_calibration'
+        ];
+    }
+
+    public static function getScale(?string $plantUuid = null, ?string $approval = null)
+    {
+        $query = self::hasArea('asset')->FilterByPlant($plantUuid, 'asset')->with(self::defaultRelations())->where('approval', $approval);
+
+        return $query->get();
     }
 }

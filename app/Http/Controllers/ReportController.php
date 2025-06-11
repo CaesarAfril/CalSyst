@@ -22,10 +22,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
-    public function temperature()
+    public function temperature(Request $request)
     {
-        // Ambil semua data dengan approval = 1
-        $report = temp_calibration::hasArea('asset')->with(['actual_temps', 'asset'])->where('approval', null)->get();
+        $plant = $request->input('area');
+        $report = temp_calibration::getTemperature($plant);
 
         return view('report.temperatureData', [
             'reports' => $report
@@ -121,9 +121,10 @@ class ReportController extends Controller
         return Excel::download(new TempCalibrationExport($temperature), 'Temperature_calibration_' . $temperature->asset->merk . '_' . $temperature->asset->type . '.xlsx');
     }
 
-    public function display()
+    public function display(Request $request)
     {
-        $report = Display_calibration::hasArea('asset')->with(['actual_displays', 'asset'])->where('approval', null)->get();
+        $plant = $request->input('area');
+        $report = Display_calibration::getDisplay($plant);
 
         return view('report.displayData', [
             'reports' => $report
@@ -215,9 +216,10 @@ class ReportController extends Controller
         return Excel::download(new DisplayCalibrationExport($display), 'Display_calibration_' . $display->asset->merk . '_' . $display->asset->department->department . '.xlsx');
     }
 
-    public function scale()
+    public function scale(Request $request)
     {
-        $report = Scale_calibration::hasArea('asset')->with(['asset', 'weighing_performances', 'repeatability_scale_calibrations', 'eccentricity_scale_calibration'])->where('approval', null)->get();
+        $plant = $request->input('area');
+        $report = Scale_calibration::getScale($plant);
 
         return view('report.scaleData', [
             'reports' => $report
