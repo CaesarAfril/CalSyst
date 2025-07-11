@@ -39,9 +39,6 @@ Route::get('/image/{filename}', function ($filename) {
     return response()->file($path);
 });
 
-
-
-
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('actionLogout', [AuthController::class, 'actionLogout'])->name('actionLogout');
@@ -57,6 +54,13 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('asset', AssetController::class)->except(['show']);
     Route::post('/asset/upload-csv', [AssetController::class, 'importCsv'])->name('asset.importCsv');
     Route::get('asset/export-assets', [AssetController::class, 'exportExcelAssets'])->name('asset.exportExcel');
+    Route::get('/asset/download-template', function () {
+        $filePath = storage_path('app/assets/templates.xls');
+        if (!file_exists($filePath)) {
+            abort(404, 'File not Found');
+        }
+        return response()->download($filePath);
+    })->name('asset.download-templates');
     Route::resource('machine', MachineController::class);
     Route::resource('weight', WeightController::class);
     Route::resource('validation_asset', Validation_assetController::class);

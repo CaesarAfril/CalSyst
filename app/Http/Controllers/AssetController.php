@@ -9,8 +9,10 @@ use App\Models\Department;
 use App\Models\Plant;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AssetController extends Controller
@@ -59,7 +61,7 @@ class AssetController extends Controller
         $validated = $request->validate($rules);
 
         Assets::create([
-            'plant_uuid' => $validated['asset_plant'] ?? Auth::user()->plant->plant_uuid,
+            'plant_uuid' => $request->asset_plant ?? Auth::user()->plant->plant_uuid,
             'dept_uuid' => $validated['asset_department'] ?? Auth::user()->dept_uuid,
             'location' => $validated['asset_location'],
             'category_uuid' => $validated['asset_category'],
@@ -102,55 +104,93 @@ class AssetController extends Controller
     public function importCsv(Request $request)
     {
         $request->validate([
-            'csv_file' => 'required|mimes:csv,txt'
+            'csv_file' => 'required|mimes:csv,txt',
         ]);
 
         $file = fopen($request->file('csv_file'), 'r');
         $header = fgetcsv($file, 0, ';');
+        $failedRows = [];
+        $rowNumber = 1;
 
         while ($row = fgetcsv($file, 0, ';')) {
+            $rowNumber++;
             $data = array_combine($header, $row);
+            try {
+                // Lookups
+                $plant = Plant::where('plant', $data['Plant'])->firstOrFail();
+                $department = Department::where('department', $data['Departemen'])->firstOrFail();
+                $category = Category::firstOrCreate([
+                    'category' => $data['Kategori'],
+                    'calibration' => $data['Pelaksana'],
+                ]);
 
-            // Find related models safely
-            $plant = Plant::where('plant', $data['Plant'])->firstOrFail();
-            $department = Department::where('department', $data['Departemen'])->firstOrFail();
-            $category = Category::where('category', $data['Kategori'])->where('calibration', $data['Pelaksana'])->firstOrFail();
-            $rawDate = $data['Expired'];
-            $formattedDate = $rawDate ?? null;
+                // Format date
+                $rawDate = $data['Expired'] ?? null;
+                $formattedDate = null;
 
-            if (!empty($rawDate) && !Carbon::hasFormat($rawDate, 'Y-m-d')) {
-                if (Carbon::hasFormat($rawDate, 'Y/m/d')) {
-                    $formattedDate = Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
-                } elseif (Carbon::hasFormat($rawDate, 'd/m/Y')) {
-                    $formattedDate = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+                if (!empty($rawDate)) {
+                    if (Carbon::hasFormat($rawDate, 'Y-m-d')) {
+                        $formattedDate = $rawDate;
+                    } elseif (Carbon::hasFormat($rawDate, 'Y/m/d')) {
+                        $formattedDate = Carbon::createFromFormat('Y/m/d', $rawDate)->format('Y-m-d');
+                    } elseif (Carbon::hasFormat($rawDate, 'd/m/Y')) {
+                        $formattedDate = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+                    } else {
+                        throw new \Exception("Invalid date format: $rawDate");
+                    }
                 }
+
+                // Normalize fields
+                $capacity = mb_convert_encoding($data['Kapasitas'], 'UTF-8', 'Windows-1252');
+                $resolution = str_replace(',', '.', $data['Resolusi']);
+                $correction = str_replace(',', '.', $data['Koreksi']);
+                $uncertainty = str_replace(',', '.', $data['Ketidakpastian']);
+                $standard = str_replace(',', '.', $data['Standar']);
+
+                // Create asset
+                Assets::create([
+                    'plant_uuid' => $plant->uuid,
+                    'dept_uuid' => $department->uuid,
+                    'location' => $data['Lokasi'],
+                    'category_uuid' => $category->uuid,
+                    'merk' => $data['Merk'],
+                    'type' => $data['Tipe'],
+                    'series_number' => $data['Nomor Seri'],
+                    'capacity' => $capacity,
+                    'range' => $data['Range'],
+                    'resolution' => floatval($resolution),
+                    'correction' => floatval($correction),
+                    'uncertainty' => floatval($uncertainty),
+                    'standard' => floatval($standard),
+                    'expired_date' => $formattedDate,
+                ]);
+            } catch (ModelNotFoundException $e) {
+                $failedRows[] = [
+                    'row' => $rowNumber,
+                    'error' => 'Missing related record (Plant/Department): ' . $e->getMessage(),
+                ];
+            } catch (\Exception $e) {
+                $failedRows[] = [
+                    'row' => $rowNumber,
+                    'error' => $e->getMessage(),
+                ];
             }
-
-            $capacity = mb_convert_encoding($data['Kapasitas'], 'UTF-8', 'Windows-1252');
-            $resolution = str_replace(',', '.', $data['Resolusi']);
-            $correction = str_replace(',', '.', $data['Koreksi']);
-            $uncertainty = str_replace(',', '.', $data['Ketidakpastian']);
-            $standard = str_replace(',', '.', $data['Standar']);
-
-            Assets::create([
-                'plant_uuid' => $plant->uuid,
-                'dept_uuid' => $department->uuid,
-                'location' => $data['Lokasi'],
-                'category_uuid' => $category->uuid,
-                'merk' => $data['Merk'],
-                'type' => $data['Tipe'],
-                'series_number' => $data['Nomor Seri'],
-                'capacity' => $capacity,
-                'range' => $data['Range'],
-                'resolution' => floatval($resolution),
-                'correction' => floatval($correction),
-                'uncertainty' => floatval($uncertainty),
-                'standard' => floatval($standard),
-                'expired_date' => $formattedDate,
-            ]);
         }
 
         fclose($file);
+
+        if (!empty($failedRows)) {
+            // Optional: Log all failures
+            foreach ($failedRows as $fail) {
+                Log::error("CSV import failed at row {$fail['row']}: {$fail['error']}");
+            }
+
+            return redirect()->back()->with([
+                'warning' => 'CSV imported with some errors.',
+                'failedRows' => $failedRows,
+            ]);
+        }
+
         return redirect()->back()->with('success', 'CSV imported successfully.');
     }
 

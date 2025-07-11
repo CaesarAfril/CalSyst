@@ -209,7 +209,6 @@ class Assets extends Model
         $query = self::hasArea()->FilterByPlant($plantUuid)->whereHas('category', function ($query) {
             $query->where('calibration', 'External');
         });
-
         return $query;
     }
 }

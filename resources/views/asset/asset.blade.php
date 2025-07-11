@@ -36,7 +36,10 @@
                         </div>
                         <div class="modal-body">
                             <input type="file" name="csv_file" id="csv_file" class="form-control mb-3" required>
-                            <button class="btn btn-success" type="submit">Import</button>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success" type="submit">Import</button>
+                                <a href="{{route('asset.download-templates')}}" class="btn btn-primary">Download Template</a>
+                            </div>
                         </div>
                     </div>
                 </form>

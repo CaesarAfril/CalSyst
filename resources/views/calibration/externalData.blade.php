@@ -91,6 +91,27 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaranpengajuan-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            <div class="modal fade" id="importpenawaranpengajuan-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('penawaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="label" class="form-label">Tanggal</label>
+                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                                <label for="label" class="form-label">Upload FIle</label>
+                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                                <button class="btn btn-success" type="submit">Upload</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             @endcan
                             @endif
                             @if($report->latestCalibrationFile)
@@ -103,6 +124,27 @@
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importpenawaran-{{ $report->uuid }}">
                                 Upload File
                             </button>
+                            <div class="modal fade" id="importpenawaran-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('penawaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
+                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="label" class="form-label">Tanggal</label>
+                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
+                                                <label for="label" class="form-label">Upload FIle</label>
+                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
+
+                                                <button class="btn btn-success" type="submit">Upload</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             @endcan
                             @elseif($report->latestCalibrationFile->filename != NULL && $report->latestCalibrationFile->approval == NULL)
                             <a href="{{ asset('storage/' . $report->latestCalibrationFile->path) }}" target="_blank" class="btn btn-primary btn-sm">
@@ -798,27 +840,7 @@
                         </td>
 
                         {{-- modal upload persiapan pengajuan --}}
-                        <div class="modal fade" id="importpenawaranpengajuan-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ route('penawaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="label" class="form-label">Tanggal</label>
-                                            <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
-                                            <label for="label" class="form-label">Upload FIle</label>
-                                            <input type="file" name="file" id="file" class="form-control mb-3" required>
 
-                                            <button class="btn btn-success" type="submit">Upload</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
 
                         {{-- penawaran --}}
                         {{-- approve --}}
@@ -844,7 +866,6 @@
                                     </div>
                                 </div>
                             </div>
-                                      
                         </div>
                         <div class="modal fade" id="addNotesModal" tabindex="-1" role="dialog" aria-labelledby="addNotesModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -874,27 +895,7 @@
                             </div>
 
                             {{-- modal upload penawaran --}}
-                            <div class="modal fade" id="importpenawaran-{{ $report->uuid }}" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <form action="{{ route('penawaranFileStore', $report->uuid) }}" method="post" enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="importCsvModalLabel">Upload File</h5>
-                                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <label for="label" class="form-label">Tanggal</label>
-                                                <input type="date" name="date_file" id="date_file" class="form-control mb-3" required>
-                                                <label for="label" class="form-label">Upload FIle</label>
-                                                <input type="file" name="file" id="file" class="form-control mb-3" required>
 
-                                                <button class="btn btn-success" type="submit">Upload</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
                             @endif
                         </div>
                     </tr>

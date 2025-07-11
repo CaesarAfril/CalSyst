@@ -102,7 +102,7 @@
             <!-- Menu -->
             <aside id="layout-menu" class="layout-menu menu-vertical menu custom-sidebar">
                 <div class="app-brand demo">
-                    <a class="app-brand-link" href="{{route('dashboard')}}">
+                    <a class="app-brand-link" href="{{route('dashboard', ['area' => request('area')])}}">
                         <img src="{{ url('/image/icon.png') }}" alt="icon" style="width: 200px;">
                     </a>
 
@@ -118,7 +118,7 @@
                         ---------- Button Dashboard ----------
                         ************************************-->
                     <li class="menu-item">
-                        <a href="{{route('dashboard')}}" class="menu-link">
+                        <a href="{{route('dashboard', ['area' => request('area')])}}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle custom-sidebar-text"></i>
                             <div data-i18n="Analytics" class="custom-sidebar-text" style="font-size: 18px">Dashboard</div>
                         </a>
@@ -136,7 +136,7 @@
                                 ************************************-->
                             @can('access user')
                             <li class="menu-item {{ request()->is('user*') ? 'active' : '' }}">
-                                <a href="{{ route('user') }}" class="menu-link">
+                                <a href="{{ route('user', ['area' => request('area')]) }}" class="menu-link">
                                     <i class="menu-icon bx bxs-bot custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Data User</div>
                                 </a>
@@ -148,7 +148,7 @@
                                 ************************************-->
                             @can('access plant')
                             <li class="menu-item {{ request()->is('plant*') ? 'active' : '' }}">
-                                <a href="{{ route('plant.index') }}" class="menu-link">
+                                <a href="{{ route('plant.index', ['area' => request('area')]) }}" class="menu-link">
                                     <i class="menu-icon bx bxs-institution custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Data Plant</div>
                                 </a>
@@ -160,7 +160,7 @@
                                 ************************************-->
                             @can('access department')
                             <li class="menu-item {{ request()->is('department*') ? 'active' : '' }}">
-                                <a href="{{ route('department.index') }}" class="menu-link">
+                                <a href="{{ route('department.index', ['area' => request('area')]) }}" class="menu-link">
                                     <i class="menu-icon bx bxs-home custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Data Department</div>
                                 </a>
@@ -172,7 +172,7 @@
                                 ************************************-->
                             @can('access category')
                             <li class="menu-item {{ request()->is('category*') ? 'active' : '' }}">
-                                <a href="{{ route('category.index') }}" class="menu-link">
+                                <a href="{{ route('category.index', ['area' => request('area')]) }}" class="menu-link">
                                     <i class="menu-icon bx bx-category custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Kategori Alat Ukur</div>
                                 </a>
@@ -181,7 +181,7 @@
 
                             @can('access machine')
                             <li class="menu-item {{ request()->is('machine*') ? 'active' : '' }}">
-                                <a href="{{ route('machine.index') }}" class="menu-link">
+                                <a href="{{ route('machine.index', ['area' => request('area')]) }}" class="menu-link">
                                     <i class="menu-icon bx bx-dish custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Mesin</div>
                                 </a>
@@ -190,7 +190,7 @@
 
                             @can('access weight')
                             <li class="menu-item {{ request()->is('weight*') ? 'active' : '' }}">
-                                <a href="{{ route('weight.index') }}" class="menu-link">
+                                <a href="{{ route('weight.index', ['area' => request('area')]) }}" class="menu-link">
                                     <i class="menu-icon bx bx-layer custom-sidebar-text"></i>
                                     <div class="custom-sidebar-text" style="font-size: 18px">Anak Timbang</div>
                                 </a>
@@ -208,12 +208,12 @@
                                 </a>
                                 <ul class="menu-sub" style="margin-left: -.1rem;">
                                     <li class="menu-item {{ request()->is('asset*') ? 'active' : '' }}">
-                                        <a href="{{ route('asset.index') }}" class="menu-link">
+                                        <a href="{{ route('asset.index', ['area' => request('area')]) }}" class="menu-link">
                                             <div class="custom-sidebar-text" style="font-size: 18px">Aset Alat Ukur</div>
                                         </a>
                                     </li>
                                     <li class="menu-item {{ request()->is('validation_asset*') ? 'active' : '' }}">
-                                        <a href="{{ route('validation_asset.index') }}" class="menu-link">
+                                        <a href="{{ route('validation_asset.index', ['area' => request('area')]) }}" class="menu-link">
                                             <div class="custom-sidebar-text" style="font-size: 18px">Aset Mesin Pemasakan</div>
                                         </a>
                                     </li>
@@ -261,7 +261,7 @@
                                 ---------- Menu Total Alat Telat Kalibrasi --------
                                 ************************************-->
                             <li class="menu-item {{ request()->is('calibration/late-calibration*') ? 'active' : '' }}">
-                                <a href="{{ route('late-calibration') }}" class="menu-link">
+                                <a href="{{ route('late-calibration', ['area' => request('area')]) }}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
                                     <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Total Alat Telat Kalibrasi</div>
                                 </a>
@@ -271,7 +271,7 @@
                                 ---------- Menu Total Alat Terkalibrasi --------
                                 ************************************-->
                             <li class="menu-item {{ request()->is('calibration/calibrated-assets*') ? 'active' : '' }}">
-                                <a href="{{ route('calibrated-assets') }}" class="menu-link">
+                                <a href="{{ route('calibrated-assets', ['area' => request('area')]) }}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-check-double custom-sidebar-text"></i>
                                     <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Total Alat Terkalibrasi</div>
                                 </a>
@@ -294,17 +294,17 @@
                                 </a>
                                 <ul class="menu-sub">
                                     <li class="menu-item {{ request()->is('report/temperature*') ? 'active' : '' }}">
-                                        <a href="{{ route('report.temperature') }}" class="menu-link">
+                                        <a href="{{ route('report.temperature', ['area' => request('area')]) }}" class="menu-link">
                                             <div data-i18n="report.temperature" class="custom-sidebar-text" style="font-size: 18px">Report Temperatur</div>
                                         </a>
                                     </li>
                                     <li class="menu-item {{ request()->is('report/display*') ? 'active' : '' }}">
-                                        <a href="{{ route('report.display') }}" class="menu-link">
+                                        <a href="{{ route('report.display', ['area' => request('area')]) }}" class="menu-link">
                                             <div data-i18n="report.display" class="custom-sidebar-text" style="font-size: 18px">Report Display Suhu</div>
                                         </a>
                                     </li>
                                     <li class="menu-item {{ request()->is('report/scale*') ? 'active' : '' }}">
-                                        <a href="{{ route('report.scale') }}" class="menu-link">
+                                        <a href="{{ route('report.scale', ['area' => request('area')]) }}" class="menu-link">
                                             <div data-i18n="report.scale" class="custom-sidebar-text" style="font-size: 18px">Report Timbangan</div>
                                         </a>
                                     </li>

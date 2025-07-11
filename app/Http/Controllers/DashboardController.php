@@ -15,7 +15,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $plant = $request->input('area');
+        $plant = $request->input('area') ?? session('selected_area');
         $totalAssets = Assets::fetchTotalAsset($plant);
         $assets = Assets::fetchDataDashboard($plant);
 
@@ -129,7 +129,7 @@ class DashboardController extends Controller
         $search = request()->get('search');
 
         // Query builder
-        $expiringAssets = Assets::getExpiringAssets($plant, $threeMonthsLater, $sixMonthsLater, $search, $sortColumn, $sortDirection);
+        $expiringAssets = Assets::getExpiringAssets($plant, $threeMonthsLater, $sixMonthsLater, $search, $sortColumn, $sortDirection)->appends(request()->query());;
         $expiringCount = $expiringAssets->count();
         $approachingEDCount = $expiringAssets->total();
 
@@ -170,6 +170,7 @@ class DashboardController extends Controller
         });
 
         return view('dashboard.dashboard', [
+            'selected_plant' => $plant,
             'onTrackAsset' => $onTrackAsset,
             'assets' => $expiringAssets,
             'totalAssets' => $totalAssets,
