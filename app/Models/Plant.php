@@ -11,7 +11,7 @@ class Plant extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = "Plant";
+    protected $table = "plant";
     protected $primaryKey = "id";
     protected $fillable = [
         'uuid',

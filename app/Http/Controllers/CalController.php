@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\actual_temp_calibration;
+use App\Models\actual_Temp_calibration;
 use App\Models\Assets;
 use App\Models\Plant;
 use App\Models\Category;
@@ -11,7 +11,7 @@ use App\Models\Display_calibration;
 use App\Models\External_calibration;
 use App\Models\external_calibration_file;
 use App\Models\Scale_calibration;
-use App\Models\temp_calibration;
+use App\Models\Temp_calibration;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -31,7 +31,7 @@ class CalController extends Controller
     public function temperature(Request $request)
     {
         $plant = $request->input('area');
-        $report = temp_calibration::getTemperature($plant, 1);
+        $report = Temp_calibration::getTemperature($plant, 1);
 
         return view('calibration.temperatureData', [
             'reports' => $report
@@ -40,7 +40,7 @@ class CalController extends Controller
 
     public function temperature_pdfPrint($uuid)
     {
-        $temperature = temp_calibration::with(['actual_temps', 'asset'])->where('uuid', $uuid)->firstOrFail();
+        $temperature = Temp_calibration::with(['actual_temps', 'asset'])->where('uuid', $uuid)->firstOrFail();
         $temperature->calibration_date = Carbon::parse($temperature->date)->format('d-m-Y');
         $temperature->ttd_date = Carbon::parse($temperature->date)->locale('id')->translatedFormat('d F Y');
 
@@ -338,7 +338,7 @@ class CalController extends Controller
                 }
 
                 $hasOtherCalibration = collect([
-                    optional($asset->latest_temp_calibration)->date,
+                    optional($asset->latest_Temp_calibration)->date,
                     optional($asset->latest_display_calibration)->date,
                     optional($asset->latest_scale_calibration)->date,
                 ])->filter()->isNotEmpty();

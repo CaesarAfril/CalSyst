@@ -90,6 +90,17 @@
         font-size: 1.7rem;
         margin-bottom: 3rem !important;
     }
+
+    .active {
+        background-color:rgb(134, 113, 67) !important;
+    }
+
+    .active .custom-sidebar-text {
+        color: white !important;
+        font-weight: bold !important;
+    }
+
+    
 </style>
 
 @yield('style')
@@ -117,7 +128,7 @@
                     <!--***********************************
                         ---------- Button Dashboard ----------
                         ************************************-->
-                    <li class="menu-item">
+                    <li class="menu-item {{ request()->is('dashboard*') ? 'active' : '' }}">
                         <a href="{{route('dashboard', ['area' => request('area')])}}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle custom-sidebar-text"></i>
                             <div data-i18n="Analytics" class="custom-sidebar-text" style="font-size: 18px">Dashboard</div>
@@ -224,13 +235,13 @@
                     </li>
 
                     @can('access permission')
-                    <li class="menu-item mt-2">
+                    <li class="menu-item mt-2 {{ request()->is('roles*') || request()->is('permissions*')  ? 'open' : '' }}">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon bx bx-desktop custom-sidebar-text"></i>
                             <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Access Control</div>
                         </a>
                         <ul class="menu-sub" style="margin-left: -.1rem;">
-                            <li class="menu-item">
+                            <li class="menu-item {{ request()->is('roles*') ? 'active' : '' }}">
                                 <a href="{{ route('roles.index') }}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bxs-time custom-sidebar-text"></i>
                                     <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Role</div>
@@ -240,7 +251,7 @@
                             <!--***********************************
                                 ---------- Menu Total Alat Terkalibrasi --------
                                 ************************************-->
-                            <li class="menu-item">
+                            <li class="menu-item {{ request()->is('permissions*') ? 'active' : '' }}">
                                 <a href="{{ route('permissions.index') }}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-check-double custom-sidebar-text"></i>
                                     <div data-i18n="Basic" class="custom-sidebar-text" style="font-size: 18px">Permission</div>

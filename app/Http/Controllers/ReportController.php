@@ -13,7 +13,7 @@ use App\Models\Display_calibration;
 use App\Models\Eccentricity_scale_calibration;
 use App\Models\Repeatability_scale_calibration;
 use App\Models\Scale_calibration;
-use App\Models\temp_calibration;
+use App\Models\Temp_calibration;
 use App\Models\Weighing_performance;
 use App\Models\Weight;
 use Carbon\Carbon;
@@ -25,7 +25,7 @@ class ReportController extends Controller
     public function temperature(Request $request)
     {
         $plant = $request->input('area');
-        $report = temp_calibration::getTemperature($plant);
+        $report = Temp_calibration::getTemperature($plant);
 
         return view('report.temperatureData', [
             'reports' => $report
