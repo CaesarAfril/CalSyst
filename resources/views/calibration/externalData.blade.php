@@ -903,7 +903,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-end mt-4">
-                {{ $reports->links('pagination::bootstrap-5') }}
+                {{ $reports->appends(request()->query())->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
